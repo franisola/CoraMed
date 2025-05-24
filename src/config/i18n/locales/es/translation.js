@@ -2,6 +2,22 @@ const translations = {
   greeting: "Hola muchacho",
   farewell: "Adiós",
 
+  screenTitles: {
+    home: "Inicio",
+    profile: "Mi perfil",
+    myData: "Mis datos",
+    myHealthInsurance: "Mi obra social",
+    addHealthInsurance: "Agregar obra social",
+    language: "Idioma",
+    notifications: "Notificaciones",
+    addAppointment: "Pedir turno",
+    myAppointments: "Mis turnos",
+    myPastAppointments: "Pasados",
+    myNextAppointments: "Próximos",
+    appointmentInfo: "Información del turno",
+    results: "Resultados",
+  },
+
   inputPlaceholder: {
     email: "Email",
     password: "Contraseña",

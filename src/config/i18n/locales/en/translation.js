@@ -2,6 +2,22 @@ const translations = {
   greeting: "Hello guys",
   farewell: "Goodbye",
 
+  screenTitles: {
+    home: "Home",
+    profile: "My profile",
+    myData: "My data",
+    myHealthInsurance: "My health insurance",
+    addHealthInsurance: "Add health insurance",
+    language: "Language",
+    notifications: "Notifications",
+    addAppointment: "Add appointment",
+    myAppointments: "My appointments",
+    myPastAppointments: "Past appointments",
+    myNextAppointments: "Next appointments",
+    appointmentInfo: "Appointment info",
+    results: "Results",
+  },
+
   inputPlaceholder: {
     email: "Email",
     password: "Password",
@@ -15,7 +31,7 @@ const translations = {
     address: "Address",
   },
 
-  genderPick:{
+  genderPick: {
     male: "Male",
     female: "Female",
     other: "Other",
@@ -28,7 +44,7 @@ const translations = {
     changePassword: "Change password",
   },
 
-  authTitles:{
+  authTitles: {
     login: "Login",
     register: "Register",
     recover: "Recover password",
@@ -37,16 +53,12 @@ const translations = {
     linkForgotPassword: "Recover it here",
   },
 
-    authFooterText: {
+  authFooterText: {
     noAccount: "Don't have an account?",
     alreadyHaveAccount: "Already have an account?",
     login: "Login",
     register: "Register",
   },
-
-
-
-
 
   errorInputEmail: "Invalid email",
   errorInputPassword: "Invalid password",
