@@ -1,0 +1,96 @@
+import CustomInput from "@/ui/components/Inputs/InputData";
+import NormalButton from "@/ui/components/Buttons/NormalButton";
+import AuthForm from "@/ui/components/Auth/AuthForm";
+
+type MainProps = {
+  changeLanguage: (lang: string) => void;
+  currentLanguage: string;
+};
+
+export default function Main({ changeLanguage, currentLanguage }: MainProps) {
+  const { t } = useTranslation();
+  const { theme, toggleTheme, isDark } = useTheme();
+
+  const [name, setName] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
+  // return (
+  //   <SafeAreaView
+  //     style={[styles.container, { backgroundColor: theme.colors.background }]}
+  //   >
+  //     <ScrollView>
+  //       <View
+  //         style={[
+  //           styles.container,
+  //           { backgroundColor: theme.colors.background },
+  //         ]}
+  //       >
+  //         <Text style={{ color: theme.colors.text, fontSize: 20 }}>
+  //           {t("greeting")}
+  //         </Text>
+
+  //         <View style={{ marginVertical: 10 }}>
+  //           <Button
+  //             title="English"
+  //             onPress={() => changeLanguage("en")}
+  //             disabled={currentLanguage === "en"}
+  //           />
+  //           <Button
+  //             title="Español"
+  //             onPress={() => changeLanguage("es")}
+  //             disabled={currentLanguage === "es"}
+  //           />
+
+  //           <CustomInput
+  //             label={t("inputPlaceholderFullName")}
+  //             placeholder={t("inputPlaceholderFullName")}
+  //             error={emailError ? t("errorInputFullName") : undefined}
+  //             value={name}
+  //             onChangeText={setName}
+  //           />
+
+  //           <View style={{ marginVertical: 10, flexDirection: "row", justifyContent: "space-between" }}> 
+  //             <NormalButton
+  //               style={{ width: 148 }}
+  //               title={t("submit")}
+  //               onPress={() => {
+  //                 if (name.length < 3) {
+  //                   setEmailError(true);
+  //                 } else {
+  //                   setEmailError(false);
+  //                 }
+  //               }}
+  //             />
+  //             <NormalButton
+  //               style={{ width: 148, backgroundColor: theme.colors.error }}
+  //               title={t("cancel")}
+  //               onPress={() => {
+  //                 if (name.length < 3) {
+  //                   setEmailError(true);
+  //                 } else {
+  //                   setEmailError(false);
+  //                 }
+  //               }}
+  //             />
+  //           </View>
+
+  //           <AuthForm
+  //             type="changePassword"
+  //             onSubmit={(data) => {
+  //               console.log("Form data:", data);
+  //             }}
+  //           />
+  //         </View>
+
+  //         <Button
+  //           title={isDark ? "Switch to Light Theme" : "Switch to Dark Theme"}
+  //           onPress={toggleTheme}
+  //         />
+  //       </View>
+
+
+  //     </ScrollView>
+
+    
+  //   </SafeAreaView>
+  // );

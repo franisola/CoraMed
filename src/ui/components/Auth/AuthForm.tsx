@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  Button,
+} from "react-native";
 import CustomInput from "@components/Inputs/InputData";
 import CustomButton from "@components/Buttons/NormalButton";
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   registerUserSchema,
@@ -12,6 +20,7 @@ import {
   recoverPasswordSchema,
   changePasswordSchema,
 } from "@validations/authSchemas"; // ajustá según la ubicación real
+import AuthFooter from "./AuthFooter";
 
 type FormType = "login" | "register" | "recover" | "changePassword";
 
@@ -27,6 +36,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
   const [genero, setGenero] = useState<"Masculino" | "Femenino" | "Otro" | "">(
     ""
   );
+
+  const navigation = useNavigation();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -39,23 +50,25 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
   });
 
   let buttonTextKey = "";
+  let authTitleKey = "";
 
   switch (type) {
     case "login":
+      authTitleKey = "authTitles.login";
       buttonTextKey = "button.login";
       break;
     case "register":
+      authTitleKey = "authTitles.register";
       buttonTextKey = "button.register";
       break;
     case "recover":
+      authTitleKey = "authTitles.recover";
       buttonTextKey = "button.recover";
       break;
     default:
+      authTitleKey = "authTitles.changePassword";
       buttonTextKey = "button.changePassword";
   }
-
-
-
 
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -100,7 +113,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
       return false;
     }
 
-    // Limpiar errores si todo está OK
     setErrors({
       nombreCompleto: "",
       dni: "",
@@ -154,109 +166,163 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
   };
 
   return (
-    <View style={{ gap: 10 }}>
-      {type === "register" && (
-        <>
+    <SafeAreaView style={{ gap: 10, flex: 1, alignItems: "center" }}>
+
+      <Text
+        style={{
+          color: theme.colors.primary,
+          fontSize: 36,
+          fontWeight: "bold",
+          alignSelf: "center",
+          marginTop: 80,
+        }}
+      >
+        {t(authTitleKey)}
+      </Text>
+
+      <View
+        style={{
+          gap: 10,
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 50,
+        }}
+      >
+        {type === "register" && (
+          <>
+            <CustomInput
+              placeholder={t("inputPlaceholder.fullName")}
+              value={nombreCompleto}
+              onChangeText={(value) =>
+                handleInputChange("nombreCompleto", value)
+              }
+              error={errors.nombreCompleto}
+            />
+            <CustomInput
+              placeholder={t("inputPlaceholder.dni")}
+              value={dni}
+              onChangeText={(value) => handleInputChange("dni", value)}
+              keyboardType="numeric"
+              error={errors.dni}
+              maxLength={8}
+            />
+          </>
+        )}
+
+        {(type === "register" || type === "login" || type === "recover") && (
           <CustomInput
-            placeholder={t("inputPlaceholder.fullName")}
-            value={nombreCompleto}
-            onChangeText={(value) => handleInputChange("nombreCompleto", value)}
-            error={errors.nombreCompleto}
+            placeholder={t("inputPlaceholder.email")}
+            value={email}
+            onChangeText={(value) => handleInputChange("email", value)}
+            keyboardType="email-address"
+            error={errors.email}
           />
+        )}
+
+        {(type === "register" ||
+          type === "login" ||
+          type === "changePassword") && (
           <CustomInput
-            placeholder={t("inputPlaceholder.dni")}
-            value={dni}
-            onChangeText={(value) => handleInputChange("dni", value)}
-            keyboardType="numeric"
-            error={errors.dni}
-            maxLength={8}
+            placeholder={t("inputPlaceholder.password")}
+            value={password}
+            onChangeText={(value) => handleInputChange("password", value)}
+            secureTextEntry
+            error={errors.password}
           />
-        </>
-      )}
-
-      {(type === "register" || type === "login" || type === "recover") && (
-        <CustomInput
-          placeholder={t("inputPlaceholder.email")}
-          value={email}
-          onChangeText={(value) => handleInputChange("email", value)}
-          keyboardType="email-address"
-          error={errors.email}
-        />
-      )}
-
-      {(type === "register" ||
-        type === "login" ||
-        type === "changePassword") && (
-        <CustomInput
-          placeholder={t("inputPlaceholder.password")}
-          value={password}
-          onChangeText={(value) => handleInputChange("password", value)}
-          secureTextEntry
-          error={errors.password}
-        />
-      )}
-
-      {type === "changePassword" && (
-        <CustomInput
-          placeholder={t("inputPlaceholder.confirmPassword")}
-          value={confirmPassword}
-          onChangeText={(value) => handleInputChange("confirmPassword", value)}
-          secureTextEntry
-          error={errors.confirmPassword}
-        />
-      )}
-
-      {type === "register" && (
-        <>
-          <View
-            style={{
-              borderWidth: 1,
-              borderRadius: 8,
-              borderColor: errors.genero
-                ? theme.colors.error
-                : theme.colors.primary,
-              marginBottom: 0,
-            }}
+        )}
+        {type === "login" && (
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignSelf: "flex-start" }}
+            onPress={() => navigation.navigate("RecoverPassword")}
           >
-            <Picker
-              selectedValue={genero}
-              onValueChange={(itemValue) => {
-                setGenero(itemValue as "Masculino" | "Femenino" | "Otro");
-                setErrors((prev) => ({ ...prev, genero: "" }));
-              }}
-              style={{
-                color: theme.colors.primary,
-                backgroundColor: theme.colors.white,
-                marginBottom: 0,
-              }}
-            >
-              <Picker.Item label={t("inputPlaceholder.gender")} value="" />
-              <Picker.Item label={t("genderPick.male")} value="Masculino" />
-              <Picker.Item label={t("genderPick.female")} value="Femenino" />
-              <Picker.Item label={t("genderPick.other")} value="Otro" />
-            </Picker>
-          </View>
-          {errors.genero ? (
+            <Text style={{ color: theme.colors.primary }}>
+              {t("authTitles.forgotPassword")}
+            </Text>
             <Text
               style={{
-                color: theme.colors.error,
-                width: 308,
-                marginTop: 0,
-                fontSize: 12,
+                color: theme.colors.primary,
+                fontWeight: "bold",
+                marginLeft: 4,
               }}
             >
-              {errors.genero}
+              {t("authTitles.linkForgotPassword")}
             </Text>
-          ) : null}
-        </>
-      )}
+          </TouchableOpacity>
+        )}
+
+        {type === "changePassword" && (
+          <CustomInput
+            placeholder={t("inputPlaceholder.confirmPassword")}
+            value={confirmPassword}
+            onChangeText={(value) =>
+              handleInputChange("confirmPassword", value)
+            }
+            secureTextEntry
+            error={errors.confirmPassword}
+          />
+        )}
+
+        {type === "register" && (
+          <>
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: errors.genero
+                  ? theme.colors.error
+                  : theme.colors.primary,
+                marginBottom: 0,
+                marginTop: 10,
+                width: 308,
+              }}
+            >
+              <Picker
+                selectedValue={genero}
+                onValueChange={(itemValue) => {
+                  setGenero(itemValue as "Masculino" | "Femenino" | "Otro");
+                  setErrors((prev) => ({ ...prev, genero: "" }));
+                }}
+                style={{
+                  color: theme.colors.primary,
+                  backgroundColor: theme.colors.white,
+                  marginBottom: 0,
+                  height: 58,
+                }}
+              >
+                <Picker.Item label={t("inputPlaceholder.gender")} value="" />
+                <Picker.Item label={t("genderPick.male")} value="Masculino" />
+                <Picker.Item label={t("genderPick.female")} value="Femenino" />
+                <Picker.Item label={t("genderPick.other")} value="Otro" />
+              </Picker>
+            </View>
+            {errors.genero ? (
+              <Text
+                style={{
+                  color: theme.colors.error,
+                  width: 308,
+                  marginTop: 0,
+                  fontSize: 12,
+                }}
+              >
+                {errors.genero}
+              </Text>
+            ) : null}
+          </>
+        )}
+      </View>
 
       <CustomButton
-        style={{ marginTop: 0 }}
+        style={{
+          marginHorizontal: "auto",
+          alignSelf: "center",
+          position: "absolute",
+          bottom: 100,
+        }}
         title={t(buttonTextKey)}
         onPress={handleSubmit}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

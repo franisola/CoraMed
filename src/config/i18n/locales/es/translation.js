@@ -28,6 +28,25 @@ const translations = {
     changePassword: "Cambiar contraseña",
   },
 
+  authTitles:{
+    login: "Iniciar sesión",
+    register: "Registro",
+    recover: "Recuperar contraseña",
+    changePassword: "Cambiar contraseña",
+    forgotPassword: "¿Olvidaste tu contraseña?",
+    linkForgotPassword: "Recuperala aquí",
+  },
+
+  authFooterText: {
+    noAccount: "¿No tienes una cuenta?",
+    alreadyHaveAccount: "¿Ya tienes una cuenta?",
+    login: "Inicia sesión",
+    register: "Registrate",
+  },
+
+
+
+
   errorInputEmail: "Email inválido",
   errorInputPassword: "Contraseña inválida",
   errorInputFullName: "Nombre completo inválido",

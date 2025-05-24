@@ -1,26 +1,16 @@
-module.exports = function (api) {
+export default function (api) {
   api.cache(true);
   return {
     presets: [
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
-      "nativewind/babel",
+      "nativewind/babel"
     ],
     plugins: [
       [
         "module-resolver",
         {
           root: ["./src"],
-          extensions: [
-            ".ios.ts",
-            ".android.ts",
-            ".ts",
-            ".ios.tsx",
-            ".android.tsx",
-            ".tsx",
-            ".jsx",
-            ".js",
-            ".json",
-          ],
+          extensions: [".tsx", ".ts", ".js", ".jsx", ".json"],
           alias: {
             "@": "./src",
             "@app": "./src/App",
@@ -35,10 +25,10 @@ module.exports = function (api) {
             "@redux": "./src/redux",
             "@components": "./src/ui/components",
             "@screens": "./src/ui/screens",
-            "@validations": "./src/validations",
-          },
-        },
-      ],
-    ],
+            "@validations": "./src/validations"
+          }
+        }
+      ]
+    ]
   };
-};
+}

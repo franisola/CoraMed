@@ -1,10 +1,12 @@
 {
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "target": "esnext",
     "module": "Node16",
+    "moduleResolution": "Node16",
     "strict": true,
     "jsx": "react",
-    "moduleResolution": "node16",
+    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
@@ -13,53 +15,22 @@
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@app/*": [
-        "src/App/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ],
-      "@config/*": [
-        "src/config/*"
-      ],
-      "@i18n/*": [
-        "src/config/i18n/*"
-      ],
-      "@context/*": [
-        "src/context/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@navigation/*": [
-        "src/navigation/*"
-      ],
-      "@networking/*": [
-        "src/networking/*"
-      ],
-      "@themes/*": [
-        "src/themes/*"
-      ],
-      "@redux/*": [
-        "src/redux/*"
-      ],
-      "@components/*": [
-        "src/ui/components/*"
-      ],
-      "@screens/*": [
-        "src/ui/screens/*"
-      ],
-      "@validations/*": [
-        "src/validations/*"
-      ],
+      "@/*": ["src/*"],
+      "@app/*": ["src/App/*"],
+      "@assets/*": ["assets/*"],
+      "@config/*": ["src/config/*"],
+      "@i18n/*": ["src/config/i18n/*"],
+      "@context/*": ["src/context/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@navigation/*": ["src/navigation/*"],
+      "@networking/*": ["src/networking/*"],
+      "@themes/*": ["src/themes/*"],
+      "@redux/*": ["src/redux/*"],
+      "@components/*": ["src/ui/components/*"],
+      "@screens/*": ["src/ui/screens/*"],
+      "@validations/*": ["src/validations/*"]
     }
   },
-  "include": [
-    "src",
-    "nativewind-env.d.ts"
-  ],
-  "extends": "expo/tsconfig.base"
+  "include": ["src", "nativewind-env.d.ts"]
 }
+

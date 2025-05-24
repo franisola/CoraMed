@@ -28,6 +28,24 @@ const translations = {
     changePassword: "Change password",
   },
 
+  authTitles:{
+    login: "Login",
+    register: "Register",
+    recover: "Recover password",
+    changePassword: "Change password",
+    forgotPassword: "Forgot your password?",
+    linkForgotPassword: "Recover it here",
+  },
+
+    authFooterText: {
+    noAccount: "Don't have an account?",
+    alreadyHaveAccount: "Already have an account?",
+    login: "Login",
+    register: "Register",
+  },
+
+
+
 
 
   errorInputEmail: "Invalid email",

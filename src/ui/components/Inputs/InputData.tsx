@@ -6,7 +6,7 @@ import {
   Text,
   TextInputProps,
 } from "react-native";
-import { useTheme } from "../../../themes/ThemeContext";
+import { useTheme } from "@themes/ThemeContext";
 
 interface CustomInputProps extends TextInputProps {
   label?: string;
