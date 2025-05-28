@@ -33,7 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         {
           backgroundColor: disabled
           ? theme.colors.unauthorizedButton
-          : theme.colors.primary,
+          : theme.colors.button,
         },
         style,
       ]}

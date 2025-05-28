@@ -14,8 +14,6 @@ type MainProps = {
 import AuthForm from "@/ui/components/Auth/AuthForm";
 
 const Register = () => {
-  const navigation = useNavigation();
-  const { t } = useTranslation();
   const { theme, toggleTheme, isDark } = useTheme();
 
   return (

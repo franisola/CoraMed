@@ -1,15 +1,36 @@
+import { Button } from "react-native";
+
 export const lightColors = {
   primary: "#769FCD",
   background: "#F7FBFC",
   details: "#D6E6F2",
-  text: "#6D6D6D",
+  icons: "#769FCD",
+  text: "#769FCD",
+  greyText: "#6D6D6D",
   white: "#FFFFFF",
-  error: "#C62828",
+
+  button: "#769FCD",
   unauthorizedButton: "#7992AE",
+  errorButton: "#C62828",
+  error: "#C62828",
+
+  inputBorder: "#769FCD",
+
 };
 
 export const darkColors = {
-  background: "#000000",
-  text: "#FFFFFF",
-  primary: "#0A84FF",
+  primary: "#121212",
+  background: "#2C2C2C",
+  details: "#4D4D4D",
+  icons: "#769FCD",
+  text: "#769FCD",
+  greyText: "#6D6D6D",
+  white: "#FFFFFF",
+
+  button: "#769FCD",
+  unauthorizedButton: "#7992AE",
+  errorButton: "#C62828",
+  error: "#C62828",
+
+  inputBorder: "#769FCD",
 };

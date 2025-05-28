@@ -2,6 +2,8 @@ import React from "react";
 import { SafeAreaView, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { FontAwesome5 } from '@expo/vector-icons';
+
 import { useTheme } from "@themes/ThemeContext";
 import { useTranslation } from "react-i18next";
 
@@ -9,11 +11,14 @@ import Home from "@/ui/screens/Home";
 import Notifications from "@/ui/screens/Notifications";
 import Profile from "@/ui/screens/Profile/Profile";
 
+
+import ProfileStack from  "@/navigation/StackNavigation/ProfileStack";
+
 const Tab = createBottomTabNavigator();
 
 const ICONS: Record<string, string> = {
   Home: "home",
-  Profile: "user",
+  ProfileStack: "user",
   Notifications: "bell",
 };
 
@@ -41,7 +46,12 @@ function MyTabBar({ state, descriptors, navigation }) {
           });
 
           if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
+            if (route.name === "ProfileStack") {
+              // Navega siempre a la pantalla principal del stack
+              navigation.navigate("ProfileStack", { screen: "Profile" });
+            } else {
+              navigation.navigate(route.name, route.params);
+            }
           }
         };
 
@@ -68,7 +78,7 @@ function MyTabBar({ state, descriptors, navigation }) {
               backgroundColor: isFocused ? activeBg : inactiveBg,
             }}
           >
-            <FontAwesome
+            <FontAwesome5
               name={ICONS[route.name] || "circle"}
               size={25}
               color={isFocused ? activeIcon : inactiveIcon}
@@ -98,7 +108,7 @@ export default function NavigationTab() {
           backgroundColor: theme.colors.details,
         },
         headerTitleStyle: {
-          color: theme.colors.primary,
+          color: theme.colors.text,
         },
       }}
     >
@@ -114,10 +124,10 @@ export default function NavigationTab() {
         options={{ title: t("screenTitles.notifications") }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileStack"
+        component={ProfileStack}
         options={{ title: t("screenTitles.profile") }}
       />
     </Tab.Navigator>
-  );
+  )
 }

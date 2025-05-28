@@ -47,10 +47,10 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ currentScreen }) => {
         style={{ flexDirection: "row", alignItems: "center" }}
         onPress={() => handleNavigation()}
       >
-        <Text style={{ color: theme.colors.primary }}>{footerText}</Text>
+        <Text style={{ color: theme.colors.text }}>{footerText}</Text>
         <Text
           style={{
-            color: theme.colors.primary,
+            color: theme.colors.text,
             fontWeight: "bold",
             marginLeft: 4,
           }}

@@ -20,7 +20,7 @@ import {
   recoverPasswordSchema,
   changePasswordSchema,
 } from "@validations/authSchemas"; // ajustá según la ubicación real
-import AuthFooter from "./AuthFooter";
+
 
 type FormType = "login" | "register" | "recover" | "changePassword";
 
@@ -170,7 +170,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
 
       <Text
         style={{
-          color: theme.colors.primary,
+          color: theme.colors.text,
           fontSize: 36,
           fontWeight: "bold",
           alignSelf: "center",
@@ -236,12 +236,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
             style={{ flexDirection: "row", alignSelf: "flex-start" }}
             onPress={() => navigation.navigate("RecoverPassword")}
           >
-            <Text style={{ color: theme.colors.primary }}>
+            <Text style={{ color: theme.colors.text }}>
               {t("authTitles.forgotPassword")}
             </Text>
             <Text
               style={{
-                color: theme.colors.primary,
+                color: theme.colors.text,
                 fontWeight: "bold",
                 marginLeft: 4,
               }}
@@ -271,7 +271,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
                 borderRadius: 8,
                 borderColor: errors.genero
                   ? theme.colors.error
-                  : theme.colors.primary,
+                  : theme.colors.inputBorder,
                 marginBottom: 0,
                 marginTop: 10,
                 width: 308,
@@ -284,7 +284,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
                   setErrors((prev) => ({ ...prev, genero: "" }));
                 }}
                 style={{
-                  color: theme.colors.primary,
+                  color: theme.colors.text,
                   backgroundColor: theme.colors.white,
                   marginBottom: 0,
                   height: 58,

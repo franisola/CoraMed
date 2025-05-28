@@ -28,12 +28,12 @@ const CustomInput: React.FC<CustomInputProps> = ({
         style={[
           styles.input,
           {
-            borderColor: error ? theme.colors.error : theme.colors.primary,
+            borderColor: error ? theme.colors.error : theme.colors.inputBorder,
             backgroundColor: theme.colors.white,
-            color: theme.colors.primary,
+            color: theme.colors.greyText,
           },
         ]}
-        placeholderTextColor={theme.colors.primary}
+        placeholderTextColor={theme.colors.inputBorder}
         {...props}
       />
       {error ? (
