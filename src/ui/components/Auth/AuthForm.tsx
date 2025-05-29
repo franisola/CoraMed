@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import CustomInput from "@components/Inputs/InputData";
 import CustomButton from "@components/Buttons/NormalButton";
+import CustomPicker from "@components/Inputs/CustomPicker";
+
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
@@ -20,7 +22,6 @@ import {
   recoverPasswordSchema,
   changePasswordSchema,
 } from "@validations/authSchemas"; // ajustá según la ubicación real
-
 
 type FormType = "login" | "register" | "recover" | "changePassword";
 
@@ -167,7 +168,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
 
   return (
     <SafeAreaView style={{ gap: 10, flex: 1, alignItems: "center" }}>
-
       <Text
         style={{
           color: theme.colors.text,
@@ -227,7 +227,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
             placeholder={t("inputPlaceholder.password")}
             value={password}
             onChangeText={(value) => handleInputChange("password", value)}
-            secureTextEntry
+            secureTextEntry={true}
             error={errors.password}
           />
         )}
@@ -258,57 +258,26 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
             onChangeText={(value) =>
               handleInputChange("confirmPassword", value)
             }
-            secureTextEntry
+            secureTextEntry={true}
             error={errors.confirmPassword}
           />
         )}
 
         {type === "register" && (
-          <>
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 8,
-                borderColor: errors.genero
-                  ? theme.colors.error
-                  : theme.colors.inputBorder,
-                marginBottom: 0,
-                marginTop: 10,
-                width: 308,
-              }}
-            >
-              <Picker
-                selectedValue={genero}
-                onValueChange={(itemValue) => {
-                  setGenero(itemValue as "Masculino" | "Femenino" | "Otro");
-                  setErrors((prev) => ({ ...prev, genero: "" }));
-                }}
-                style={{
-                  color: theme.colors.text,
-                  backgroundColor: theme.colors.white,
-                  marginBottom: 0,
-                  height: 58,
-                }}
-              >
-                <Picker.Item label={t("inputPlaceholder.gender")} value="" />
-                <Picker.Item label={t("genderPick.male")} value="Masculino" />
-                <Picker.Item label={t("genderPick.female")} value="Femenino" />
-                <Picker.Item label={t("genderPick.other")} value="Otro" />
-              </Picker>
-            </View>
-            {errors.genero ? (
-              <Text
-                style={{
-                  color: theme.colors.error,
-                  width: 308,
-                  marginTop: 0,
-                  fontSize: 12,
-                }}
-              >
-                {errors.genero}
-              </Text>
-            ) : null}
-          </>
+          <CustomPicker
+            selectedValue={genero}
+            onValueChange={(itemValue) => {
+              setGenero(itemValue as "Masculino" | "Femenino" | "Otro");
+              setErrors((prev) => ({ ...prev, genero: "" }));
+            }}
+            error={errors.genero}
+            items={[
+              { label: t("inputPlaceholder.gender"), value: "" },
+              { label: t("genderPick.male"), value: "Masculino" },
+              { label: t("genderPick.female"), value: "Femenino" },
+              { label: t("genderPick.other"), value: "Otro" },
+            ]}
+          />
         )}
       </View>
 

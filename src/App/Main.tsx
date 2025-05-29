@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "@navigation/StackNavigation/AuthStack";
-import NavigationTab from "@/navigation/TabNavigation/NavigationTab";
+import AppStack from "@navigation/StackNavigation/AppStack";
+// import NavigationTab from "@/navigation/TabNavigation/NavigationTab";
 
 type MainProps = {
   changeLanguage: (lang: string) => void;
@@ -13,7 +14,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   return (
     <NavigationContainer >
-      {isAuthenticated ? <NavigationTab /> : <AuthStack />}
+      {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

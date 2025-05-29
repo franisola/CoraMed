@@ -6,6 +6,8 @@ export const lightColors = {
   details: "#D6E6F2",
   icons: "#769FCD",
   text: "#769FCD",
+  textSecondary: "#D6E6F2",
+
   greyText: "#6D6D6D",
   white: "#FFFFFF",
 
@@ -24,6 +26,7 @@ export const darkColors = {
   details: "#4D4D4D",
   icons: "#769FCD",
   text: "#769FCD",
+  textSecondary: "#D6E6F2",
   greyText: "#6D6D6D",
   white: "#FFFFFF",
 
