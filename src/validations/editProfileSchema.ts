@@ -18,7 +18,7 @@ export const updateUserProfileSchema = z
       .regex(/^\d{7,8}$/, "El DNI debe contener entre 7 y 8 dígitos.")
       .optional(),
 
-    fecha_nacimiento: z
+    fechaNacimiento: z
       .string()
       .optional()
       .refine(

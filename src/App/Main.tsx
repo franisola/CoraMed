@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "@navigation/StackNavigation/AuthStack";
 import AppStack from "@navigation/StackNavigation/AppStack";
-// import NavigationTab from "@/navigation/TabNavigation/NavigationTab";
+import { useAppSelector, useAppDispatch } from "@redux/hooks";
+import { getCurrentUser, logoutUser } from "@slices/authSlice";
+
+import LoadingScreen from "@screens/LoadingScreen";
 
 type MainProps = {
   changeLanguage: (lang: string) => void;
@@ -10,11 +13,20 @@ type MainProps = {
 };
 
 export default function Main({ changeLanguage, currentLanguage }: MainProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const dispatch = useAppDispatch();
+  const { user, loading } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <NavigationContainer >
-      {isAuthenticated ? <AppStack /> : <AuthStack />}
+    <NavigationContainer>
+      {user && Object.keys(user).length > 0 ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

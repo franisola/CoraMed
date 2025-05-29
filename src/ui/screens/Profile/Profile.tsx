@@ -5,12 +5,22 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 
+import { useAppDispatch } from "@redux/hooks";
+
+import { logoutUser } from "@slices/authSlice";
+import { useToast } from "react-native-toast-notifications";
+
 
 import { useTheme } from "@themes/ThemeContext";
 
 const ProfileScreen = () => {
   const { theme, toggleTheme, isDark } = useTheme();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+
+  const handleLogOut = () => {
+    dispatch(logoutUser());
+  };
 
 
   const ProfileItem = ({ iconName, text, onPress }) => (
@@ -48,7 +58,7 @@ const ProfileScreen = () => {
 
       <View style={[styles.separator, {backgroundColor: theme.colors.text}]} />
 
-      <ProfileItem iconName="lock" text="Cerrar Sesión" onPress={() => {}} />
+      <ProfileItem iconName="lock" text="Cerrar Sesión" onPress={handleLogOut} />
       <ProfileItem iconName="trash" text="Borrar Cuenta" onPress={() => {}} />
     </View>
   );

@@ -23,9 +23,11 @@ export default function (api) {
             "@networking": "./src/networking",
             "@themes": "./src/themes",
             "@redux": "./src/redux",
+            "@slices": "./src/redux/slices",
             "@components": "./src/ui/components",
             "@screens": "./src/ui/screens",
-            "@validations": "./src/validations"
+            "@validations": "./src/validations",
+            "@api": "./src/api",
           }
         }
       ]

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,10 +11,18 @@ import CustomInput from "@components/Inputs/InputData";
 import CustomButton from "@components/Buttons/NormalButton";
 import CustomPicker from "@components/Inputs/CustomPicker";
 
-import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
+import { useAppSelector, useAppDispatch } from "@redux/hooks";
+
+import {
+  registerUser,
+  loginUser,
+  recoverPassword,
+  resetPassword,
+} from "@slices/authSlice";
+import { useToast } from "react-native-toast-notifications";
 
 import {
   registerUserSchema,
@@ -73,6 +81,23 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
 
   const { t } = useTranslation();
   const { theme } = useTheme();
+
+  useEffect(() => {
+    setNombreCompleto("");
+    setDni("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setGenero("");
+    setErrors({
+      nombreCompleto: "",
+      dni: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      genero: "",
+    });
+  }, [type]);
 
   const validateFields = () => {
     let validationResult;
@@ -147,7 +172,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const dispatch = useAppDispatch();
+  const toast = useToast();
+
+  const handleSubmit = async () => {
     if (!validateFields()) return;
 
     const formData: any = {
@@ -159,11 +187,25 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
         password,
         genero,
       }),
-      ...(type === "recover" && {}),
       ...(type === "changePassword" && { password, confirmPassword }),
     };
 
-    onSubmit(formData);
+    try {
+      if (type === "login") {
+        await dispatch(loginUser({ email, password })).unwrap();
+      } else if (type === "register") {
+        await dispatch(registerUser(formData)).unwrap();
+      } else if (type === "recover") {
+        await dispatch(recoverPassword(email)).unwrap(); // sólo email (string)
+      } else if (type === "changePassword") {
+        await dispatch(resetPassword(formData)).unwrap();
+      }
+
+      onSubmit(formData);
+    } catch (err) {
+      // Podés mostrar el error con Toast o setErrors si querés
+      toast.show(err as string, { type: "danger" });
+    }
   };
 
   return (
