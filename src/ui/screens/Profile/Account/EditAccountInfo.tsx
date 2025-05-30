@@ -143,7 +143,7 @@ const EditarPerfil = () => {
       <TabsPerfil
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        disableSwitching={true}
+        // disableSwitching={true}
       />
 
       <ScrollView

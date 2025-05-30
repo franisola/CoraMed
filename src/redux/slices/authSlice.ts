@@ -1,18 +1,9 @@
 // src/store/auth.slice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import * as authAPI from "@api/auth";
+import { User } from "@models/User";
 
-// Tipos para el usuario (puedes agregar más campos si tienes)
-interface User {
-  _id: string;
-  dni: string;
-  email: string;
-  genero: string;
-  nombreCompleto: string;
-  fechaNacimiento?: string;
-  direccion?: string;
-  telefono?: string;
-}
+
 
 interface AuthState {
   user: User | null;

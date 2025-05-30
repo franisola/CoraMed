@@ -28,6 +28,7 @@ export default function (api) {
             "@screens": "./src/ui/screens",
             "@validations": "./src/validations",
             "@api": "./src/api",
+            "@models": "./src/models",
           }
         }
       ]

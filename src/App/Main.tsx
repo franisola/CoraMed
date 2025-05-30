@@ -21,6 +21,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
   }, [dispatch]);
 
 
+
   if (loading) {
     return <LoadingScreen />;
   }
