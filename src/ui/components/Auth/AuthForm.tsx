@@ -36,9 +36,10 @@ type FormType = "login" | "register" | "recover" | "changePassword";
 interface AuthFormProps {
   type: FormType;
   onSubmit: (data: any) => void;
+  generalError?: string; // Para manejar errores generales
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, ...props }) => {
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
@@ -56,6 +57,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
     password: "",
     confirmPassword: "",
     genero: "",
+    general: props.generalError,
   });
 
   let buttonTextKey = "";
@@ -96,6 +98,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
       password: "",
       confirmPassword: "",
       genero: "",
+      general: props.generalError,
     });
   }, [type]);
 
@@ -146,6 +149,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
       password: "",
       confirmPassword: "",
       genero: "",
+      general: "",
     });
 
     return true;
@@ -193,21 +197,37 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
     try {
       if (type === "login") {
         await dispatch(loginUser({ email, password })).unwrap();
+        setErrors((prev) => ({ ...prev, general: "" }));
+        onSubmit(formData);
       } else if (type === "register") {
         await dispatch(registerUser(formData)).unwrap();
+        setErrors((prev) => ({ ...prev, general: "" }));
+        onSubmit(formData);
       } else if (type === "recover") {
-        await dispatch(recoverPassword(email)).unwrap(); // sólo email (string)
+        // Para recover, tratamos el resultado localmente y NO llamamos a onSubmit
+        await dispatch(recoverPassword(email)).unwrap();
+        setErrors((prev) => ({ ...prev, general: "" }));
+        toast.show("Correo de recuperación enviado.", { type: "success" });
+        // Acá NO se llama a onSubmit, por lo que no se actualiza el stack.
       } else if (type === "changePassword") {
         await dispatch(resetPassword(formData)).unwrap();
+        setErrors((prev) => ({ ...prev, general: "" }));
+        onSubmit(formData);
       }
-
-      onSubmit(formData);
-    } catch (err) {
-      // Podés mostrar el error con Toast o setErrors si querés
-      toast.show(err as string, { type: "danger" });
+    } catch (err: any) {
+      if (err && typeof err === "object" && err.errors) {
+        setErrors((prev) => ({ ...prev, ...err.errors }));
+      } else if (typeof err === "string") {
+        setErrors((prev) => ({ ...prev, general: err }));
+        toast.show(err, { type: "danger" });
+      } else if (err && err.message) {
+        setErrors((prev) => ({ ...prev, general: err.message }));
+        toast.show(err.message, { type: "danger" });
+      } else {
+        toast.show("Error inesperado, intente nuevamente.", { type: "danger" });
+      }
     }
   };
-
   return (
     <SafeAreaView style={{ gap: 10, flex: 1, alignItems: "center" }}>
       <Text
@@ -321,6 +341,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {
             ]}
           />
         )}
+
+        {errors.general ? (
+          <Text style={{ color: theme.colors.error, marginBottom: 10 }}>
+            {errors.general}
+          </Text>
+        ) : null}
       </View>
 
       <CustomButton

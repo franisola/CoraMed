@@ -32,6 +32,8 @@ const Login = () => {
       <AuthForm
         type="recover"
         onSubmit={(data) => {
+          console.log("hola");
+          
           console.log("Form data:", data);
         }}
       />

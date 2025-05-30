@@ -36,7 +36,7 @@ export const logoutUser = async () => {
 
 // RECOVER PASSWORD
 export const recoverPassword = async (email: string) => {
-  const response = await API.post('/auth/recover-password', { email });
+  const response = await API.post('/auth/recover-password', { email });  
   return response.data;
 };
 

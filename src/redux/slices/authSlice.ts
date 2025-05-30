@@ -28,6 +28,23 @@ const initialState: AuthState = {
   successMessage: null,
 };
 
+// Función para extraer el mensaje de error según tu formato de backend
+const extractErrorMessage = (err: any): string => {
+
+  if (err?.response?.data?.error) {
+   
+    return err.response.data.error;
+  }
+  if (typeof err === "string") {
+    return err;
+  }
+  if (err?.message) {
+    return err.message;
+  }
+  
+  return "Error desconocido";
+};
+
 // Thunks async:
 
 export const loginUser = createAsyncThunk(
@@ -35,11 +52,9 @@ export const loginUser = createAsyncThunk(
   async (credentials: authAPI.LoginPayload, { rejectWithValue }) => {
     try {
       const data = await authAPI.loginUser(credentials);
-      console.log({ hola: data });
-
       return data as User;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -51,7 +66,7 @@ export const registerUser = createAsyncThunk(
       const data = await authAPI.registerUser(userData);
       return data as User;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -63,7 +78,7 @@ export const logoutUser = createAsyncThunk(
       const data = await authAPI.logoutUser();
       return data.message;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -75,7 +90,7 @@ export const recoverPassword = createAsyncThunk(
       const data = await authAPI.recoverPassword(email);
       return data.message;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -90,7 +105,7 @@ export const resetPassword = createAsyncThunk(
       const data = await authAPI.resetPassword(token, newPassword);
       return data.message;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -102,7 +117,7 @@ export const deleteAccount = createAsyncThunk(
       const data = await authAPI.deleteAccount();
       return data.message;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );
@@ -112,10 +127,9 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await authAPI.getCurrentUser();
-
       return data.user as User;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || err.message);
+      return rejectWithValue(extractErrorMessage(err));
     }
   }
 );

@@ -1,15 +1,14 @@
-// src/api/index.ts
 import axios from "axios";
 
 const API = axios.create({
   baseURL: "https://backsalud.onrender.com/api",
-  withCredentials: true, // para que envíe cookies (si usás sesiones o JWT en cookies)
+  withCredentials: true, // MUY IMPORTANTE para enviar cookies
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Interceptor de respuesta (opcional: manejo global de errores)
+// Opcional: interceptor para manejar errores globalmente
 API.interceptors.response.use(
   (response) => response,
   (error) => {
