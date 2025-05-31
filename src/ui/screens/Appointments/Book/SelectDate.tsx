@@ -35,7 +35,8 @@ const SelectDate = () => {
 
   useEffect(() => {
     const fetchWorkingDays = async () => {
-      const dias_laborales = ["Lunes", "Miercoles", "Viernes"];
+      // const dias_laborales = ["Lunes", "Miercoles", "Viernes"];
+      const dias_laborales = [ "Martes", "Jueves", "Sabado" ];
       setAvailableDays(dias_laborales);
     };
 
@@ -77,7 +78,7 @@ const SelectDate = () => {
   };
 
   const handleContinue = () => {
-    navigation.navigate("ConfirmacionTurno", {
+    navigation.navigate("BookAppointment", {
       especialidad,
       doctor,
       fecha: selectedDate,

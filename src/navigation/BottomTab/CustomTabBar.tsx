@@ -6,7 +6,7 @@ import { useTheme } from "@themes/ThemeContext";
 
 const ICONS: Record<string, string> = {
   HomeStack: "home",
-  Notifications: "bell",
+  NotificationsStack: "bell",
   ProfileStack: "user",
 };
 

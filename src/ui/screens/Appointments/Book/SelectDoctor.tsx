@@ -46,7 +46,7 @@ const SelectDoctor = () => {
             "Nadia Solis",
             "Carla Juarez",
           ],
-          Cardiología: ["Juan Perelli", "Marcos Jugo"],
+          Cardiología: ["Macarena Calandroni", "Juan Perelli", "Marcos Jugo"],
           Pediatría: ["Luciana Gómez", "Pedro Rojo"],
         };
 
