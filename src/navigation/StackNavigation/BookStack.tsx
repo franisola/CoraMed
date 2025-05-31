@@ -1,6 +1,8 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SelectSpecialty from "@screens/Appointments/Book/SelectSpecialty";
+import SelectDoctor from "@screens/Appointments/Book/SelectDoctor";
+import SelectDate from "@screens/Appointments/Book/SelectDate";
 
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
@@ -27,6 +29,17 @@ const BookStack = () => {
       <Stack.Screen
         name="SelectSpecialty"
         component={SelectSpecialty}
+        options={{ title: t("screenTitles.addAppointment") }}
+      />
+      <Stack.Screen
+        name="SelectDoctor"
+        component={SelectDoctor}
+        options={{ title: t("screenTitles.addAppointment") }}
+      />
+
+      <Stack.Screen
+        name="SelectDate"
+        component={SelectDate}
         options={{ title: t("screenTitles.addAppointment") }}
       />
 

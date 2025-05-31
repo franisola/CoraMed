@@ -30,7 +30,7 @@ const SelectSpecialty = () => {
   };
 
   const handlePress = () => {
-    navigation.navigate("ConfirmacionTurno", { especialidad: selected });
+    navigation.navigate("SelectDoctor", { especialidad: selected });
   };
 
   return (
@@ -74,7 +74,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "normal",
     alignSelf: "flex-start",
-    marginVertical: 20,
+    marginBottom: 20,
+    marginTop: 10,
     width: 308,
   },
   button: {
