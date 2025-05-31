@@ -103,7 +103,7 @@ const Home = () => {
         <IconButton
           icon="calendar"
           label="Solicitar Turno"
-          onPress={() => navigation.navigate("SolicitarTurno")}
+          onPress={() => navigation.navigate("BookStack", { screen: "SelectSpecialty" })}
         />
         <IconButton
           icon="book"

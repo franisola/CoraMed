@@ -16,6 +16,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
   const dispatch = useAppDispatch();
   const { user, loading, error } = useAppSelector((state) => state.auth);
 
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
@@ -37,7 +38,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   return (
     <NavigationContainer linking={linking}>
-      {user ? <AppStack /> : <AuthStack />}
+      {0 < 1  ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

@@ -2,10 +2,13 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
+import { useTranslation } from "react-i18next";
+
+
 
 const TabsPerfil = ({ activeTab, setActiveTab, disableSwitching = false }) => {
   const { theme } = useTheme();
-
+  const { t } = useTranslation();
   return (
     <View style={[styles.tabContainer, { backgroundColor: theme.colors.primary }]}>
       {["personal", "cuenta"].map((tab) => (
@@ -31,7 +34,7 @@ const TabsPerfil = ({ activeTab, setActiveTab, disableSwitching = false }) => {
               fontSize: 16,
             }}
           >
-            {tab === "personal" ? "Personal" : "Cuenta"}
+            {tab === "personal" ? t("screenTitles.subtitlePersonal") : t("screenTitles.subtitleAccount") }
           </Text>
         </TouchableOpacity>
       ))}

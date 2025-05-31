@@ -1,5 +1,7 @@
 import React from 'react';
 
-const Notifications = () => null;
+import { Text } from 'react-native';
+
+const Notifications = () => <Text>Notifications Screen</Text>;
 
 export default Notifications;

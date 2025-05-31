@@ -16,7 +16,11 @@ const translations = {
     myNextAppointments: "Próximos",
     appointmentInfo: "Información del turno",
     results: "Resultados",
+    subtitlePersonal: "Personal",
+    subtitleAccount: "Cuenta",
   },
+
+
 
   inputPlaceholder: {
     email: "Email",

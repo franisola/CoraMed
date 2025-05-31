@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { View, Text, Switch, StyleSheet, TouchableOpacity } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import { useAppDispatch } from "@redux/hooks";
@@ -10,11 +10,12 @@ import { useAppDispatch } from "@redux/hooks";
 import { logoutUser } from "@slices/authSlice";
 import { useToast } from "react-native-toast-notifications";
 
-
 import { useTheme } from "@themes/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const ProfileScreen = () => {
   const { theme, toggleTheme, isDark } = useTheme();
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
@@ -22,28 +23,45 @@ const ProfileScreen = () => {
     dispatch(logoutUser());
   };
 
-
   const ProfileItem = ({ iconName, text, onPress }) => (
     <TouchableOpacity style={styles.item} onPress={onPress}>
       <View style={styles.itemLeft}>
         <View style={styles.iconContainer}>
           <FontAwesome5 name={iconName} size={25} color={theme.colors.icons} />
         </View>
-        <Text style={[styles.itemText, {color: theme.colors.text}]}>{text}</Text>
+        <Text style={[styles.itemText, { color: theme.colors.text }]}>
+          {text}
+        </Text>
       </View>
       <FontAwesome5 name="angle-right" size={20} color={theme.colors.icons} />
     </TouchableOpacity>
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ProfileItem iconName="database" text="Mis datos" onPress={() => navigation.navigate("ProfileStack", { screen: "AccountInfo" })} />
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <ProfileItem
+        iconName="database"
+        text="Mis datos"
+        onPress={() =>
+          navigation.navigate("ProfileStack", { screen: "AccountInfo" })
+        }
+      />
       <ProfileItem
         iconName="id-card"
         text="Mi Obra Social"
-        onPress={() => navigation.navigate("ProfileStack", { screen: "Insurance" })}
+        onPress={() =>
+          navigation.navigate("ProfileStack", { screen: "Insurance" })
+        }
       />
-      <ProfileItem iconName="globe" text="Idioma" onPress={() => navigation.navigate("ProfileStack", { screen: "Language" })} />
+      <ProfileItem
+        iconName="globe"
+        text="Idioma"
+        onPress={() =>
+          navigation.navigate("ProfileStack", { screen: "Language" })
+        }
+      />
 
       {/* Modo oscuro */}
       <View style={styles.item}>
@@ -51,14 +69,22 @@ const ProfileScreen = () => {
           <View style={styles.iconContainer}>
             <FontAwesome5 name="moon" size={25} color={theme.colors.icons} />
           </View>
-          <Text style={[styles.itemText, {color: theme.colors.text}]}>Modo Oscuro</Text>
+          <Text style={[styles.itemText, { color: theme.colors.text }]}>
+            Modo Oscuro
+          </Text>
         </View>
         <Switch value={isDark} onValueChange={toggleTheme} />
       </View>
 
-      <View style={[styles.separator, {backgroundColor: theme.colors.text}]} />
+      <View
+        style={[styles.separator, { backgroundColor: theme.colors.text }]}
+      />
 
-      <ProfileItem iconName="lock" text="Cerrar Sesión" onPress={handleLogOut} />
+      <ProfileItem
+        iconName="lock"
+        text="Cerrar Sesión"
+        onPress={handleLogOut}
+      />
       <ProfileItem iconName="trash" text="Borrar Cuenta" onPress={() => {}} />
     </View>
   );

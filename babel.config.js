@@ -31,7 +31,9 @@ export default function (api) {
             "@models": "./src/models",
           }
         }
-      ]
+      ],
+ 
+      "react-native-reanimated/plugin"
     ]
   };
 }

@@ -16,6 +16,8 @@ const translations = {
     myNextAppointments: "Next appointments",
     appointmentInfo: "Appointment info",
     results: "Results",
+    subtitlePersonal: "Personal",
+    subtitleAccount: "Account",
   },
 
   inputPlaceholder: {
