@@ -38,7 +38,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   return (
     <NavigationContainer linking={linking}>
-      {0 < 1  ? <AppStack /> : <AuthStack />}
+      {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
