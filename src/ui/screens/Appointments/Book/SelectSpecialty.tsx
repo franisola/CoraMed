@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30, // para que el botón quede a 30px del bottom
   },
   content: {
-    marginTop: 40,
+    marginTop: 30,
     alignItems: "center",
   },
   subtitle: {

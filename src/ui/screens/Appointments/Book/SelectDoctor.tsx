@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   content: {
-    marginTop: 40,
+    marginTop: 30,
     alignItems: "center",
   },
   subtitle: {
