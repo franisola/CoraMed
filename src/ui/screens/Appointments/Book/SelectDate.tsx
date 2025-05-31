@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "normal",
     alignSelf: "flex-start",
-    marginVertical: 20,
+    marginBottom: 20,
     width: 308,
   },
   calendarWrapper: {
@@ -225,6 +225,8 @@ const styles = StyleSheet.create({
     height: (36 + 10) * 3,
     width: 308,
     marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   timeButton: {
     width: 90,

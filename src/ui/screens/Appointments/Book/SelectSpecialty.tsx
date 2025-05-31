@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     alignSelf: "flex-start",
     marginBottom: 20,
-    marginTop: 10,
     width: 308,
   },
   button: {
