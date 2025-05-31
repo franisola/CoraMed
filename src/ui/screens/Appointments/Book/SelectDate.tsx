@@ -26,7 +26,7 @@ const SelectDate = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { doctor, especialidad } = route.params;
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
 
   const [availableDays, setAvailableDays] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -106,6 +106,7 @@ const SelectDate = () => {
             style={{ width: 308 }}
             theme={{
               calendarBackground: theme.colors.background,
+              monthTextColor: theme.colors.text,
               textSectionTitleColor: theme.colors.text,
               selectedDayBackgroundColor: theme.colors.button,
               selectedDayTextColor: theme.colors.white,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   content: {
-    marginTop: 40,
+    marginTop: 30,
     alignItems: "center",
   },
   subtitle: {
@@ -220,6 +221,7 @@ const styles = StyleSheet.create({
   },
   calendarWrapper: {
     width: 308,
+    marginBottom: 10,
   },
   timeListContainer: {
     height: (36 + 10) * 3,

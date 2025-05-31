@@ -30,7 +30,7 @@ const HomeStack = () => {
       <Stack.Screen
         name="BookStack"
         component={BookStack}
-        options={{ headerShown: false }} // 👈 porque BookStack tendrá su propio header
+        options={{ headerShown: false }} 
       />
     </Stack.Navigator>
   );
