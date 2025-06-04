@@ -20,7 +20,10 @@ const translations = {
     subtitleAccount: "Cuenta",
   },
 
-
+  settings: {
+    changeLanguage: "Cambiar a Inglés",
+     darkMode: "Modo oscuro",
+  },
 
   inputPlaceholder: {
     email: "Email",
@@ -46,6 +49,8 @@ const translations = {
     register: "Registrarse",
     recover: "Enviar email",
     changePassword: "Cambiar contraseña",
+    logOut: "Desconectar",
+    deleteAccount: "Borrar cuenta",
   },
 
   authTitles:{

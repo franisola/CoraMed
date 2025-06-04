@@ -1,3 +1,6 @@
+import { deleteAccount } from "@/api/auth";
+import { changeLanguage } from "i18next";
+
 const translations = {
   greeting: "Hello guys",
   farewell: "Goodbye",
@@ -20,6 +23,11 @@ const translations = {
     subtitleAccount: "Account",
   },
 
+  settings: {
+    changeLanguage: "Switch to Spanish",
+    darkMode: "Dark mode",
+  },
+  
   inputPlaceholder: {
     email: "Email",
     password: "Password",
@@ -44,6 +52,8 @@ const translations = {
     register: "Register",
     recover: "Send email",
     changePassword: "Change password",
+    logOut: "LogOut",
+    deleteAccount: "Delete account",
   },
 
   authTitles: {
