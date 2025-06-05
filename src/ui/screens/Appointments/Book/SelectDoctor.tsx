@@ -13,6 +13,9 @@ import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 import { Ionicons } from "@expo/vector-icons";
 
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { getProfessionalsBySpecialty, Professional } from "@slices/professionalSlice";
+
 interface RouteParams {
   especialidad: string;
 }
@@ -23,54 +26,26 @@ const SelectDoctor = () => {
   const route = useRoute();
   const { especialidad } = route.params as RouteParams;
 
+  const dispatch = useAppDispatch();
+  const allDoctors = useAppSelector((state) => state.professionals.professionals);
+  const loading = useAppSelector((state) => state.professionals.loading);
+
   const [search, setSearch] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null);
-  const [allDoctors, setAllDoctors] = useState<string[]>([]);
-  const [filteredDoctors, setFilteredDoctors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedDoctor, setSelectedDoctor] = useState<Professional | null>(null);
+  const [filteredDoctors, setFilteredDoctors] = useState<Professional[]>([]);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      setLoading(true);
-      try {
-        const fakeApiResponse = {
-          Dermatología: [
-            "Giuliana Leyes",
-            "Guillermo Lopez",
-            "Valentino Vacchini",
-            "Pedro Picapiedra",
-            "Mariela Torres",
-            "Juan Gomez",
-            "Laura Paredes",
-            "Martin Villa",
-            "Nadia Solis",
-            "Carla Juarez",
-          ],
-          Cardiología: ["Macarena Calandroni", "Juan Perelli", "Marcos Jugo"],
-          Pediatría: ["Luciana Gómez", "Pedro Rojo"],
-        };
-
-        const doctors = fakeApiResponse[especialidad] || [];
-        setAllDoctors(doctors);
-        setFilteredDoctors(doctors);
-      } catch (error) {
-        console.error("Error al cargar doctores", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDoctors();
-  }, [especialidad]);
+    dispatch(getProfessionalsBySpecialty(especialidad));
+  }, [dispatch, especialidad]);
 
   useEffect(() => {
-    const filtered = allDoctors.filter((name) =>
-      name.toLowerCase().includes(search.toLowerCase())
+    const filtered = allDoctors.filter((doctor) =>
+      `${doctor.nombre} ${doctor.apellido}`.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredDoctors(filtered);
   }, [search, allDoctors]);
 
-  const handleSelectDoctor = (doctor: string) => {
+  const handleSelectDoctor = (doctor: Professional) => {
     setSelectedDoctor(doctor);
   };
 
@@ -122,33 +97,34 @@ const SelectDoctor = () => {
           <View style={styles.doctorListContainer}>
             <FlatList
               data={filteredDoctors}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.doctorButton,
-                    {
-                      backgroundColor:
-                        selectedDoctor === item
+              renderItem={({ item }) => {
+                const fullName = `${item.nombre} ${item.apellido}`;
+                const isSelected = selectedDoctor?._id === item._id;
+
+                return (
+                  <TouchableOpacity
+                    style={[
+                      styles.doctorButton,
+                      {
+                        backgroundColor: isSelected
                           ? theme.colors.button
                           : theme.colors.details,
-                    },
-                  ]}
-                  onPress={() => handleSelectDoctor(item)}
-                >
-                  <Text
-                    style={{
-                      color:
-                        selectedDoctor === item
-                          ? theme.colors.white
-                          : theme.colors.text,
-                      fontSize: 16,
-                    }}
+                      },
+                    ]}
+                    onPress={() => handleSelectDoctor(item)}
                   >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item}
+                    <Text
+                      style={{
+                        color: isSelected ? theme.colors.white : theme.colors.text,
+                        fontSize: 16,
+                      }}
+                    >
+                      {fullName}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={(item) => item._id}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ gap: 10 }}
             />

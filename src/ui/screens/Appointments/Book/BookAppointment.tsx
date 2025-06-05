@@ -13,28 +13,44 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { createAppointment } from "@slices/appointmentSlice";
+
 const BookAppointment = () => {
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useAppDispatch();
+
   const { especialidad, doctor, fecha, hora } = route.params;
-
   const [motivoConsulta, setMotivoConsulta] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = () => {
-    const formData = {
-      especialidad,
-      doctor,
-      fecha,
-      hora,
-      motivo_consulta: motivoConsulta,
-    };
-
-    console.log("Formulario enviado:", formData);
-  };
-
-  const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
   const isValid = motivoConsulta.trim().length >= 10 && motivoConsulta.length <= 500;
+  const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
+
+  const handleSubmit = async () => {
+    setErrorMsg("");
+
+    try {
+      const payload = {
+        profesional: doctor._id,
+        especialidad,
+        fecha,
+        hora,
+        motivo_consulta: motivoConsulta.trim(),
+      };
+
+      const response = await dispatch(createAppointment(payload)).unwrap();
+
+      // Podés navegar a pantalla de éxito, o mostrar un mensaje
+      navigation.navigate("Home", { turno: response });
+
+    } catch (error: any) {
+      const mensaje = error?.message || "Ocurrió un error al crear el turno.";
+      setErrorMsg(mensaje);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -46,7 +62,9 @@ const BookAppointment = () => {
           <View style={styles.row}>
             <View style={styles.column}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Profesional:</Text>
-              <Text style={[styles.value, { color: valueColor }]}>{doctor}</Text>
+              <Text style={[styles.value, { color: valueColor }]}>
+                {doctor.nombre} {doctor.apellido}
+              </Text>
             </View>
             <View style={styles.column}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Especialidad:</Text>
@@ -78,7 +96,15 @@ const BookAppointment = () => {
             multiline
             numberOfLines={5}
           />
-          <Text style={[styles.charCounter, { color: valueColor }]}>Caracteres: {motivoConsulta.length}/500</Text>
+          <Text style={[styles.charCounter, { color: valueColor }]}>
+            Caracteres: {motivoConsulta.length}/500
+          </Text>
+
+          {!!errorMsg && (
+            <Text style={{ color: theme.colors.error, marginTop: 10, textAlign: 'center' }}>
+              {errorMsg}
+            </Text>
+          )}
         </View>
 
         <View style={styles.buttonWrapper}>

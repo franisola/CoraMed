@@ -12,36 +12,37 @@ import CustomButton from "@components/Buttons/NormalButton";
 import { Calendar } from "react-native-calendars";
 import dayjs from "dayjs";
 
-const weekdayMap = {
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { getAvailableSchedules } from "@slices/professionalSlice";
+
+const weekdayMap: Record<string, string> = {
   Sunday: "Domingo",
   Monday: "Lunes",
   Tuesday: "Martes",
-  Wednesday: "Miercoles",
+  Wednesday: "Miércoles",
   Thursday: "Jueves",
   Friday: "Viernes",
-  Saturday: "Sabado",
+  Saturday: "Sábado",
 };
 
 const SelectDate = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { doctor, especialidad } = route.params;
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
+
+  const dispatch = useAppDispatch();
+  const availableTimes = useAppSelector((state) => state.professionals.schedules);
 
   const [availableDays, setAvailableDays] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchWorkingDays = async () => {
-      // const dias_laborales = ["Lunes", "Miercoles", "Viernes"];
-      const dias_laborales = [ "Martes", "Jueves", "Sabado" ];
-      setAvailableDays(dias_laborales);
-    };
-
-    fetchWorkingDays();
-  }, []);
+    if (doctor?.dias_laborales) {
+      setAvailableDays(doctor.dias_laborales);
+    }
+  }, [doctor]);
 
   const isDayAvailable = (date: string) => {
     const today = dayjs().startOf("day");
@@ -49,28 +50,15 @@ const SelectDate = () => {
     if (dateObj.isBefore(today)) return false;
 
     const day = dateObj.format("dddd");
-    const diaTraducido = weekdayMap[day as keyof typeof weekdayMap];
+    const diaTraducido = weekdayMap[day];
     return availableDays.includes(diaTraducido);
   };
 
-  const handleDateSelect = (date: string) => {
+  const handleDateSelect = async (date: string) => {
     if (!isDayAvailable(date)) return;
     setSelectedDate(date);
     setSelectedTime(null);
-
-    const horarios = [
-      "08:00",
-      "08:20",
-      "08:40",
-      "09:00",
-      "09:20",
-      "09:40",
-      "10:00",
-      "10:20",
-      "10:40",
-      "11:00",
-    ];
-    setAvailableTimes(horarios);
+    await dispatch(getAvailableSchedules({ id: doctor._id, date }));
   };
 
   const handleTimeSelect = (time: string) => {
@@ -146,7 +134,7 @@ const SelectDate = () => {
                 </TouchableOpacity>
               );
             }}
-            minDate={dayjs().add(1, 'day').format('YYYY-MM-DD')}
+            minDate={dayjs().add(1, "day").format("YYYY-MM-DD")}
           />
         </View>
 

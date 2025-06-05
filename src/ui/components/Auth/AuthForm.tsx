@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView } from "react-native";
 import CustomButton from "@components/Buttons/NormalButton";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
-import FormFields from "@/ui/components/Auth/Forms/formFields";
+import FormFields from "@/ui/components/Auth/Forms/FormFields";
 import { useAuthForm } from "@components/Auth/Forms/useAuthForm";
 import { useAppSelector } from "@redux/hooks"; // <- nuevo
 

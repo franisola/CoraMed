@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
+import appointmentReducer from './slices/appointmentSlice';
+import professionalReducer from './slices/professionalSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    // otros slices si los tenés
+    appointment: appointmentReducer,
+    professionals: professionalReducer,
   },
 });
 

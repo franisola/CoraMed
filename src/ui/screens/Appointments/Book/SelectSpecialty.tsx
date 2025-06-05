@@ -5,28 +5,36 @@ import { useTheme } from "@themes/ThemeContext";
 import CustomPicker from "@components/Inputs/CustomPicker";
 import CustomButton from "@components/Buttons/NormalButton";
 
+import { useAppDispatch, useAppSelector } from "@redux/hooks"; // asumí que ahí están tus hooks
+import {
+  getSpecialties,
+  setSelectedSpecialty,
+} from "@slices/professionalSlice";
+
 const SelectSpecialty = () => {
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
-  const [specialties, setSpecialties] = useState<{ label: string; value: string }[]>([]);
-  const [selected, setSelected] = useState("default");
+  const specialties = useAppSelector((state) => state.professionals.specialties);
+  const selected = useAppSelector((state) => state.professionals.selectedSpecialty);
+
+  const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
-    const fetchSpecialties = async () => {
-      const data = ["Cardiología", "Dermatología", "Pediatría", "Ginecología", "Neurología"];
-      const formatted = [
-        { label: "Especialidad", value: "default" },
-        ...data.map((item) => ({ label: item, value: item })),
-      ];
-      setSpecialties(formatted);
-    };
+    dispatch(getSpecialties());
+  }, [dispatch]);
 
-    fetchSpecialties();
-  }, []);
+  useEffect(() => {
+    const formatted = [
+      { label: "Especialidad", value: "default" },
+      ...specialties.map((item) => ({ label: item, value: item })),
+    ];
+    setOptions(formatted);
+  }, [specialties]);
 
   const handleSelect = (value: string) => {
-    setSelected(value);
+    dispatch(setSelectedSpecialty(value));
   };
 
   const handlePress = () => {
@@ -41,9 +49,9 @@ const SelectSpecialty = () => {
         </Text>
 
         <CustomPicker
-          selectedValue={selected}
+          selectedValue={selected || "default"}
           onValueChange={handleSelect}
-          items={specialties}
+          items={options}
           label={false}
         />
       </View>
@@ -51,8 +59,16 @@ const SelectSpecialty = () => {
       <CustomButton
         title="Seleccionar Especialidad"
         onPress={handlePress}
-        disabled={selected === "default"}
-        style={[styles.button, { backgroundColor: selected === "default" ? theme.colors.unauthorizedButton : theme.colors.button }]}
+        disabled={selected === "default" || !selected}
+        style={[
+          styles.button,
+          {
+            backgroundColor:
+              selected === "default" || !selected
+                ? theme.colors.unauthorizedButton
+                : theme.colors.button,
+          },
+        ]}
       />
     </View>
   );
@@ -64,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingBottom: 30, // para que el botón quede a 30px del bottom
+    paddingBottom: 30,
   },
   content: {
     marginTop: 30,

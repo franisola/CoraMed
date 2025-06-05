@@ -6,6 +6,7 @@ import { useTheme } from "@themes/ThemeContext";
 import { useSelector } from "react-redux";
 import { RootState } from "@redux/store";
 import { User } from "@models/User";
+import NextAppointmentCard from "@components/Appointments/NextAppointmentCard";
 
 const IconButton = ({
   icon,
@@ -52,11 +53,10 @@ const Home = () => {
   const navigation = useNavigation();
   const { theme, isDark } = useTheme();
 
-  // Obtengo el usuario del store
   const user = useSelector(
     (state: RootState) => state.auth.user
   ) as User;
-  
+
   const getSaludo = (genero?: string) => {
     if (!genero) return "Bienvenide";
     const g = genero.toLowerCase();
@@ -64,9 +64,6 @@ const Home = () => {
     if (g === "femenino" || g === "f" || g === "female") return "Bienvenida";
     return "Bienvenide";
   };
-
-  console.log("User in Home:", user.genero);
-  
 
   return (
     <View
@@ -86,13 +83,11 @@ const Home = () => {
           marginHorizontal: 20,
         }}
       >
-        {/* Si user existe muestro nombre, si no saludo genérico */}
         {user
           ? `${getSaludo(user.genero)} ${user.nombreCompleto}!`
           : "Bienvenide!"}
       </Text>
 
-      {/* Botones circulares */}
       <View
         style={{
           flexDirection: "row",
@@ -119,30 +114,7 @@ const Home = () => {
         />
       </View>
 
-      {/* Próximo Turno */}
-      <TouchableOpacity
-        style={{
-          borderWidth: 1,
-          borderColor: theme.colors.inputBorder,
-          backgroundColor: theme.colors.details,
-          borderRadius: 8,
-          padding: 16,
-        }}
-        onPress={() => navigation.navigate("DetalleTurno")}
-      >
-        <Text
-          style={{
-            color: theme.colors.text,
-            fontWeight: "bold",
-            fontSize: 24,
-            marginBottom: 8,
-          }}
-        >
-          Próximo Turno
-        </Text>
-
-        {/* ... resto del contenido */}
-      </TouchableOpacity>
+      <NextAppointmentCard onPress={() => navigation.navigate("DetalleTurno")} />
     </View>
   );
 };
