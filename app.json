@@ -7,21 +7,51 @@
     "icon": "./src/assets/images/Logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "scheme": "coramed", 
+    "scheme": "coramed",
     "splash": {
       "image": "",
       "resizeMode": "",
       "backgroundColor": ""
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.coramed.app",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["coramed"]
+          }
+        ]
+      },
+      "associatedDomains": [
+        "applinks:coramed.com"
+      ]
     },
     "android": {
+      "package": "com.coramed.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/Logo.png",
         "backgroundColor": ""
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "https",
+            "host": "coramed.com",
+            "pathPrefix": "/reset-password"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        },
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "coramed"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "",

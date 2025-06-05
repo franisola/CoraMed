@@ -1,75 +1,53 @@
-// src/store/auth.slice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import * as authAPI from "@api/auth";
-import { User } from "@models/User";
-
-
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  loginUser as loginUserAPI,
+  registerUser as registerUserAPI,
+  recoverPassword as recoverPasswordAPI,
+  resetPassword as resetPasswordAPI,
+  getCurrentUser as getCurrentUserAPI,
+  logoutUser as logoutUserAPI,
+  deleteAccount as deleteAccountAPI,
+} from "@api/auth";
 
 interface AuthState {
-  user: User | null;
+  user: any;
   loading: boolean;
-  error: string | null;
-  successMessage: string | null;
+  initialLoading: boolean;
+  error: any;
 }
 
 const initialState: AuthState = {
   user: null,
   loading: false,
+  initialLoading: true, // <--- nuevo flag solo para el arranque
   error: null,
-  successMessage: null,
 };
-
-// Función para extraer el mensaje de error según tu formato de backend
-const extractErrorMessage = (err: any): string => {
-
-  if (err?.response?.data?.error) {
-   
-    return err.response.data.error;
-  }
-  if (typeof err === "string") {
-    return err;
-  }
-  if (err?.message) {
-    return err.message;
-  }
-  
-  return "Error desconocido";
-};
-
-// Thunks async:
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async (credentials: authAPI.LoginPayload, { rejectWithValue }) => {
+  async (
+    credentials: { email: string; password: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const data = await authAPI.loginUser(credentials);
-      return data as User;
+      const res = await loginUserAPI(credentials);
+      return await getCurrentUserAPI();
     } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
+      const backendError = err.response?.data?.error || "Error del servidor";
+      return rejectWithValue({ error: backendError });
     }
   }
 );
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
-  async (userData: authAPI.RegisterPayload, { rejectWithValue }) => {
+  async (formData: any, { rejectWithValue }) => {
     try {
-      const data = await authAPI.registerUser(userData);
-      return data as User;
+      const res = await registerUserAPI(formData);
+      return await getCurrentUserAPI();
     } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
-    }
-  }
-);
-
-export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await authAPI.logoutUser();
-      return data.message;
-    } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
+      const backendError = err.response?.data?.error || "Error al registrar";
+      return rejectWithValue({ error: backendError });
     }
   }
 );
@@ -78,10 +56,11 @@ export const recoverPassword = createAsyncThunk(
   "auth/recoverPassword",
   async (email: string, { rejectWithValue }) => {
     try {
-      const data = await authAPI.recoverPassword(email);
-      return data.message;
+      const res = await recoverPasswordAPI(email);
+      return res;
     } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
+      const backendError = err.response?.data?.error || "Error al enviar email";
+      return rejectWithValue({ error: backendError });
     }
   }
 );
@@ -93,22 +72,12 @@ export const resetPassword = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const data = await authAPI.resetPassword(token, newPassword);
-      return data.message;
+      const res = await resetPasswordAPI(token, newPassword);
+      return res;
     } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
-    }
-  }
-);
-
-export const deleteAccount = createAsyncThunk(
-  "auth/deleteAccount",
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await authAPI.deleteAccount();
-      return data.message;
-    } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
+      const backendError =
+        err.response?.data?.error || "Error al cambiar contraseña";
+      return rejectWithValue({ error: backendError });
     }
   }
 );
@@ -117,155 +86,124 @@ export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await authAPI.getCurrentUser();
-      return data.user as User;
+      const res = await getCurrentUserAPI();
+      return res;
     } catch (err: any) {
-      return rejectWithValue(extractErrorMessage(err));
+      return rejectWithValue({ error: "Sesión expirada" });
     }
   }
 );
 
-// Slice
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  await logoutUserAPI();
+});
+
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await deleteAccountAPI();
+      return res;
+    } catch (err: any) {
+      const backendError =
+        err.response?.data?.error || "No se pudo eliminar la cuenta";
+      return rejectWithValue({ error: backendError });
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    clearError(state) {
-      state.error = null;
-    },
-    clearSuccessMessage(state) {
-      state.successMessage = null;
-    },
-    setUser(state, action: PayloadAction<User>) {
-      state.user = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    // Login
     builder
+      // LOGIN
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.successMessage = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        state.error = null;
-        state.successMessage = "Login exitoso";
+        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-        state.user = null;
-      });
+        state.error = action.payload;
+      })
 
-    // Register
-    builder
+      // REGISTER
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.successMessage = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        state.error = null;
-        state.successMessage = "Registro exitoso";
+        state.user = action.payload.user;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
-
-    // Logout
-    builder
-      .addCase(logoutUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.error = action.payload;
       })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.loading = false;
-        state.user = null;
-        state.error = null;
-        state.successMessage = "Logout exitoso";
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
 
-    // Recover password
-    builder
+      // RECOVER PASSWORD
       .addCase(recoverPassword.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.successMessage = null;
       })
-      .addCase(recoverPassword.fulfilled, (state, action) => {
+      .addCase(recoverPassword.fulfilled, (state) => {
         state.loading = false;
-        state.error = null;
-        state.successMessage = action.payload;
       })
       .addCase(recoverPassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
+        state.error = action.payload;
+      })
 
-    // Reset password
-    builder
+      // RESET PASSWORD
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.successMessage = null;
       })
-      .addCase(resetPassword.fulfilled, (state, action) => {
+      .addCase(resetPassword.fulfilled, (state) => {
         state.loading = false;
-        state.error = null;
-        state.successMessage = action.payload;
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
+        state.error = action.payload;
+      })
 
-    // Delete account
-    builder
+      // GET CURRENT USER
+      .addCase(getCurrentUser.pending, (state) => {
+        state.initialLoading = true;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.initialLoading = false;
+      })
+      .addCase(getCurrentUser.rejected, (state) => {
+        state.user = null;
+        state.initialLoading = false;
+      })
+
+      // LOGOUT
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+      })
+
+      // DELETE ACCOUNT
       .addCase(deleteAccount.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteAccount.fulfilled, (state, action) => {
+      .addCase(deleteAccount.fulfilled, (state) => {
         state.loading = false;
         state.user = null;
-        state.error = null;
-        state.successMessage = action.payload;
       })
       .addCase(deleteAccount.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
-
-    // Get current user
-    builder
-      .addCase(getCurrentUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-        state.error = null;
-      })
-      .addCase(getCurrentUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-        state.user = null;
+        state.error = action.payload;
       });
   },
 });
-
-export const { clearError, clearSuccessMessage, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

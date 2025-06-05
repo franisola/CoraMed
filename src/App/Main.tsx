@@ -14,16 +14,17 @@ type MainProps = {
 
 export default function Main({ changeLanguage, currentLanguage }: MainProps) {
   const dispatch = useAppDispatch();
-  const { user, loading, error } = useAppSelector((state) => state.auth);
 
+  const { user, initialLoading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
 
+  
 
-  if (loading) {
+  if (initialLoading) {
     return <LoadingScreen />;
   }
 

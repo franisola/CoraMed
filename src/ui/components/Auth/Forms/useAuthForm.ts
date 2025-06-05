@@ -36,7 +36,7 @@ const initialValues: AuthField = {
 
 export const useAuthForm = (
   type: "login" | "register" | "recover" | "changePassword",
-  onSubmit: (data: any) => void,
+  onSubmit: (data?: any) => void,
   generalError?: string
 ) => {
   const [values, setValues] = useState<AuthField>(initialValues);
@@ -47,8 +47,8 @@ export const useAuthForm = (
 
   useEffect(() => {
     setValues(initialValues);
-    setErrors({ general: generalError });
-  }, [type]);
+    setErrors((prev) => ({ ...prev, general: generalError }));
+  }, [type, generalError]);
 
   const handleChange = (field: keyof AuthField, value: string) => {
     setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -96,7 +96,8 @@ export const useAuthForm = (
   };
 
   const buildFormData = (): any => {
-    const { email, password, confirmPassword, nombreCompleto, dni, genero } = values;
+    const { email, password, confirmPassword, nombreCompleto, dni, genero } =
+      values;
     return {
       email,
       ...(type === "login" && { password }),
@@ -112,25 +113,42 @@ export const useAuthForm = (
 
     try {
       if (type === "login") {
-        await dispatch(loginUser({ email: values.email, password: values.password })).unwrap();
-        onSubmit(formData);
+        const result = await dispatch(
+          loginUser({ email: values.email, password: values.password })
+        ).unwrap();
+        onSubmit(result);
       } else if (type === "register") {
-        await dispatch(registerUser(formData)).unwrap();
-        onSubmit(formData);
+        const result = await dispatch(registerUser(formData)).unwrap();
+        onSubmit(result);
       } else if (type === "recover") {
-        await dispatch(recoverPassword(values.email)).unwrap();
-        toast.show("Correo de recuperación enviado.", { type: "success" });
+        try {
+          await dispatch(recoverPassword(values.email)).unwrap();
+          toast.show("Correo de recuperación enviado.", {
+            type: "success",
+            placement: "top",
+            duration: 4000,
+          });
+        } catch (err: any) {
+          const backendError =
+            err?.error || err?.message || "Error al enviar email";
+          setErrors((prev) => ({ ...prev, general: backendError }));
+          toast.show(backendError, { type: "danger" });
+        }
       } else if (type === "changePassword") {
-        await dispatch(resetPassword(formData)).unwrap();
-        onSubmit(formData);
+        const result = await dispatch(resetPassword(formData)).unwrap();
+        onSubmit(result);
       }
     } catch (err: any) {
-      const msg = typeof err === "string" ? err : err?.message || "Error inesperado, intente nuevamente.";
+      const backendError = err?.error || err?.message;
 
-      if (err?.errors) setErrors((prev) => ({ ...prev, ...err.errors }));
-      else {
-        setErrors((prev) => ({ ...prev, general: msg }));
-        toast.show(msg, { type: "danger" });
+      if (err?.errors) {
+        setErrors((prev) => ({ ...prev, ...err.errors }));
+      } else if (typeof backendError === "string") {
+        setErrors((prev) => ({ ...prev, general: backendError }));
+        toast.show(backendError, { type: "danger" });
+      } else {
+        setErrors((prev) => ({ ...prev, general: "Error inesperado" }));
+        toast.show("Error inesperado", { type: "danger" });
       }
     }
   };

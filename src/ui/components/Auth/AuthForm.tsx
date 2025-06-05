@@ -3,8 +3,9 @@ import { View, Text, SafeAreaView } from "react-native";
 import CustomButton from "@components/Buttons/NormalButton";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
-import FormFields from "@components/Auth/Forms/formFields";
+import FormFields from "@/ui/components/Auth/Forms/formFields";
 import { useAuthForm } from "@components/Auth/Forms/useAuthForm";
+import { useAppSelector } from "@redux/hooks"; // <- nuevo
 
 interface AuthFormProps {
   type: "login" | "register" | "recover" | "changePassword";
@@ -12,34 +13,39 @@ interface AuthFormProps {
   generalError?: string;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, generalError }) => {
+const AuthForm: React.FC<AuthFormProps> = ({
+  type,
+  onSubmit,
+  generalError,
+}) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const {
-    values,
-    errors,
-    handleChange,
-    setGenero,
-    handleSubmit,
-  } = useAuthForm(type, onSubmit, generalError);
+  const { values, errors, handleChange, setGenero, handleSubmit } = useAuthForm(
+    type,
+    onSubmit,
+    generalError
+  );
+
+  const { loading, error } = useAppSelector((state) => state.auth); // <- nuevo
+  const showLoading = loading && !error; // <- nuevo
 
   const authTitleKey =
     type === "login"
       ? "authTitles.login"
       : type === "register"
-      ? "authTitles.register"
-      : type === "recover"
-      ? "authTitles.recover"
-      : "authTitles.changePassword";
+        ? "authTitles.register"
+        : type === "recover"
+          ? "authTitles.recover"
+          : "authTitles.changePassword";
 
   const buttonTextKey =
     type === "login"
       ? "button.login"
       : type === "register"
-      ? "button.register"
-      : type === "recover"
-      ? "button.recover"
-      : "button.changePassword";
+        ? "button.register"
+        : type === "recover"
+          ? "button.recover"
+          : "button.changePassword";
 
   return (
     <SafeAreaView style={{ gap: 10, flex: 1, alignItems: "center" }}>
@@ -67,6 +73,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, generalError }) => 
         style={{ alignSelf: "center", position: "absolute", bottom: 100 }}
         title={t(buttonTextKey)}
         onPress={handleSubmit}
+        loading={showLoading} // <- aplicado
       />
     </SafeAreaView>
   );

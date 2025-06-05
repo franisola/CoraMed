@@ -13,6 +13,7 @@ interface CustomButtonProps {
   title: string;
   onPress: () => void;
   disabled?: boolean;
+  loading?: boolean; // opcional, si se quiere mostrar un estado de carga
   style?: StyleProp<ViewStyle>; // estilos para el botón (TouchableOpacity)
   textStyle?: StyleProp<TextStyle>; // estilos para el texto
 }
@@ -22,6 +23,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   onPress,
   disabled = false,
   style,
+  loading,
   textStyle,
 }) => {
   const { theme } = useTheme();
@@ -44,7 +46,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       <Text
         style={[styles.buttonText, { color: theme.colors.white }, textStyle]}
       >
-        {title}
+        {loading ? "Cargando..." : title}
       </Text>
     </TouchableOpacity>
   );
