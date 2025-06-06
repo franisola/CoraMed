@@ -74,10 +74,10 @@ Para recargar la app: Presiona R en la terminal.
 
 7. **Desarrolladores**
 
-Francisco Isola - https://github.com/franisola
-Oteiza Santiago - https://github.com/santiote
-Julian Aguero - https://github.com/JulianAgu
-Martin Ascariz - 
+Francisco Isola - https://github.com/franisola  
+Oteiza Santiago - https://github.com/santiote  
+Julian Aguero - https://github.com/JulianAgu  
+Martin Ascariz -  
 
 - queremos saber porque cuando viene un error del back la screen vuelve para la screen principal del flujo
 - esta bien que el flujo principal se de a partir del tab navigation, ademas queremos agregar el burger menu ahi 
