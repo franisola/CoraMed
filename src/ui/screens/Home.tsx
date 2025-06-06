@@ -103,7 +103,7 @@ const Home = () => {
         <IconButton
           icon="book"
           label="Mis Turnos"
-          onPress={() => navigation.navigate("MisTurnos")}
+          onPress={() => navigation.navigate("ScheduleStack", { screen: "MyAppointments" })}
         />
         <IconButton
           icon="id-card"

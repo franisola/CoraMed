@@ -1,17 +1,29 @@
-// @components/Tabs/TabsPerfil.js
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 import { useTranslation } from "react-i18next";
 
+interface TabsProps {
+  tabs: string[];
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  disableSwitching?: boolean;
+  labelMap?: Record<string, string>; // Mapeo opcional si querés mostrar texto personalizado
+}
 
-
-const TabsPerfil = ({ activeTab, setActiveTab, disableSwitching = false }) => {
+const Tabs: React.FC<TabsProps> = ({
+  tabs,
+  activeTab,
+  setActiveTab,
+  disableSwitching = false,
+  labelMap = {},
+}) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+
   return (
     <View style={[styles.tabContainer, { backgroundColor: theme.colors.primary }]}>
-      {["personal", "cuenta"].map((tab) => (
+      {tabs.map((tab) => (
         <TouchableOpacity
           key={tab}
           style={[
@@ -21,26 +33,25 @@ const TabsPerfil = ({ activeTab, setActiveTab, disableSwitching = false }) => {
                 activeTab === tab ? theme.colors.details : theme.colors.primary,
             },
           ]}
-          onPress={() => {
-            if (!disableSwitching) setActiveTab(tab);
-          }}
+          onPress={() => !disableSwitching && setActiveTab(tab)}
           disabled={disableSwitching}
         >
           <Text
             style={{
-              color:
-                activeTab === tab ? theme.colors.text : theme.colors.textSecondary,
+              color: activeTab === tab ? theme.colors.text : theme.colors.textSecondary,
               fontWeight: "bold",
               fontSize: 16,
             }}
           >
-            {tab === "personal" ? t("screenTitles.subtitlePersonal") : t("screenTitles.subtitleAccount") }
+            {labelMap[tab] || t(`screenTitles.subtitle${capitalize(tab)}`)}
           </Text>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const styles = StyleSheet.create({
   tabContainer: {
@@ -54,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabsPerfil;
+export default Tabs;

@@ -11,6 +11,9 @@ import { getDefaultHeaderOptions } from "@navigation/options/headerOptions";
 
 export type BookStackParamList = {
   SelectSpecialty: undefined;
+  SelectDoctor: { especialidad: string };
+  SelectDate: { especialidad: string; doctor: any };
+  BookAppointment: { especialidad: string; doctor: any; date: string };
 };
 
 

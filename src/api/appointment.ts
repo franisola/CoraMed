@@ -27,6 +27,11 @@ export const getNextAppointment = async () => {
   return response.data;
 };
 
+export const getAllAppointments = async () => {
+  const response = await API.get("/appointments");
+  return response.data;
+};
+
 // Cambiar estado del turno
 export const updateAppointmentStatus = async (
   id: string,

@@ -143,6 +143,7 @@ const EditarPerfil = () => {
       <TabsPerfil
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        tabs={["personal", "account"]}
         // disableSwitching={true}
       />
 

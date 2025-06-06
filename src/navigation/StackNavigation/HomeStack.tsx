@@ -5,10 +5,12 @@ import { useTheme } from "@themes/ThemeContext";
 import { getDefaultHeaderOptions } from "@navigation/options/headerOptions";
 import Home from "@screens/Home";
 import BookStack from "./BookStack";
+import ScheduleStack from "./ScheduleStack";
 
 export type HomeStackParamList = {
   Home: undefined;
   BookStack: undefined;
+  ScheduleStack: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
@@ -16,7 +18,7 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 const HomeStack = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
-  
+
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -30,7 +32,12 @@ const HomeStack = () => {
       <Stack.Screen
         name="BookStack"
         component={BookStack}
-        options={{ headerShown: false }} 
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ScheduleStack"
+        component={ScheduleStack}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

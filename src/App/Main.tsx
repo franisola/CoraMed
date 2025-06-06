@@ -17,6 +17,8 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   const { user, initialLoading } = useAppSelector((state) => state.auth);
 
+
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);

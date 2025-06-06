@@ -174,7 +174,7 @@
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
         {/* Tabs */}
-        <TabsPerfil activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabsPerfil activeTab={activeTab} setActiveTab={setActiveTab} tabs={["personal", "account"]} />
 
         {/* Contenido scrollable */}
         <View
