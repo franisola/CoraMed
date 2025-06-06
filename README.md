@@ -20,7 +20,7 @@
 - [npm](https://www.npmjs.com/) o [Yarn](https://yarnpkg.com/)  
 - [Android Studio](https://developer.android.com/studio) (para el emulador Android sug)  
 - [JDK](https://www.oracle.com/java/technologies/javase-downloads.html) (v11 o superior)  
-- [React Native CLI](https://reactnative.dev/docs/environment-setup)  
+- [React Native EXPO](https://docs.expo.dev/get-started/set-up-your-environment/)  
 
 ---
 
