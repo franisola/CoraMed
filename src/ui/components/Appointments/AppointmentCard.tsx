@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@themes/ThemeContext";
 import { Appointment } from "@redux/slices/appointmentSlice";
+import dayjs from "dayjs"
 
 interface Props {
   appointment: Appointment;
@@ -12,7 +13,7 @@ const ICON_SIZE = 18;
 
 const AppointmentCard: React.FC<Props> = ({ appointment }) => {
   const { theme, isDark } = useTheme();
-
+  
   const textColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
 
   return (
@@ -27,7 +28,7 @@ const AppointmentCard: React.FC<Props> = ({ appointment }) => {
       <View style={styles.row}>
         <FontAwesome name="calendar" size={ICON_SIZE} color={theme.colors.icons} style={styles.icon} />
         <Text style={[styles.info, { color: textColor }]}>
-          Fecha: {new Date(appointment.fecha).toLocaleDateString()}
+          Fecha: {dayjs(appointment.fecha).format("DD/MM/YYYY")}
         </Text>
       </View>
 
