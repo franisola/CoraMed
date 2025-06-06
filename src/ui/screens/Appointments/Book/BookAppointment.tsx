@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import dayjs from "dayjs";
 import {
   View,
   Text,
@@ -75,7 +76,7 @@ const BookAppointment = () => {
           <View style={styles.row}>
             <View style={styles.column}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Fecha:</Text>
-              <Text style={[styles.value, { color: valueColor }]}>{fecha}</Text>
+              <Text style={[styles.value, { color: valueColor }]}>{dayjs(fecha).format("DD/MM/YYYY")}</Text>
             </View>
             <View style={styles.column}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Hora:</Text>
