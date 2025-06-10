@@ -10,6 +10,8 @@ import {
 import { useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { useNavigation } from "@react-navigation/native";
+
 import { getAppointmentById as fetchAppointmentById } from "@slices/appointmentSlice";
 
 import AppointmentInfo from "@components/Appointments/AppointmentInfo";
@@ -23,6 +25,7 @@ const AppointmentDetailsScreen = () => {
   const dispatch = useAppDispatch();
   const route = useRoute();
   const { id } = route.params as { id: string };
+  const navigation = useNavigation();
 
   const valueColor = isDark
     ? theme.colors.textSecondary
@@ -140,7 +143,11 @@ const AppointmentDetailsScreen = () => {
         {estado === "Completado" && resultadosListos && (
           <CustomButton
             title="Ver resultados"
-            onPress={() => console.log("Ir a resultados")}
+            onPress={() =>
+              navigation.navigate("AppointmentResults", {
+                appointment,
+              })
+            }
           />
         )}
       </View>
