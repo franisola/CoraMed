@@ -17,6 +17,9 @@ import CustomButton from "@components/Buttons/NormalButton";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { createAppointment } from "@slices/appointmentSlice";
 
+import AppointmentMotiveInput from "@components/Appointments/AppointmentMotiveInput";
+import AppointmentInfo from "@components/Appointments/AppointmentInfo";
+
 const BookAppointment = () => {
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
@@ -27,8 +30,11 @@ const BookAppointment = () => {
   const [motivoConsulta, setMotivoConsulta] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const isValid = motivoConsulta.trim().length >= 10 && motivoConsulta.length <= 500;
-  const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
+  const isValid =
+    motivoConsulta.trim().length >= 10 && motivoConsulta.length <= 500;
+  const valueColor = isDark
+    ? theme.colors.textSecondary
+    : theme.colors.greyText;
 
   const handleSubmit = async () => {
     setErrorMsg("");
@@ -46,7 +52,6 @@ const BookAppointment = () => {
 
       // Podés navegar a pantalla de éxito, o mostrar un mensaje
       navigation.navigate("Home", { turno: response });
-
     } catch (error: any) {
       const mensaje = error?.message || "Ocurrió un error al crear el turno.";
       setErrorMsg(mensaje);
@@ -60,7 +65,20 @@ const BookAppointment = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={styles.content}>
-          <View style={styles.row}>
+          <AppointmentInfo
+            doctor={doctor}
+            especialidad={especialidad}
+            fecha={fecha}
+            hora={hora}
+          />
+
+          <AppointmentMotiveInput
+            value={motivoConsulta}
+            onChangeText={setMotivoConsulta}
+            editable={true}
+          />
+
+          {/* <View style={styles.row}>
             <View style={styles.column}>
               <Text style={[styles.label, { color: theme.colors.text }]}>Profesional:</Text>
               <Text style={[styles.value, { color: valueColor }]}>
@@ -105,7 +123,7 @@ const BookAppointment = () => {
             <Text style={{ color: theme.colors.error, marginTop: 10, textAlign: 'center' }}>
               {errorMsg}
             </Text>
-          )}
+          )} */}
         </View>
 
         <View style={styles.buttonWrapper}>
@@ -113,11 +131,14 @@ const BookAppointment = () => {
             title="Confirmar Turno"
             onPress={handleSubmit}
             disabled={!isValid}
-            style={[styles.button, {
-              backgroundColor: !isValid
-                ? theme.colors.unauthorizedButton
-                : theme.colors.button,
-            }]}
+            style={[
+              styles.button,
+              {
+                backgroundColor: !isValid
+                  ? theme.colors.unauthorizedButton
+                  : theme.colors.button,
+              },
+            ]}
           />
         </View>
       </KeyboardAvoidingView>

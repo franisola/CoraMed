@@ -13,12 +13,16 @@ import Tabs from "@components/Header/TabsPerfil";
 import { useTheme } from "@themes/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { FontAwesome } from "@expo/vector-icons";
+
+import { useNavigation } from "@react-navigation/native";
+
 import AppointmentCard from "@components/Appointments/AppointmentCard";
 
 const MyAppointmentsScreen = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { theme } = useTheme();
+  const navigation = useNavigation();
 
   const [activeTab, setActiveTab] = useState("proximos");
 
@@ -30,8 +34,11 @@ const MyAppointmentsScreen = () => {
   }, [dispatch]);
 
   const renderAppointment = ({ item }: { item: Appointment }) => (
-  <AppointmentCard appointment={item} />
-);
+    <AppointmentCard
+      appointment={item}
+      onPress={() => navigation.navigate("AppointmentDetails", { id: item._id })}
+    />
+  );
 
   const labelMap = {
     proximos: t("screenTitles.myNextAppointments"),

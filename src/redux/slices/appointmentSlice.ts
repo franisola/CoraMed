@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import API from "@/api";
+import * as appointmentApi from "@api/appointment";
 
 export interface Appointment {
   _id: string;
@@ -9,10 +9,20 @@ export interface Appointment {
     apellido: string;
     especialidad: string;
   };
+  especialidad: string;
   fecha: string;
   hora: string;
   motivo_consulta: string;
-  estado: string;
+  estado: "Agendado" | "Cancelado" | "Completado";
+  notas_medicas?: string;
+  resultados_estudios?: Estudio[];
+
+}
+
+export interface Estudio {
+  nombre: string;
+  imagenes: string[];
+  fecha_arga: string;
 }
 
 interface AppointmentState {
@@ -45,8 +55,7 @@ export const createAppointment = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await API.post("/appointments", payload);
-      return res.data;
+      return await appointmentApi.createAppointment(payload);
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al crear turno"
@@ -59,11 +68,11 @@ export const getNextAppointment = createAsyncThunk(
   "appointment/next",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await API.get("/appointments/next");
-      return res.data.appointment;
+      const { appointment } = await appointmentApi.getNextAppointment();
+      return appointment;
     } catch (err: any) {
       return rejectWithValue(
-        err.response?.data?.message || "No hay turnos próximos"
+        err.response?.data?.message || "No hay turnos prÃ³ximos"
       );
     }
   }
@@ -73,8 +82,7 @@ export const getAppointmentById = createAsyncThunk(
   "appointment/getById",
   async (id: string, { rejectWithValue }) => {
     try {
-      const res = await API.get(`/appointments/${id}`);
-      return res.data;
+      return await appointmentApi.getAppointmentById(id);
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al obtener el turno"
@@ -87,8 +95,7 @@ export const getAllAppointments = createAsyncThunk(
   "appointment/getAll",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await API.get("/appointments");
-      return res.data;
+      return await appointmentApi.getAllAppointments();
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al obtener los turnos"
@@ -107,8 +114,7 @@ export const updateAppointmentStatus = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const res = await API.patch(`/appointments/${id}/status`, { estado });
-      return res.data;
+      return await appointmentApi.updateAppointmentStatus(id, estado);
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al actualizar el estado del turno"

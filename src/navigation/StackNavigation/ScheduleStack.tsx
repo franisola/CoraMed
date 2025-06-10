@@ -8,9 +8,11 @@ import { getDefaultHeaderOptions } from "@navigation/options/headerOptions";
 
 
 import MyAppointments from "@screens/Appointments/Schedule/MyAppointments";
+import AppointmentDetails from "@screens/Appointments/Schedule/AppointmentDetails";
 
 export type AppointmentStackParamList = {
   MyAppointments: undefined;
+  AppointmentDetails: undefined
 };
 
 
@@ -30,6 +32,12 @@ const AppointmentStack = () => {
       <Stack.Screen
         name="MyAppointments"
         component={MyAppointments}
+        options={{ title: t("screenTitles.myAppointments") }}
+      />
+
+      <Stack.Screen
+        name="AppointmentDetails"
+        component={AppointmentDetails}
         options={{ title: t("screenTitles.myAppointments") }}
       />
 

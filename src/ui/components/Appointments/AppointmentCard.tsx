@@ -1,52 +1,83 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useTheme } from "@themes/ThemeContext";
 import { Appointment } from "@redux/slices/appointmentSlice";
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 
 interface Props {
   appointment: Appointment;
+  onPress?: () => void;
 }
 
 const ICON_SIZE = 18;
 
-const AppointmentCard: React.FC<Props> = ({ appointment }) => {
+const AppointmentCard: React.FC<Props> = ({ appointment, onPress }) => {
   const { theme, isDark } = useTheme();
-  
+
   const textColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.colors.details }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>
-        Dr. {appointment.profesional.nombre} {appointment.profesional.apellido}
-      </Text>
-      <Text style={[styles.subtitle, { color: textColor }]}>
-        Especialidad: {appointment.profesional.especialidad}
-      </Text>
-
-      <View style={styles.row}>
-        <FontAwesome name="calendar" size={ICON_SIZE} color={theme.colors.icons} style={styles.icon} />
-        <Text style={[styles.info, { color: textColor }]}>
-          Fecha: {dayjs(appointment.fecha).format("DD/MM/YYYY")}
+    // <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[styles.card, { backgroundColor: theme.colors.details }]}>
+        <Text style={[styles.title, { color: theme.colors.text }]}>
+          Dr. {appointment.profesional.nombre}{" "}
+          {appointment.profesional.apellido}
         </Text>
-      </View>
 
-      <View style={styles.row}>
-        <FontAwesome name="clock-o" size={ICON_SIZE} color={theme.colors.icons} style={styles.icon} />
-        <Text style={[styles.info, { color: textColor }]}>Hora: {appointment.hora}</Text>
-      </View>
+        <Text style={[styles.subtitle, { color: textColor }]}>
+          Especialidad: {appointment.profesional.especialidad}
+        </Text>
 
-      <View style={styles.row}>
-        <FontAwesome name="comment" size={ICON_SIZE} color={theme.colors.icons} style={styles.icon} />
-        <Text style={[styles.info, { color: textColor }]}>Motivo: {appointment.motivo_consulta}</Text>
-      </View>
+        <View style={styles.row}>
+          <FontAwesome
+            name="calendar"
+            size={ICON_SIZE}
+            color={theme.colors.icons}
+            style={styles.icon}
+          />
+          <Text style={[styles.info, { color: textColor }]}>
+            Fecha: {dayjs(appointment.fecha).format("DD/MM/YYYY")}
+          </Text>
+        </View>
 
-      <View style={styles.row}>
-        <FontAwesome name="info-circle" size={ICON_SIZE} color={theme.colors.icons} style={styles.icon} />
-        <Text style={[styles.info, { color: textColor }]}>Estado: {appointment.estado}</Text>
-      </View>
-    </View>
+        <View style={styles.row}>
+          <FontAwesome
+            name="clock-o"
+            size={ICON_SIZE}
+            color={theme.colors.icons}
+            style={styles.icon}
+          />
+          <Text style={[styles.info, { color: textColor }]}>
+            Hora: {appointment.hora}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <FontAwesome
+            name="comment"
+            size={ICON_SIZE}
+            color={theme.colors.icons}
+            style={styles.icon}
+          />
+          <Text style={[styles.info, { color: textColor }]}>
+            Motivo: {appointment.motivo_consulta}
+          </Text>
+        </View>
+
+        <View style={styles.row}>
+          <FontAwesome
+            name="info-circle"
+            size={ICON_SIZE}
+            color={theme.colors.icons}
+            style={styles.icon}
+          />
+          <Text style={[styles.info, { color: textColor }]}>
+            Estado: {appointment.estado}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    // </TouchableOpacity>
   );
 };
 

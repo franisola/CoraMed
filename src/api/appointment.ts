@@ -37,7 +37,7 @@ export const updateAppointmentStatus = async (
   id: string,
   estado: "pendiente" | "confirmado" | "cancelado"
 ) => {
-  const response = await API.patch(`/appointments/${id}/status`, { estado });
+  const response = await API.put(`/appointments/${id}/status`, { estado });
   return response.data;
 };
 
