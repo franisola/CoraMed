@@ -1,5 +1,6 @@
 import API from "./index";
 
+import type { Appointment } from "@slices/appointmentSlice";
 export interface AppointmentPayload {
   paciente: string;
   profesional: string;
@@ -8,6 +9,7 @@ export interface AppointmentPayload {
   motivo_consulta: string;
   notas_medicas?: string;
 }
+
 
 // Crear turno
 export const createAppointment = async (data: AppointmentPayload) => {
@@ -22,9 +24,18 @@ export const getAppointmentById = async (id: string) => {
 };
 
 // Obtener próximo turno
-export const getNextAppointment = async () => {
-  const response = await API.get("/appointments/next");
-  return response.data;
+export const getNextAppointment = async (): Promise<{ appointment: Appointment | null }> => {
+  try {
+    const response = await API.get("/appointments/next");
+    return { appointment: response.data.appointment || null };
+  } catch (err: any) {
+    // Si el backend devuelve 404, interpretamos que no hay turno próximo (NO es un error)
+    if (err.response?.status === 404) {
+      return { appointment: null };
+    }
+    // Cualquier otro error se lanza normalmente
+    throw err;
+  }
 };
 
 export const getAllAppointments = async () => {

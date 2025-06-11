@@ -53,9 +53,7 @@ const Home = () => {
   const navigation = useNavigation();
   const { theme, isDark } = useTheme();
 
-  const user = useSelector(
-    (state: RootState) => state.auth.user
-  ) as User;
+  const user = useSelector((state: RootState) => state.auth.user) as User;
 
   const getSaludo = (genero?: string) => {
     if (!genero) return "Bienvenide";
@@ -98,12 +96,16 @@ const Home = () => {
         <IconButton
           icon="calendar"
           label="Solicitar Turno"
-          onPress={() => navigation.navigate("BookStack", { screen: "SelectSpecialty" })}
+          onPress={() =>
+            navigation.navigate("BookStack", { screen: "SelectSpecialty" })
+          }
         />
         <IconButton
           icon="book"
           label="Mis Turnos"
-          onPress={() => navigation.navigate("ScheduleStack", { screen: "MyAppointments" })}
+          onPress={() =>
+            navigation.navigate("ScheduleStack", { screen: "MyAppointments" })
+          }
         />
         <IconButton
           icon="id-card"
@@ -114,7 +116,7 @@ const Home = () => {
         />
       </View>
 
-      <NextAppointmentCard onPress={() => navigation.navigate("DetalleTurno")} />
+      <NextAppointmentCard />
     </View>
   );
 };

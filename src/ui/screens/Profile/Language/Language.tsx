@@ -1,10 +1,11 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
-import { lightColors } from "../../../../themes/colors"; // Ajustá la ruta
+import { useTheme } from "@themes/ThemeContext";
 
 export default function LanguageSelector() {
   const { i18n } = useTranslation();
+  const { theme } = useTheme();
   const selectedLanguage = i18n.language.startsWith("es") ? "es" : "en";
 
   const handleSelectLanguage = (lang: "es" | "en") => {
@@ -12,48 +13,99 @@ export default function LanguageSelector() {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.option}
-        onPress={() => handleSelectLanguage("es")}
-      >
-        <View style={[styles.radio, { borderColor: lightColors.primary }]}>
-          {selectedLanguage === "es" && (
-            <View style={[styles.radioInner, { backgroundColor: lightColors.primary }]} />
-          )}
-        </View>
-        <Text style={[styles.label, { color: lightColors.primary }]}>Español</Text>
-      </TouchableOpacity>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.title, { color: theme.colors.text }]}>
+        {selectedLanguage === "es" ? "Idioma" : "Language"}
+      </Text>
 
-      <TouchableOpacity
-        style={styles.option}
-        onPress={() => handleSelectLanguage("en")}
-      >
-        <View style={[styles.radio, { borderColor: lightColors.primary }]}>
-          {selectedLanguage === "en" && (
-            <View style={[styles.radioInner, { backgroundColor: lightColors.primary }]} />
-          )}
-        </View>
-        <Text style={[styles.label, { color: lightColors.primary }]}>English</Text>
-      </TouchableOpacity>
+      <View style={[styles.separator, { backgroundColor: theme.colors.primary }]} />
+
+      <View style={styles.optionsContainer}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleSelectLanguage("es")}
+        >
+          <View
+            style={[
+              styles.radio,
+              {
+                borderColor: theme.colors.primary,
+              },
+            ]}
+          >
+            {selectedLanguage === "es" && (
+              <View
+                style={[
+                  styles.radioInner,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+              />
+            )}
+          </View>
+          <Text style={[styles.label, { color: theme.colors.primary }]}>
+            {selectedLanguage === "es" ? "Español" : "Spanish"}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => handleSelectLanguage("en")}
+        >
+          <View
+            style={[
+              styles.radio,
+              {
+                borderColor: theme.colors.primary,
+              },
+            ]}
+          >
+            {selectedLanguage === "en" && (
+              <View
+                style={[
+                  styles.radioInner,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+              />
+            )}
+          </View>
+          <Text style={[styles.label, { color: theme.colors.primary }]}>
+            {selectedLanguage === "es" ? "Inglés" : "English"}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  separator: {
+    height: 2,
+    width: "70%",
+    marginBottom: 30,
+  },
+  optionsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginTop: 20,
+    width: "80%",
   },
   option: {
     flexDirection: "row",
     alignItems: "center",
   },
   radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",

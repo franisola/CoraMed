@@ -1,13 +1,20 @@
 // screens/ProfileScreen.js
 import React, { useState } from "react";
-import { View, Text, Switch, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Switch,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import { useAppDispatch } from "@redux/hooks";
 
-import { logoutUser } from "@slices/authSlice";
+import { logoutUser, deleteAccount } from "@slices/authSlice";
 import { useToast } from "react-native-toast-notifications";
 
 import { useTheme } from "@themes/ThemeContext";
@@ -19,8 +26,52 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const handleLogOut = () => {
-    dispatch(logoutUser());
+  const confirmLogout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Está seguro que desea cerrar sesión?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Cerrar Sesión",
+          onPress: () => dispatch(logoutUser()),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const confirmDeleteAccount = () => {
+    Alert.alert(
+      "Borrar Cuenta",
+      "Esta acción eliminará su cuenta y todos sus datos.\n¿Está seguro que desea continuar?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Borrar Cuenta",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await dispatch(deleteAccount()).unwrap();
+              dispatch(logoutUser()); // limpia token y navegación
+            } catch (err: any) {
+              toast.show(
+                err?.error || "Ocurrió un error al eliminar la cuenta",
+                { type: "danger" }
+              );
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const ProfileItem = ({ iconName, text, onPress }) => (
@@ -83,9 +134,13 @@ const ProfileScreen = () => {
       <ProfileItem
         iconName="lock"
         text="Cerrar Sesión"
-        onPress={handleLogOut}
+        onPress={confirmLogout}
       />
-      <ProfileItem iconName="trash" text="Borrar Cuenta" onPress={() => {}} />
+      <ProfileItem
+        iconName="trash"
+        text="Borrar Cuenta"
+        onPress={confirmDeleteAccount}
+      />
     </View>
   );
 };

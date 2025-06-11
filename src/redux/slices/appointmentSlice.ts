@@ -16,7 +16,6 @@ export interface Appointment {
   estado: "Agendado" | "Cancelado" | "Completado";
   notas_medicas?: string;
   resultados_estudios?: Estudio[];
-
 }
 
 export interface Estudio {
@@ -41,6 +40,22 @@ const initialState: AppointmentState = {
   error: null,
 };
 
+
+export const getNextAppointment = createAsyncThunk(
+  "appointment/next",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { appointment } = await appointmentApi.getNextAppointment();
+      return appointment; 
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Error al obtener el próximo turno"
+      );
+    }
+  }
+);
+
+// 🎯 Resto de thunks sin cambios
 export const createAppointment = createAsyncThunk(
   "appointment/create",
   async (
@@ -59,20 +74,6 @@ export const createAppointment = createAsyncThunk(
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al crear turno"
-      );
-    }
-  }
-);
-
-export const getNextAppointment = createAsyncThunk(
-  "appointment/next",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { appointment } = await appointmentApi.getNextAppointment();
-      return appointment;
-    } catch (err: any) {
-      return rejectWithValue(
-        err.response?.data?.message || "No hay turnos prÃ³ximos"
       );
     }
   }
@@ -123,7 +124,6 @@ export const updateAppointmentStatus = createAsyncThunk(
   }
 );
 
-// 🔧 Slice
 const appointmentSlice = createSlice({
   name: "appointment",
   initialState,
@@ -154,7 +154,8 @@ const appointmentSlice = createSlice({
       })
       .addCase(getNextAppointment.fulfilled, (state, action) => {
         state.loading = false;
-        state.appointment = action.payload;
+        state.appointment = action.payload; // puede ser null, no es error
+        state.error = null;
       })
       .addCase(getNextAppointment.rejected, (state, action) => {
         state.loading = false;
@@ -180,8 +181,8 @@ const appointmentSlice = createSlice({
       })
       .addCase(getAllAppointments.fulfilled, (state, action) => {
         state.loading = false;
-        state.pastAppointments = action.payload.anteriores; // Almacena los turnos pasados
-        state.upcomingAppointments = action.payload.proximos; // Almacena los turnos futuros
+        state.pastAppointments = action.payload.anteriores;
+        state.upcomingAppointments = action.payload.proximos;
       })
       .addCase(getAllAppointments.rejected, (state, action) => {
         state.loading = false;

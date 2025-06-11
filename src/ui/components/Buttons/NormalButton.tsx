@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  ActivityIndicator,
 } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 
@@ -13,41 +14,53 @@ interface CustomButtonProps {
   title: string;
   onPress: () => void;
   disabled?: boolean;
-  loading?: boolean; // opcional, si se quiere mostrar un estado de carga
-  style?: StyleProp<ViewStyle>; // estilos para el botón (TouchableOpacity)
-  textStyle?: StyleProp<TextStyle>; // estilos para el texto
+  loading?: boolean;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   title,
   onPress,
   disabled = false,
+  loading = false,
   style,
-  loading,
   textStyle,
 }) => {
   const { theme } = useTheme();
+
+  const isDisabled = disabled || loading;
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
         {
-          backgroundColor: disabled
-          ? theme.colors.unauthorizedButton
-          : theme.colors.button,
+          backgroundColor: isDisabled
+            ? theme.colors.unauthorizedButton
+            : theme.colors.button,
         },
         style,
       ]}
-      onPress={disabled ? undefined : onPress}
+      onPress={isDisabled ? undefined : onPress}
       activeOpacity={0.7}
-      disabled={disabled}
+      disabled={isDisabled}
     >
-      <Text
-        style={[styles.buttonText, { color: theme.colors.white }, textStyle]}
-      >
-        {loading ? "Cargando..." : title}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color={theme.colors.white} />
+      ) : (
+        <Text
+          style={[
+            styles.buttonText,
+            {
+              color: theme.colors.white,
+            },
+            textStyle,
+          ]}
+        >
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
