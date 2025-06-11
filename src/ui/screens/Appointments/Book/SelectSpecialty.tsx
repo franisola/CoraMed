@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import CustomPicker from "@components/Inputs/CustomPicker";
 import CustomButton from "@components/Buttons/NormalButton";
 
-import { useAppDispatch, useAppSelector } from "@redux/hooks"; // asumí que ahí están tus hooks
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   getSpecialties,
   setSelectedSpecialty,
@@ -16,10 +16,15 @@ const SelectSpecialty = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const specialties = useAppSelector((state) => state.professionals.specialties);
-  const selected = useAppSelector((state) => state.professionals.selectedSpecialty);
+  const specialties = useAppSelector(
+    (state) => state.professionals.specialties
+  );
+  const selected = useAppSelector(
+    (state) => state.professionals.selectedSpecialty
+  );
 
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     dispatch(getSpecialties());
@@ -33,16 +38,28 @@ const SelectSpecialty = () => {
     setOptions(formatted);
   }, [specialties]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(false); // Reinicia el estado de loading al enfocar la pantalla
+
+      // Reinicia la especialidad seleccionada si es la primera vez que se ingresa
+      dispatch(setSelectedSpecialty("default"));
+    }, [dispatch])
+  );
+
   const handleSelect = (value: string) => {
     dispatch(setSelectedSpecialty(value));
   };
 
   const handlePress = () => {
+    setLoading(true);
     navigation.navigate("SelectDoctor", { especialidad: selected });
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <View style={styles.content}>
         <Text style={[styles.subtitle, { color: theme.colors.text }]}>
           Elija una Especialidad:
@@ -59,7 +76,8 @@ const SelectSpecialty = () => {
       <CustomButton
         title="Seleccionar Especialidad"
         onPress={handlePress}
-        disabled={selected === "default" || !selected}
+        disabled={selected === "default" || !selected || loading}
+        loading={loading}
         style={[
           styles.button,
           {

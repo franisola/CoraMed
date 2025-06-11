@@ -7,29 +7,26 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
-import { useNavigation } from "@react-navigation/native";
-
-import { getAppointmentById as fetchAppointmentById } from "@slices/appointmentSlice";
 
 import AppointmentInfo from "@components/Appointments/AppointmentInfo";
 import AppointmentMotiveInput from "@components/Appointments/AppointmentMotiveInput";
 import CustomButton from "@components/Buttons/NormalButton";
 
-import { updateAppointmentStatus } from "@slices/appointmentSlice";
+import {
+  updateAppointmentStatus,
+  getAppointmentById as fetchAppointmentById,
+  getNextAppointment
+} from "@slices/appointmentSlice";
 
 const AppointmentDetailsScreen = () => {
   const { theme, isDark } = useTheme();
   const dispatch = useAppDispatch();
   const route = useRoute();
-  const { id } = route.params as { id: string };
   const navigation = useNavigation();
-
-  const valueColor = isDark
-    ? theme.colors.textSecondary
-    : theme.colors.greyText;
+  const { id } = route.params as { id: string };
 
   const { appointment, loading, error } = useAppSelector(
     (state) => state.appointment
@@ -42,12 +39,9 @@ const AppointmentDetailsScreen = () => {
   const handleCancelarTurno = () => {
     Alert.alert(
       "¿Está seguro?",
-      "¿Está seguro que desea cancelar su turno?",
+      "¿Desea cancelar su turno?",
       [
-        {
-          text: "Mantener Turno",
-          style: "cancel",
-        },
+        { text: "Mantener Turno", style: "cancel" },
         {
           text: "Cancelar Turno",
           style: "destructive",
@@ -59,9 +53,22 @@ const AppointmentDetailsScreen = () => {
                   id: appointment._id,
                   estado: "Cancelado",
                 })
+              ).unwrap();
+
+              // Recargar próximo turno para actualizar estado
+              dispatch(getNextAppointment());
+
+              Alert.alert(
+                "Turno cancelado",
+                "El turno fue cancelado correctamente."
               );
-            } catch (error) {
-              console.log("Error al cancelar turno:", error);
+              navigation.goBack();
+            } catch (e) {
+              Alert.alert(
+                "Error",
+                "No se pudo cancelar el turno. Intente nuevamente."
+              );
+              console.error("Error al cancelar turno:", e);
             }
           },
         },
@@ -100,6 +107,10 @@ const AppointmentDetailsScreen = () => {
   const resultadosListos =
     !!notas_medicas || (resultados_estudios && resultados_estudios.length > 0);
 
+  const valueColor = isDark
+    ? theme.colors.textSecondary
+    : theme.colors.greyText;
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -124,7 +135,6 @@ const AppointmentDetailsScreen = () => {
         </View>
       </View>
 
-      {/* Acciones dinámicas en el pie de pantalla */}
       <View style={styles.buttonWrapper}>
         {estado === "Agendado" && (
           <CustomButton

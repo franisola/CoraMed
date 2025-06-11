@@ -9,6 +9,8 @@ import {
   deleteAccount as deleteAccountAPI,
 } from "@api/auth";
 
+import { setToken, clearToken } from "@api/index";
+
 interface AuthState {
   user: any;
   loading: boolean;
@@ -31,7 +33,17 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const res = await loginUserAPI(credentials);
-      return await getCurrentUserAPI();
+      const token = res.token;
+      if (token) {
+        await setToken(token);
+      }
+
+      const userRes = await getCurrentUserAPI();
+      if (userRes.isAuthenticated) {
+        return userRes.user;
+      } else {
+        return null;
+      }
     } catch (err: any) {
       const backendError = err.response?.data?.error || "Error del servidor";
       return rejectWithValue({ error: backendError });
@@ -44,7 +56,12 @@ export const registerUser = createAsyncThunk(
   async (formData: any, { rejectWithValue }) => {
     try {
       const res = await registerUserAPI(formData);
-      return await getCurrentUserAPI();
+      const token = res.token;
+      if (token) {
+        await setToken(token);
+      }
+      const user = await getCurrentUserAPI();
+      return user;
     } catch (err: any) {
       const backendError = err.response?.data?.error || "Error al registrar";
       return rejectWithValue({ error: backendError });
@@ -87,7 +104,12 @@ export const getCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await getCurrentUserAPI();
-      return res;
+
+      if (res.isAuthenticated) {
+        return res.user;
+      } else {
+        return null; // no autenticado
+      }
     } catch (err: any) {
       return rejectWithValue({ error: "Sesión expirada" });
     }
@@ -96,6 +118,7 @@ export const getCurrentUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   await logoutUserAPI();
+  await clearToken();
 });
 
 export const deleteAccount = createAsyncThunk(
@@ -103,6 +126,7 @@ export const deleteAccount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await deleteAccountAPI();
+      await clearToken();
       return res;
     } catch (err: any) {
       const backendError =
@@ -125,7 +149,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.user = action.payload; // action.payload ya es el user
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -139,7 +163,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.user = action.payload; // action.payload ya es el user
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -177,12 +201,13 @@ const authSlice = createSlice({
         state.initialLoading = true;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.initialLoading = false;
       })
-      .addCase(getCurrentUser.rejected, (state) => {
+      .addCase(getCurrentUser.rejected, (state, action) => {
         state.user = null;
         state.initialLoading = false;
+        state.error = action.payload?.error ?? null;
       })
 
       // LOGOUT

@@ -73,7 +73,8 @@ const AuthForm: React.FC<AuthFormProps> = ({
         style={{ alignSelf: "center", position: "absolute", bottom: 100 }}
         title={t(buttonTextKey)}
         onPress={handleSubmit}
-        loading={showLoading} // <- aplicado
+        loading={showLoading}
+        disabled={showLoading}
       />
     </SafeAreaView>
   );

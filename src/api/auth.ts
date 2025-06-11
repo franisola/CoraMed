@@ -1,4 +1,4 @@
-import API from './index';
+import API, { setToken, clearToken } from './index';
 
 export interface LoginPayload {
   email: string;
@@ -19,18 +19,27 @@ export interface RegisterPayload {
 // LOGIN
 export const loginUser = async (data: LoginPayload) => {
   const response = await API.post('/auth/login', data);
+  const token = response.data.token;
+  if (token) {
+    await setToken(token);  // guardo token en AsyncStorage
+  }
   return response.data;
 };
 
 // REGISTER
 export const registerUser = async (data: RegisterPayload) => {
   const response = await API.post('/auth/register', data);
+  const token = response.data.token;
+  if (token) {
+    await setToken(token);  // guardo token en AsyncStorage
+  }
   return response.data;
 };
 
 // LOGOUT
 export const logoutUser = async () => {
   const response = await API.post('/auth/logout');
+  await clearToken();  // limpio token al hacer logout
   return response.data;
 };
 
@@ -52,6 +61,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
 // DELETE ACCOUNT
 export const deleteAccount = async () => {
   const response = await API.delete('/auth/delete-account');
+  await clearToken();  // también limpiar token si borran cuenta
   return response.data;
 };
 

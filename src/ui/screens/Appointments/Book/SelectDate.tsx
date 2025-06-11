@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
@@ -32,11 +33,16 @@ const SelectDate = () => {
   const { theme } = useTheme();
 
   const dispatch = useAppDispatch();
-  const availableTimes = useAppSelector((state) => state.professionals.schedules);
+  const availableTimes = useAppSelector(
+    (state) => state.professionals.schedules
+  );
 
   const [availableDays, setAvailableDays] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (doctor?.dias_laborales) {
@@ -44,34 +50,92 @@ const SelectDate = () => {
     }
   }, [doctor]);
 
-  const isDayAvailable = (date: string) => {
-    const today = dayjs().startOf("day");
-    const dateObj = dayjs(date);
-    if (dateObj.isBefore(today)) return false;
+  const isDayAvailable = useCallback(
+    (date: string) => {
+      const today = dayjs().startOf("day");
+      const tomorrow = today.add(1, "day");
+      const dateObj = dayjs(date);
 
-    const day = dateObj.format("dddd");
-    const diaTraducido = weekdayMap[day];
-    return availableDays.includes(diaTraducido);
-  };
+      // La fecha debe ser igual o posterior a mañana y estar dentro de los días laborales
+      if (dateObj.isBefore(tomorrow)) return false;
 
-  const handleDateSelect = async (date: string) => {
-    if (!isDayAvailable(date)) return;
-    setSelectedDate(date);
-    setSelectedTime(null);
-    await dispatch(getAvailableSchedules({ id: doctor._id, date }));
-  };
+      const day = dateObj.format("dddd");
+      const diaTraducido = weekdayMap[day] ?? day;
+      return availableDays.includes(diaTraducido);
+    },
+    [availableDays]
+  );
+
+  const handleDateSelect = useCallback(
+    (date: string) => {
+      if (!isDayAvailable(date)) return;
+
+      setSelectedDate(date);
+      setSelectedTime(null);
+
+      if (fetchTimeoutRef.current) {
+        clearTimeout(fetchTimeoutRef.current);
+      }
+
+      setLoading(true);
+
+      // debounce: espera 300ms antes de hacer fetch, para evitar requests rápidas seguidas
+      fetchTimeoutRef.current = setTimeout(async () => {
+        await dispatch(getAvailableSchedules({ id: doctor._id, date }));
+        setLoading(false);
+      }, 300);
+    },
+    [isDayAvailable, dispatch, doctor]
+  );
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time);
   };
 
   const handleContinue = () => {
+    if (!selectedDate || !selectedTime) return;
+
     navigation.navigate("BookAppointment", {
       especialidad,
       doctor,
       fecha: selectedDate,
       hora: selectedTime,
     });
+  };
+
+  const renderDay = ({ date }: { date: any }) => {
+    const dateStr = date.dateString;
+    const isAvailable = isDayAvailable(dateStr);
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleDateSelect(dateStr)}
+        disabled={!isAvailable}
+        accessibilityRole="button"
+        accessibilityState={{
+          disabled: !isAvailable,
+          selected: selectedDate === dateStr,
+        }}
+        style={{
+          backgroundColor:
+            selectedDate === dateStr ? theme.colors.button : "transparent",
+          borderRadius: 20,
+          padding: 8,
+        }}
+      >
+        <Text
+          style={{
+            color: !isAvailable
+              ? theme.colors.greyText
+              : selectedDate === dateStr
+                ? theme.colors.white
+                : theme.colors.text,
+          }}
+        >
+          {date.day}
+        </Text>
+      </TouchableOpacity>
+    );
   };
 
   const markedDates = selectedDate
@@ -84,9 +148,13 @@ const SelectDate = () => {
     : {};
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <View style={styles.content}>
-        <Text style={[styles.subtitle, { color: theme.colors.text }]}>Seleccionar fecha:</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.text }]}>
+          Seleccionar fecha:
+        </Text>
 
         <View style={styles.calendarWrapper}>
           <Calendar
@@ -103,87 +171,69 @@ const SelectDate = () => {
               todayTextColor: theme.colors.primary,
               arrowColor: theme.colors.text,
             }}
-            dayComponent={({ date }) => {
-              const dateStr = date.dateString;
-              const isAvailable = isDayAvailable(dateStr);
-
-              return (
-                <TouchableOpacity
-                  onPress={() => handleDateSelect(dateStr)}
-                  disabled={!isAvailable}
-                  style={{
-                    backgroundColor:
-                      selectedDate === dateStr
-                        ? theme.colors.button
-                        : "transparent",
-                    borderRadius: 20,
-                    padding: 8,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: !isAvailable
-                        ? theme.colors.greyText
-                        : selectedDate === dateStr
-                        ? theme.colors.white
-                        : theme.colors.text,
-                    }}
-                  >
-                    {date.day}
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
+            dayComponent={renderDay}
             minDate={dayjs().add(1, "day").format("YYYY-MM-DD")}
           />
         </View>
 
         {selectedDate && (
           <>
-            <Text style={[styles.subtitle, { color: theme.colors.text }]}>Seleccionar horario:</Text>
+            <Text style={[styles.subtitle, { color: theme.colors.text }]}>
+              Seleccionar horario:
+            </Text>
 
             <View style={styles.timeListContainer}>
-              <FlatList
-                data={availableTimes}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={[
-                      styles.timeButton,
-                      {
-                        backgroundColor:
-                          selectedTime === item
-                            ? theme.colors.button
-                            : theme.colors.details,
-                      },
-                    ]}
-                    onPress={() => handleTimeSelect(item)}
-                  >
-                    <Text
-                      style={{
-                        color:
-                          selectedTime === item
-                            ? theme.colors.white
-                            : theme.colors.text,
-                      }}
+              {loading ? (
+                <ActivityIndicator size="large" color={theme.colors.button} />
+              ) : availableTimes.length === 0 ? (
+                <Text style={{ color: theme.colors.text, marginTop: 10 }}>
+                  No hay horarios disponibles para esta fecha.
+                </Text>
+              ) : (
+                <FlatList
+                  data={availableTimes}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.timeButton,
+                        {
+                          backgroundColor:
+                            selectedTime === item
+                              ? theme.colors.button
+                              : theme.colors.details,
+                        },
+                      ]}
+                      onPress={() => handleTimeSelect(item)}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: selectedTime === item }}
                     >
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item}
-                numColumns={3}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ gap: 10 }}
-              />
+                      <Text
+                        style={{
+                          color:
+                            selectedTime === item
+                              ? theme.colors.white
+                              : theme.colors.text,
+                        }}
+                      >
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item}
+                  numColumns={3}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 10 }}
+                />
+              )}
             </View>
           </>
         )}
       </View>
 
       <CustomButton
-        title="Seleccionar Fecha y Hora"
+        title={loading ? "Cargando..." : "Seleccionar Fecha y Hora"}
         onPress={handleContinue}
-        disabled={!selectedDate || !selectedTime}
+        disabled={!selectedDate || !selectedTime || loading}
         style={styles.button}
       />
     </View>

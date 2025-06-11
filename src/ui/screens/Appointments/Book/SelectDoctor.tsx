@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,11 +28,12 @@ const SelectDoctor = () => {
 
   const dispatch = useAppDispatch();
   const allDoctors = useAppSelector((state) => state.professionals.professionals);
-  const loading = useAppSelector((state) => state.professionals.loading);
+  const loadingGlobal = useAppSelector((state) => state.professionals.loading);
 
   const [search, setSearch] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState<Professional | null>(null);
   const [filteredDoctors, setFilteredDoctors] = useState<Professional[]>([]);
+  const [loadingButton, setLoadingButton] = useState(false);
 
   useEffect(() => {
     dispatch(getProfessionalsBySpecialty(especialidad));
@@ -45,11 +46,18 @@ const SelectDoctor = () => {
     setFilteredDoctors(filtered);
   }, [search, allDoctors]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoadingButton(false); // Reinicia el estado de loadingButton al enfocar la pantalla
+    }, [])
+  );
+
   const handleSelectDoctor = (doctor: Professional) => {
     setSelectedDoctor(doctor);
   };
 
   const handlePress = () => {
+    setLoadingButton(true);
     navigation.navigate("SelectDate", {
       especialidad,
       doctor: selectedDoctor,
@@ -88,7 +96,7 @@ const SelectDoctor = () => {
           />
         </View>
 
-        {loading ? (
+        {loadingGlobal ? (
           <ActivityIndicator
             color={theme.colors.primary}
             style={{ marginTop: 20 }}
@@ -135,7 +143,8 @@ const SelectDoctor = () => {
       <CustomButton
         title="Seleccionar Doctor"
         onPress={handlePress}
-        disabled={!selectedDoctor}
+        disabled={!selectedDoctor || loadingButton}
+        loading={loadingButton}
         style={styles.button}
       />
     </View>

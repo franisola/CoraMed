@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
@@ -20,38 +20,20 @@ const IconButton = ({
   const { theme } = useTheme();
 
   return (
-    <TouchableOpacity style={{ alignItems: "center" }} onPress={onPress}>
+    <TouchableOpacity style={styles.iconButton} onPress={onPress}>
       <View
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 30,
-          borderWidth: 1,
-          borderColor: theme.colors.inputBorder,
-          backgroundColor: theme.colors.details,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.details }]}
       >
         <FontAwesome name={icon} size={28} color={theme.colors.icons} />
       </View>
-      <Text
-        style={{
-          color: theme.colors.text,
-          fontSize: 12,
-          textAlign: "center",
-          marginTop: 6,
-        }}
-      >
-        {label}
-      </Text>
+      <Text style={[styles.iconLabel, { color: theme.colors.text }]}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
 const Home = () => {
   const navigation = useNavigation();
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
 
   const user = useSelector((state: RootState) => state.auth.user) as User;
 
@@ -64,35 +46,12 @@ const Home = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-        paddingHorizontal: 16,
-        paddingTop: 24,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 32,
-          color: theme.colors.text,
-          fontWeight: "bold",
-          marginVertical: 50,
-          marginHorizontal: 20,
-        }}
-      >
-        {user
-          ? `${getSaludo(user.genero)} ${user.nombreCompleto}!`
-          : "Bienvenide!"}
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.welcomeText, { color: theme.colors.text }]}>
+        {user ? `${getSaludo(user.genero)} ${user.nombreCompleto}!` : "Bienvenide!"}
       </Text>
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-around",
-          marginBottom: 50,
-        }}
-      >
+      <View style={styles.buttonsRow}>
         <IconButton
           icon="calendar"
           label="Solicitar Turno"
@@ -120,5 +79,40 @@ const Home = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginVertical: 50,
+    marginHorizontal: 20,
+  },
+  buttonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 50,
+  },
+  iconButton: {
+    alignItems: "center",
+  },
+  iconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconLabel: {
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 6,
+  },
+});
 
 export default Home;
