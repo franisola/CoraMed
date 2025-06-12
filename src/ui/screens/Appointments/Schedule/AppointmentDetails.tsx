@@ -62,7 +62,7 @@ const AppointmentDetailsScreen = () => {
                 "Turno cancelado",
                 "El turno fue cancelado correctamente."
               );
-              navigation.goBack();
+              navigation.navigate("Home");
             } catch (e) {
               Alert.alert(
                 "Error",
