@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "@navigation/StackNavigation/AuthStack";
 import AppStack from "@navigation/StackNavigation/AppStack";
 import { useAppSelector, useAppDispatch } from "@redux/hooks";
-import { getCurrentUser } from "@slices/authSlice";
+import { getCurrentUser , logoutUser} from "@slices/authSlice";
 
 import LoadingScreen from "@screens/LoadingScreen";
 

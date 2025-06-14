@@ -49,14 +49,21 @@ export const recoverPassword = async (email: string) => {
   return response.data;
 };
 
+// VERIFY CODE
+export const verifyCode = async (email: string, code: string) => {
+  const response = await API.post('/auth/verify-code', { email, code });
+  return response.data;
+};
+
 // RESET PASSWORD
-export const resetPassword = async (token: string, newPassword: string) => {
+export const resetPassword = async (email: string, password: string) => {
   const response = await API.post('/auth/reset-password', {
-    token,
-    newPassword,
+    email,       // <- este campo es el que espera el backend
+    password,
   });
   return response.data;
 };
+
 
 // DELETE ACCOUNT
 export const deleteAccount = async () => {

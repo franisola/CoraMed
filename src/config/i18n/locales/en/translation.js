@@ -31,6 +31,7 @@ const translations = {
     gender: "Select your gender",
     phone: "Phone",
     address: "Address",
+    verificationCode: "Verification code",
   },
 
   genderPick: {
@@ -44,6 +45,7 @@ const translations = {
     register: "Register",
     recover: "Send email",
     changePassword: "Change password",
+    verifyCode: "Verify",
   },
 
   authTitles: {
@@ -53,6 +55,7 @@ const translations = {
     changePassword: "Change password",
     forgotPassword: "Forgot your password?",
     linkForgotPassword: "Recover it here",
+    codeVerification: "Verify code",
   },
 
   authFooterText: {

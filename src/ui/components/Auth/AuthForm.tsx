@@ -8,22 +8,30 @@ import { useAuthForm } from "@components/Auth/Forms/useAuthForm";
 import { useAppSelector } from "@redux/hooks"; // <- nuevo
 
 interface AuthFormProps {
-  type: "login" | "register" | "recover" | "changePassword";
+  type:
+    | "login"
+    | "register"
+    | "recover"
+    | "changePassword"
+    | "codeVerification";
   onSubmit: (data: any) => void;
   generalError?: string;
+  initialValues?: Partial<AuthField>;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({
   type,
   onSubmit,
   generalError,
+  initialValues,
 }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { values, errors, handleChange, setGenero, handleSubmit } = useAuthForm(
     type,
     onSubmit,
-    generalError
+    generalError,
+    initialValues ?? {}
   );
 
   const { loading, error } = useAppSelector((state) => state.auth); // <- nuevo
@@ -36,7 +44,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
         ? "authTitles.register"
         : type === "recover"
           ? "authTitles.recover"
-          : "authTitles.changePassword";
+          : type === "changePassword"
+            ? "authTitles.changePassword"
+            : "authTitles.codeVerification";
 
   const buttonTextKey =
     type === "login"
@@ -45,7 +55,9 @@ const AuthForm: React.FC<AuthFormProps> = ({
         ? "button.register"
         : type === "recover"
           ? "button.recover"
-          : "button.changePassword";
+          : type === "changePassword"
+            ? "button.changePassword"
+            : "button.verifyCode";
 
   return (
     <SafeAreaView style={{ gap: 10, flex: 1, alignItems: "center" }}>

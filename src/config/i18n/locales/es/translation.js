@@ -20,8 +20,6 @@ const translations = {
     subtitleAccount: "Cuenta",
   },
 
-
-
   inputPlaceholder: {
     email: "Email",
     password: "Contraseña",
@@ -33,6 +31,7 @@ const translations = {
     gender: "Selecciona tu género",
     phone: "Teléfono",
     address: "Dirección",
+    verificationCode: "Código de verificación",
   },
 
   genderPick: {
@@ -46,15 +45,17 @@ const translations = {
     register: "Registrarse",
     recover: "Enviar email",
     changePassword: "Cambiar contraseña",
+    verifyCode: "Verificar",
   },
 
-  authTitles:{
+  authTitles: {
     login: "Iniciar sesión",
     register: "Registro",
     recover: "Recuperar contraseña",
     changePassword: "Cambiar contraseña",
     forgotPassword: "¿Olvidaste tu contraseña?",
     linkForgotPassword: "Recuperala aquí",
+    codeVerification: "Verificar código",
   },
 
   authFooterText: {
@@ -63,9 +64,6 @@ const translations = {
     login: "Inicia sesión",
     register: "Registrate",
   },
-
-
-
 
   errorInputEmail: "Email inválido",
   errorInputPassword: "Contraseña inválida",

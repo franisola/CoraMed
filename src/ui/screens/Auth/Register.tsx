@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Button, SafeAreaView, Text, ScrollView } from "react-native";
+import {
+  View,
+  Button,
+  SafeAreaView,
+  Text,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
@@ -17,23 +25,25 @@ const Register = () => {
   const { theme, toggleTheme, isDark } = useTheme();
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: theme.colors.background,
-      }}
-    >
-      <AuthForm
-        type="register"
-        onSubmit={(data) => {
-          console.log("Form data:", data);
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: theme.colors.background,
         }}
-      />
+      >
+        <AuthForm
+          type="register"
+          onSubmit={(data) => {
+            console.log("Form data:", data);
+          }}
+        />
 
-      <AuthFooter currentScreen="Register" />
-    </SafeAreaView>
+        <AuthFooter currentScreen="Register" />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

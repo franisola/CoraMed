@@ -7,6 +7,7 @@ import {
   getCurrentUser as getCurrentUserAPI,
   logoutUser as logoutUserAPI,
   deleteAccount as deleteAccountAPI,
+  verifyCode as verifyCodeAPI,
 } from "@api/auth";
 
 import { setToken, clearToken } from "@api/index";
@@ -60,8 +61,12 @@ export const registerUser = createAsyncThunk(
       if (token) {
         await setToken(token);
       }
-      const user = await getCurrentUserAPI();
-      return user;
+      const userRes = await getCurrentUserAPI();
+      if (userRes.isAuthenticated) {
+        return userRes.user;
+      } else {
+        return null;
+      }
     } catch (err: any) {
       const backendError = err.response?.data?.error || "Error al registrar";
       return rejectWithValue({ error: backendError });
@@ -82,14 +87,34 @@ export const recoverPassword = createAsyncThunk(
   }
 );
 
-export const resetPassword = createAsyncThunk(
-  "auth/resetPassword",
+export const verifyCode = createAsyncThunk(
+  "auth/verifyCode",
   async (
-    { token, newPassword }: { token: string; newPassword: string },
+    { email, code }: { email: string; code: string },
     { rejectWithValue }
   ) => {
     try {
-      const res = await resetPasswordAPI(token, newPassword);
+      const res = await verifyCodeAPI(email, code);
+      return res;
+    } catch (err: any) {
+      // Manejo flexible de mensaje de error
+      const backendError =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Error al verificar el código";
+      return rejectWithValue({ error: backendError });
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (
+    { email, password }: { email: string; password: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await resetPasswordAPI(email, password);
       return res;
     } catch (err: any) {
       const backendError =
@@ -181,6 +206,19 @@ const authSlice = createSlice({
       .addCase(recoverPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // VERIFY CODE
+      .addCase(verifyCode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyCode.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(verifyCode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.error || "Error desconocido";
       })
 
       // RESET PASSWORD

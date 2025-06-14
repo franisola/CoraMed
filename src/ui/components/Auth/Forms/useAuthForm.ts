@@ -3,7 +3,8 @@ import {
   registerUserSchema,
   loginUserSchema,
   recoverPasswordSchema,
-  changePasswordSchema,
+  resetPasswordSchema as changePasswordSchema,
+  verifyCodeSchema,
 } from "@validations/authSchemas";
 import { useAppDispatch } from "@redux/hooks";
 import {
@@ -11,8 +12,10 @@ import {
   registerUser,
   recoverPassword,
   resetPassword,
+  verifyCode,
 } from "@slices/authSlice";
 import { useToast } from "react-native-toast-notifications";
+import { number } from "zod";
 
 export type AuthField = {
   nombreCompleto: string;
@@ -21,6 +24,7 @@ export type AuthField = {
   password: string;
   confirmPassword: string;
   genero: string;
+  code?: string; // Campo opcional para código de verificación
 };
 
 export type AuthErrors = Partial<Record<keyof AuthField | "general", string>>;
@@ -32,21 +36,31 @@ const initialValues: AuthField = {
   password: "",
   confirmPassword: "",
   genero: "",
+  code: "",
 };
 
 export const useAuthForm = (
-  type: "login" | "register" | "recover" | "changePassword",
+  type:
+    | "login"
+    | "register"
+    | "recover"
+    | "changePassword"
+    | "codeVerification",
   onSubmit: (data?: any) => void,
-  generalError?: string
+  generalError?: string,
+  initValues?: Partial<AuthField>
 ) => {
-  const [values, setValues] = useState<AuthField>(initialValues);
+  const [values, setValues] = useState<AuthField>({
+    ...initialValues,
+    ...initValues,
+  });
   const [errors, setErrors] = useState<AuthErrors>({ general: generalError });
 
   const dispatch = useAppDispatch();
   const toast = useToast();
 
   useEffect(() => {
-    setValues(initialValues);
+    setValues({ ...initialValues, ...initValues });
     setErrors((prev) => ({ ...prev, general: generalError }));
   }, [type, generalError]);
 
@@ -72,12 +86,24 @@ export const useAuthForm = (
         validationResult = recoverPasswordSchema.safeParse({
           email: values.email,
         });
+
         break;
       case "changePassword":
         validationResult = changePasswordSchema.safeParse({
+          email: values.email,
           password: values.password,
           confirmPassword: values.confirmPassword,
         });
+
+        console.log("Validation result:", validationResult);
+
+        break;
+      case "codeVerification":
+        validationResult = verifyCodeSchema.safeParse({
+          email: values.email,
+          code: values.code,
+        });
+
         break;
     }
 
@@ -96,13 +122,21 @@ export const useAuthForm = (
   };
 
   const buildFormData = (): any => {
-    const { email, password, confirmPassword, nombreCompleto, dni, genero } =
-      values;
+    const {
+      email,
+      password,
+      confirmPassword,
+      nombreCompleto,
+      dni,
+      genero,
+      code,
+    } = values;
     return {
       email,
       ...(type === "login" && { password }),
       ...(type === "register" && { nombreCompleto, dni, password, genero }),
       ...(type === "changePassword" && { password, confirmPassword }),
+      ...(type === "codeVerification" && { code, email }),
     };
   };
 
@@ -128,6 +162,7 @@ export const useAuthForm = (
             placement: "top",
             duration: 4000,
           });
+          onSubmit({ email: values.email });
         } catch (err: any) {
           const backendError =
             err?.error || err?.message || "Error al enviar email";
@@ -135,8 +170,25 @@ export const useAuthForm = (
           toast.show(backendError, { type: "danger" });
         }
       } else if (type === "changePassword") {
-        const result = await dispatch(resetPassword(formData)).unwrap();
+        console.log("Submitting change password with values:", values);
+        
+        const result = await dispatch(
+          resetPassword({ email: values.email, password: values.password })
+        ).unwrap();
+        toast.show("Contraseña restablecida exitosamente.", {
+          type: "success",
+          placement: "top",
+          duration: 4000,
+        });
         onSubmit(result);
+      } else if (type === "codeVerification") {
+        const result = await dispatch(
+          verifyCode({ email: values.email, code: values.code })
+        ).unwrap();
+
+        toast.show(result.message, { type: "success" });
+
+        onSubmit({ email: values.email });
       }
     } catch (err: any) {
       const backendError = err?.error || err?.message;
