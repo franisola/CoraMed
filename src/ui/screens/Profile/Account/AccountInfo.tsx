@@ -147,7 +147,7 @@ const Perfil = () => {
         {user?.email || "Sin email"}
       </Text>
 
-      {/* <Text style={[styles.label, { color: theme.colors.text }]}>
+      <Text style={[styles.label, { color: theme.colors.text }]}>
         Contraseña
       </Text>
       <View style={styles.passwordContainer}>
@@ -164,14 +164,14 @@ const Perfil = () => {
           {showPassword ? user?.password || "12345678" : "********"}
 
         </Text>
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+        {/* <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
           <FontAwesome
             name={showPassword ? "eye-slash" : "eye"}
             size={20}
             color={theme.dark ? theme.colors.textSecondary : theme.colors.icons}
           />
-        </TouchableOpacity>
-      </View> */}
+        </TouchableOpacity> */}
+      </View>
     </>
   );
 
@@ -201,7 +201,7 @@ const Perfil = () => {
             : renderAccountData()}
         </View>
       </View>
-      {activeTab === "personal" && (
+      
         <CustomButton
           style={{
             marginHorizontal: "auto",
@@ -212,7 +212,7 @@ const Perfil = () => {
           title="Editar Perfil"
           onPress={handleNavigation}
         />
-      )}
+      
     </SafeAreaView>
   );
 };
