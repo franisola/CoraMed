@@ -1,47 +1,46 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
-
+import React, { useState, useEffect, useMemo } from "react";
+import { View, ScrollView, StyleSheet, Text } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { isEqual } from "lodash";
 
-import { updateUserProfileSchema } from "@validations/editProfileSchema";
+import {
+  personalDataSchema,
+  accountDataSchema,
+} from "@validations/editProfileSchema";
 
 import CustomInput from "@components/Inputs/InputData";
 import CustomButton from "@components/Buttons/NormalButton";
 import CustomPicker from "@components/Inputs/CustomPicker";
-
 import FechaNacimientoInput from "@components/Inputs/FechaNacimientoInput";
 import TabsPerfil from "@components/Header/TabsPerfil";
+
+import { updateUser } from "@redux/slices/userSlice";
 
 const EditarPerfil = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { theme } = useTheme();
-  const [activeTab, setActiveTab] = useState(route.params?.tab);
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { updateLoading, updateError } = useAppSelector((state) => state.user);
 
-  // Campos personales
-  const [nombreCompleto, setNombreCompleto] = useState("Silvana Ardisson");
-  const [dni, setDni] = useState("24980182");
-  const [genero, setGenero] = useState("Femenino");
-  const [telefono, setTelefono] = useState("1136610049");
-  const [direccion, setDireccion] = useState("La gaviota");
-  const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
+  const [activeTab, setActiveTab] = useState(route.params?.tab || "personal");
 
-  // Campos cuenta
+  const user = useAppSelector((state) => state.auth.user);
+
+  const [initialValues, setInitialValues] = useState<any>(null);
+
+  const [nombreCompleto, setNombreCompleto] = useState("");
+  const [dni, setDni] = useState("");
+  const [genero, setGenero] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState<Date | null>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const { t } = useTranslation();
-
-  const handleCancel = () => navigation.goBack();
 
   const [errors, setErrors] = useState({
     nombreCompleto: "",
@@ -54,19 +53,50 @@ const EditarPerfil = () => {
     confirmPassword: "",
   });
 
-  const validateFields = () => {
-    const data = {
-      nombreCompleto,
-      dni,
-      genero,
-      telefono,
-      direccion,
-      fechaNacimiento,
-      password,
-      confirmPassword,
-    };
+  useEffect(() => {
+    if (user) {
+      const defaults = {
+        nombreCompleto: user.nombreCompleto || "",
+        dni: user.dni || "",
+        genero: user.genero || "",
+        telefono: user.telefono || "",
+        direccion: user.direccion || "",
+        fechaNacimiento: user.fechaNacimiento
+          ? new Date(user.fechaNacimiento)
+          : null,
+        password: "",
+        confirmPassword: "",
+      };
+      setNombreCompleto(defaults.nombreCompleto);
+      setDni(defaults.dni);
+      setGenero(defaults.genero);
+      setTelefono(defaults.telefono);
+      setDireccion(defaults.direccion);
+      setFechaNacimiento(defaults.fechaNacimiento);
+      setInitialValues(defaults);
+    }
+  }, [user]);
 
-    const result = updateUserProfileSchema.safeParse(data);
+  const handleCancel = () => navigation.goBack();
+
+  const validateFields = () => {
+    let result;
+
+    if (activeTab === "personal") {
+      result = personalDataSchema.safeParse({
+        nombreCompleto,
+        dni,
+        genero,
+        telefono,
+        direccion,
+        fechaNacimiento,
+      });
+    } else {
+      result = accountDataSchema.safeParse({
+        password,
+        confirmPassword,
+      });
+    }
 
     if (!result.success) {
       const fieldErrors: any = {};
@@ -78,17 +108,6 @@ const EditarPerfil = () => {
       return false;
     }
 
-    setErrors({
-      nombreCompleto: "",
-      dni: "",
-      genero: "",
-      telefono: "",
-      direccion: "",
-      fechaNacimiento: "",
-      password: "",
-      confirmPassword: "",
-    });
-
     return true;
   };
 
@@ -96,7 +115,7 @@ const EditarPerfil = () => {
     setErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
 
     switch (field) {
-      case "nombre":
+      case "nombreCompleto":
         setNombreCompleto(value);
         break;
       case "dni":
@@ -117,34 +136,111 @@ const EditarPerfil = () => {
     }
   };
 
-  const handleSave = () => {
+  const isModified = useMemo(() => {
+    if (!initialValues) return false;
+
+    if (activeTab === "personal") {
+      return !isEqual(
+        {
+          nombreCompleto: initialValues.nombreCompleto,
+          dni: initialValues.dni,
+          genero: initialValues.genero,
+          telefono: initialValues.telefono,
+          direccion: initialValues.direccion,
+          fechaNacimiento: initialValues.fechaNacimiento,
+        },
+        {
+          nombreCompleto,
+          dni,
+          genero,
+          telefono,
+          direccion,
+          fechaNacimiento,
+        }
+      );
+    } else if (activeTab === "account") {
+      return password !== "" || confirmPassword !== "";
+    }
+
+    return false;
+  }, [
+    activeTab,
+    initialValues,
+    nombreCompleto,
+    dni,
+    genero,
+    telefono,
+    direccion,
+    fechaNacimiento,
+    password,
+    confirmPassword,
+  ]);
+
+  const handleSubmit = () => {
     if (!validateFields()) return;
+    if (!isModified) return;
 
-    const formData = {
-      nombreCompleto,
-      dni,
-      genero,
-      telefono,
-      direccion,
-      fechaNacimiento,
-      password,
-      confirmPassword,
-    };
+    const payload: any = {};
 
-    // Tu lógica de guardado...
-    // navigation.goBack();
+    if (activeTab === "personal") {
+      if (nombreCompleto !== initialValues.nombreCompleto)
+        payload.nombreCompleto = nombreCompleto;
+      if (dni !== initialValues.dni) payload.dni = dni;
+      if (genero !== initialValues.genero) payload.genero = genero;
+      if (telefono !== initialValues.telefono) payload.telefono = telefono;
+      if (direccion !== initialValues.direccion) payload.direccion = direccion;
+
+      if (
+        (fechaNacimiento && !initialValues.fechaNacimiento) ||
+        (fechaNacimiento &&
+          initialValues.fechaNacimiento &&
+          fechaNacimiento.getTime() !==
+            initialValues.fechaNacimiento.getTime())
+      ) {
+        if (fechaNacimiento) {
+          payload.fechaNacimiento = fechaNacimiento.toISOString();
+        }
+      }
+    } else if (activeTab === "account") {
+      if (password !== "") payload.password = password;
+      if (confirmPassword !== "") payload.confirmPassword = confirmPassword;
+    }
+
+    dispatch(updateUser(payload))
+      .unwrap()
+      .then(() => {
+        navigation.goBack();
+      })
+      .catch(() => {
+        // El error queda en updateError y se muestra automáticamente
+      });
   };
 
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {/* Tabs */}
       <TabsPerfil
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setErrors((prev) => {
+            const clean = { ...prev };
+            if (tab === "personal") {
+              clean.password = "";
+              clean.confirmPassword = "";
+            } else {
+              clean.nombreCompleto = "";
+              clean.dni = "";
+              clean.genero = "";
+              clean.telefono = "";
+              clean.direccion = "";
+              clean.fechaNacimiento = "";
+            }
+            return clean;
+          });
+        }}
         tabs={["personal", "account"]}
-        // disableSwitching={true}
       />
 
       <ScrollView
@@ -155,16 +251,18 @@ const EditarPerfil = () => {
         {activeTab === "personal" ? (
           <>
             <CustomInput
-              label={true}
+              label
               labelText="Nombre completo"
               placeholder="Nombre completo"
               value={nombreCompleto}
-              onChangeText={(value) => handleInputChange("nombre", value)}
+              onChangeText={(value) =>
+                handleInputChange("nombreCompleto", value)
+              }
               error={errors.nombreCompleto}
             />
 
             <CustomInput
-              label={true}
+              label
               labelText="DNI"
               placeholder="DNI"
               value={dni}
@@ -174,7 +272,10 @@ const EditarPerfil = () => {
 
             <FechaNacimientoInput
               value={fechaNacimiento}
-              onChange={setFechaNacimiento}
+              onChange={(value) => {
+                setFechaNacimiento(value);
+                setErrors((prev) => ({ ...prev, fechaNacimiento: "" }));
+              }}
               error={errors.fechaNacimiento}
             />
 
@@ -196,7 +297,7 @@ const EditarPerfil = () => {
             />
 
             <CustomInput
-              label={true}
+              label
               labelText="Teléfono"
               placeholder="Teléfono"
               value={telefono}
@@ -205,7 +306,7 @@ const EditarPerfil = () => {
             />
 
             <CustomInput
-              label={true}
+              label
               labelText="Dirección"
               placeholder="Dirección"
               value={direccion}
@@ -216,28 +317,33 @@ const EditarPerfil = () => {
         ) : (
           <>
             <CustomInput
-              label={true}
+              label
               labelText="Nueva contraseña"
               placeholder="Nueva contraseña"
               value={password}
               onChangeText={(value) => handleInputChange("password", value)}
-              secureTextEntry={true}
+              secureTextEntry
               error={errors.password}
             />
 
-
             <CustomInput
-              label={true}
+              label
               labelText="Confirme la contraseña"
               placeholder="Confirme la contraseña"
               value={confirmPassword}
               onChangeText={(value) =>
                 handleInputChange("confirmPassword", value)
               }
-              secureTextEntry={true}
+              secureTextEntry
               error={errors.confirmPassword}
             />
           </>
+        )}
+
+        {updateError && (
+          <Text style={[styles.errorText, { color: theme.colors.error }]}>
+            {updateError}
+          </Text>
         )}
 
         <View
@@ -250,13 +356,14 @@ const EditarPerfil = () => {
                   position: "absolute",
                   bottom: 30,
                 }
-              : "",
+              : {},
           ]}
         >
           <CustomButton
-            title="Editar datos"
-            onPress={handleSave}
+            title={updateLoading ? "Guardando..." : "Editar datos"}
+            onPress={handleSubmit}
             style={{ width: "48%" }}
+            disabled={!isModified || updateLoading}
           />
           <CustomButton
             title="Cancelar"
@@ -278,23 +385,14 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingLeft: 40,
   },
-  tabContainer: {
-    flexDirection: "row",
-    height: 50,
-  },
-  tab: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   buttonRow: {
     width: 308,
     marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  label: {
-    marginBottom: 4,
+  errorText: {
+    marginTop: 8,
     fontSize: 14,
   },
 });

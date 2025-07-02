@@ -1,23 +1,18 @@
 // @components/Inputs/FechaNacimientoInput.tsx
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useTheme } from "@themes/ThemeContext";
 
 interface Props {
-  value: Date;
+  value: Date | null; // <-- permito null
   onChange: (date: Date) => void;
   error?: string;
 }
 
 const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
   const { theme } = useTheme();
-  const [showPicker, setShowPicker] = useState(false);
-
-  const handleChange = (_event: any, selectedDate?: Date) => {
-    setShowPicker(false);
-    if (selectedDate) onChange(selectedDate);
-  };
+  const [isPickerVisible, setPickerVisible] = useState(false);
 
   const formatDate = (d: Date) =>
     d.toLocaleDateString("es-AR", {
@@ -25,6 +20,14 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
       month: "2-digit",
       year: "numeric",
     });
+
+  const showPicker = () => setPickerVisible(true);
+  const hidePicker = () => setPickerVisible(false);
+
+  const handleConfirm = (date: Date) => {
+    hidePicker();
+    onChange(date);
+  };
 
   return (
     <View style={{ marginVertical: 10 }}>
@@ -38,48 +41,60 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
       >
         Fecha de nacimiento
       </Text>
+
       <TouchableOpacity
-        onPress={() => setShowPicker(true)}
-        style={{
-          height: 58,
-          width: 308,
-          borderWidth: 1,
-          borderColor: error ? theme.colors.error : theme.colors.inputBorder,
-          backgroundColor: theme.colors.white,
-          borderRadius: 8,
-          justifyContent: "center",
-          paddingHorizontal: 14,
-        }}
+        onPress={showPicker}
+        style={[
+          styles.input,
+          {
+            borderColor: error ? theme.colors.error : theme.colors.inputBorder,
+            backgroundColor: theme.colors.white,
+          },
+        ]}
       >
-        <Text style={{ color: theme.colors.text, fontSize: 18 }}>
-          {formatDate(value)}
+        <Text
+          style={{
+            color: theme.colors.text,
+            fontSize: 18,
+          }}
+        >
+          {value ? formatDate(value) : "Seleccioná tu fecha de nacimiento"}
         </Text>
       </TouchableOpacity>
 
-      {showPicker && (
-        <DateTimePicker
-          value={value}
-          mode="date"
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-          onChange={handleChange}
-          maximumDate={new Date()}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={isPickerVisible}
+        mode="date"
+        date={value || new Date("2000-01-01")} // fecha por defecto si no hay valor
+        onConfirm={handleConfirm}
+        onCancel={hidePicker}
+        maximumDate={new Date()}
+        locale="es-AR"
+        display="spinner"
+      />
 
-      {error ? (
+      {error && (
         <Text style={[styles.errorText, { color: theme.colors.error }]}>
           {error}
         </Text>
-      ) : null}
+      )}
     </View>
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
+  input: {
+    height: 58,
+    width: 308,
+    borderWidth: 1,
+    borderRadius: 8,
+    justifyContent: "center",
+    paddingHorizontal: 14,
+  },
   errorText: {
     marginTop: 4,
     fontSize: 12,
   },
-};
+});
 
 export default FechaNacimientoInput;

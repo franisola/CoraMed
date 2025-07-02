@@ -1,5 +1,5 @@
 // src/components/Appointments/NextAppointmentCard.tsx
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { useTheme } from "@themes/ThemeContext";
 import { getNextAppointment } from "@slices/appointmentSlice";
 import dayjs from "dayjs";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect } from "@react-navigation/native";
 
 const NextAppointmentCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,11 +23,13 @@ const NextAppointmentCard: React.FC = () => {
   );
   const user = useAppSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    if (user) {
-      dispatch(getNextAppointment());
-    }
-  }, [dispatch, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (user) {
+        dispatch(getNextAppointment());
+      }
+    }, [dispatch, user])
+  );
 
   const nombreCompleto =
     appointment?.profesional?.nombre && appointment?.profesional?.apellido

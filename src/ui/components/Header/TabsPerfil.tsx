@@ -30,7 +30,7 @@ const Tabs: React.FC<TabsProps> = ({
             styles.tab,
             {
               backgroundColor:
-                activeTab === tab ? theme.colors.details : theme.colors.primary,
+                activeTab === tab ? theme.colors.primary : theme.colors.details,
             },
           ]}
           onPress={() => !disableSwitching && setActiveTab(tab)}
@@ -38,7 +38,7 @@ const Tabs: React.FC<TabsProps> = ({
         >
           <Text
             style={{
-              color: activeTab === tab ? theme.colors.text : theme.colors.textSecondary,
+              color: activeTab === tab ? theme.colors.textSecondary : theme.colors.text,
               fontWeight: "bold",
               fontSize: 16,
             }}

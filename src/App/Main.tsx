@@ -3,9 +3,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "@navigation/StackNavigation/AuthStack";
 import AppStack from "@navigation/StackNavigation/AppStack";
 import { useAppSelector, useAppDispatch } from "@redux/hooks";
-import { getCurrentUser , logoutUser} from "@slices/authSlice";
+import { getCurrentUser, logoutUser } from "@slices/authSlice";
 
 import LoadingScreen from "@screens/LoadingScreen";
+
+import { registerPushToken } from "@api/notifications"
 
 type MainProps = {
   changeLanguage: (lang: string) => void;
@@ -17,14 +19,15 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   const { user, initialLoading } = useAppSelector((state) => state.auth);
 
-
-
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
-
-  
+  useEffect(() => {
+    if (user) {
+      registerPushToken();
+    }
+  }, [user]);
 
   if (initialLoading) {
     return <LoadingScreen />;

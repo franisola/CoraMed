@@ -54,7 +54,8 @@ const BookAppointment = () => {
 
       const response = await dispatch(createAppointment(payload)).unwrap();
 
-      navigation.navigate("Home", { turno: response });
+
+      await navigation.navigate("Home", { turno: response });
     } catch (error: any) {
       const mensaje =
         error?.message || "Ocurrió un error al crear el turno.";

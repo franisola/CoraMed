@@ -14,6 +14,8 @@ const AppointmentInfo: React.FC<Props> = ({ doctor, especialidad, fecha, hora })
   const { theme, isDark } = useTheme();
   const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
 
+
+
   return (
     <>
       <View style={styles.row}>

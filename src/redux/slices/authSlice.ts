@@ -10,6 +10,8 @@ import {
   verifyCode as verifyCodeAPI,
 } from "@api/auth";
 
+import { updateUser } from "./userSlice";
+
 import { setToken, clearToken } from "@api/index";
 
 interface AuthState {
@@ -46,7 +48,7 @@ export const loginUser = createAsyncThunk(
         return null;
       }
     } catch (err: any) {
-      const backendError = err.response?.data?.error || "Error del servidor";
+      const backendError = err.response?.data?.message || "Error del servidor";
       return rejectWithValue({ error: backendError });
     }
   }
@@ -68,7 +70,7 @@ export const registerUser = createAsyncThunk(
         return null;
       }
     } catch (err: any) {
-      const backendError = err.response?.data?.error || "Error al registrar";
+      const backendError = err.response?.data?.message || "Error al registrar";
       return rejectWithValue({ error: backendError });
     }
   }
@@ -81,7 +83,8 @@ export const recoverPassword = createAsyncThunk(
       const res = await recoverPasswordAPI(email);
       return res;
     } catch (err: any) {
-      const backendError = err.response?.data?.error || "Error al enviar email";
+      const backendError =
+        err.response?.data?.message || "Error al enviar email";
       return rejectWithValue({ error: backendError });
     }
   }
@@ -118,7 +121,7 @@ export const resetPassword = createAsyncThunk(
       return res;
     } catch (err: any) {
       const backendError =
-        err.response?.data?.error || "Error al cambiar contraseña";
+        err.response?.data?.message || "Error al cambiar contraseña";
       return rejectWithValue({ error: backendError });
     }
   }
@@ -126,17 +129,14 @@ export const resetPassword = createAsyncThunk(
 
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await getCurrentUserAPI();
+  async (_, { dispatch }) => {
+    const res = await getCurrentUserAPI();
 
-      if (res.isAuthenticated) {
-        return res.user;
-      } else {
-        return null; // no autenticado
-      }
-    } catch (err: any) {
-      return rejectWithValue({ error: "Sesión expirada" });
+    if (res.isAuthenticated) {
+      return res.user;
+    } else {
+      // await dispatch(logoutUser());
+      return null; // No disparás ningún error acá
     }
   }
 );
@@ -155,7 +155,7 @@ export const deleteAccount = createAsyncThunk(
       return res;
     } catch (err: any) {
       const backendError =
-        err.response?.data?.error || "No se pudo eliminar la cuenta";
+        err.response?.data?.message || "No se pudo eliminar la cuenta";
       return rejectWithValue({ error: backendError });
     }
   }
@@ -178,9 +178,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error =
+          action.payload?.error || action.error?.message || "Error desconocido";
       })
-
       // REGISTER
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -251,6 +251,11 @@ const authSlice = createSlice({
       // LOGOUT
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.user = null;
       })
 
       // DELETE ACCOUNT
@@ -265,6 +270,13 @@ const authSlice = createSlice({
       .addCase(deleteAccount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      //EDIT PROFILE
+      .addCase(updateUser.fulfilled, (state, action) => {
+        if (state.user && action.payload?.user) {
+          state.user = { ...state.user, ...action.payload.user };
+        }
       });
   },
 });

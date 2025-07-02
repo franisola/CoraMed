@@ -94,9 +94,6 @@ export const useAuthForm = (
           password: values.password,
           confirmPassword: values.confirmPassword,
         });
-
-        console.log("Validation result:", validationResult);
-
         break;
       case "codeVerification":
         validationResult = verifyCodeSchema.safeParse({
@@ -170,8 +167,6 @@ export const useAuthForm = (
           toast.show(backendError, { type: "danger" });
         }
       } else if (type === "changePassword") {
-        console.log("Submitting change password with values:", values);
-        
         const result = await dispatch(
           resetPassword({ email: values.email, password: values.password })
         ).unwrap();

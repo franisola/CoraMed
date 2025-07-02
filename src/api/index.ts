@@ -1,6 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// import {store} from "@redux/store";
+// import { logoutUser } from "@slices/authSlice";
+
 const API = axios.create({
   baseURL: "https://backsalud.onrender.com/api",
   headers: {
@@ -24,15 +27,19 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      // Aquí podrías hacer logout automático o intentar refresh token
-      console.warn("Token inválido o expirado. Debe iniciar sesión nuevamente.");
+    const status = error.response?.status;
+
+    if (status === 401 || status === 403) {
+      console.warn("Token inválido o expirado.");
       await AsyncStorage.removeItem("token");
+      // store.dispatch(logoutUser());
     }
+
     console.error("API error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
+
 
 // Función para guardar token en AsyncStorage
 export const setToken = async (token: string) => {

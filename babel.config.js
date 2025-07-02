@@ -29,6 +29,7 @@ export default function (api) {
             "@validations": "./src/validations",
             "@api": "./src/api",
             "@models": "./src/models",
+            "@utils": "./src/utils"
           }
         }
       ],
