@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,12 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '@themes/ThemeContext';
 import { useAppDispatch, useAppSelector } from '@redux/hooks';
 import {
   fetchNotifications,
-  markNotificationAsRead,
   deleteNotification,
-  clearReadNotifications,
 } from '@slices/notificationSlice';
 
 interface NotificationItem {
@@ -24,9 +22,12 @@ interface NotificationItem {
   titulo: string;
   mensaje: string;
   leida: boolean;
-  createdAt: string;
   tipo: string;
-  turno?: { _id: string };
+  turno?: {
+    _id: string;
+    especialidad: string;
+    profesional: string | { nombreCompleto?: string; name?: string };
+  };
 }
 
 const NotificationsScreen: React.FC = () => {
@@ -37,11 +38,12 @@ const NotificationsScreen: React.FC = () => {
     state => state.notification
   );
 
-  useEffect(() => {
-    dispatch(fetchNotifications());
-  }, [dispatch]);
-
-  const handleMarkAsRead = (id: string) => dispatch(markNotificationAsRead(id));
+  // Recarga cada vez que la pantalla recibe foco
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchNotifications());
+    }, [dispatch])
+  );
 
   const handleDelete = (id: string) => {
     Alert.alert(
@@ -54,74 +56,69 @@ const NotificationsScreen: React.FC = () => {
     );
   };
 
-  const handleClearRead = () => dispatch(clearReadNotifications());
-
-  const renderIcon = (tipo: string, leida: boolean) => {
+  const renderIcon = (tipo: string) => {
+    const key = tipo.toLowerCase();
     const iconMap: Record<string, string> = {
-      recordatorio: 'time-outline',
-      cancelado: 'close-circle-outline',
-      resultado: 'document-text-outline',
-      agendado: 'calendar-outline',
+      'turno_agendado': 'calendar-outline',
+      'turno_cancelado': 'close-circle-outline',
+      'resultados_subidos': 'document-text-outline',
+      'recordatorio': 'time-outline',
+      'otro': 'notifications-outline',
     };
-    const name = iconMap[tipo] || 'notifications-outline';
-    return (
-      <Ionicons
-        name={name as any}
-        size={24}
-        color={leida ? theme.colors.greyText : theme.colors.icons}
-        style={styles.icon}
-      />
-    );
+    return iconMap[key] || iconMap['otro'];
   };
 
-  const renderItem = ({ item }: { item: NotificationItem }) => (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => {
-        if (item.turno?._id) {
-          const tabNav = navigation.getParent();
-          tabNav?.navigate('HomeStack', {
-            screen: 'ScheduleStack',
-            params: {
-              screen: 'AppointmentDetails',
-              params: { id: item.turno._id },
-            },
-          });
-        }
-      }}
-    >
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: theme.colors.white },
-          !item.leida && { borderLeftColor: theme.colors.primary, borderLeftWidth: 4 },
-        ]}
+  const renderItem = ({ item }: { item: NotificationItem }) => {
+    // Quita hora del mensaje
+    const cleanMensaje = item.mensaje.replace(/ a las \d{1,2}:\d{2}/, '');
+    // Determina nombre de doctor
+    let doctorName = '';
+    if (item.turno?.profesional) {
+      const prof = item.turno.profesional;
+      doctorName = typeof prof === 'string'
+        ? prof
+        : prof.nombreCompleto || prof.name || '';
+    }
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          if (item.turno?._id) {
+            const tabNav = navigation.getParent();
+            tabNav?.navigate('HomeStack', {
+              screen: 'ScheduleStack',
+              params: {
+                screen: 'AppointmentDetails',
+                params: { id: item.turno._id },
+              },
+            });
+          }
+        }}
       >
-        {renderIcon(item.tipo, item.leida)}
-        <View style={styles.content}>
-          <Text style={[styles.title, { color: theme.colors.text }]}>
-            {item.titulo}
-          </Text>
-          <Text style={[styles.body, { color: theme.colors.greyText }]}>
-            {item.mensaje}
-          </Text>
-          <Text style={[styles.date, { color: theme.colors.greyText }]}>
-            {new Date(item.createdAt).toLocaleString()}
-          </Text>
-        </View>
-        <View style={styles.actions}>
-          {!item.leida && (
-            <TouchableOpacity
-              onPress={() => handleMarkAsRead(item._id)}
-              style={styles.actionButton}
-            >
-              <Ionicons
-                name="checkmark-done-outline"
-                size={20}
-                color={theme.colors.primary}
-              />
-            </TouchableOpacity>
-          )}
+        <View style={[
+          styles.card,
+          { backgroundColor: theme.colors.white, borderLeftColor: theme.colors.primary, borderLeftWidth: 4 }
+        ]}>
+          <Ionicons
+            name={renderIcon(item.tipo) as any}
+            size={24}
+            color={theme.colors.icons}
+            style={styles.icon}
+          />
+          <View style={styles.content}>
+            <Text style={[styles.title, { color: theme.colors.text }]}>
+              {item.titulo}
+            </Text>
+            <Text style={[styles.body, { color: theme.colors.greyText }]}>
+              {cleanMensaje}
+            </Text>
+            {item.turno && (
+              <>
+                <Text style={[styles.info, { color: theme.colors.greyText }]}>Especialidad: {item.turno.especialidad}</Text>
+                {doctorName ? <Text style={[styles.info, { color: theme.colors.greyText }]}>Doctor: {doctorName}</Text> : null}
+              </>
+            )}
+          </View>
           <TouchableOpacity
             onPress={() => handleDelete(item._id)}
             style={styles.actionButton}
@@ -129,9 +126,9 @@ const NotificationsScreen: React.FC = () => {
             <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
           </TouchableOpacity>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   if (loading) {
     return (
@@ -140,7 +137,6 @@ const NotificationsScreen: React.FC = () => {
       </View>
     );
   }
-
   if (error) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: theme.colors.background }]}>  
@@ -151,12 +147,6 @@ const NotificationsScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>  
-      <View style={[styles.header, { backgroundColor: theme.colors.details }]}>  
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Notificaciones</Text>
-        <TouchableOpacity onPress={handleClearRead}>
-          <Text style={[styles.clearText, { color: theme.colors.primary }]}>Limpiar leídas</Text>
-        </TouchableOpacity>
-      </View>
       <FlatList
         data={notifications}
         keyExtractor={item => item._id}
@@ -174,14 +164,6 @@ export default NotificationsScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  headerTitle: { fontSize: 18, fontWeight: '600' },
-  clearText: { fontWeight: '500' },
   list: { padding: 8 },
   card: {
     flexDirection: 'row',
@@ -190,15 +172,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderRadius: 8,
     elevation: 1,
-    borderLeftWidth: 4,
   },
   icon: { marginRight: 12, alignSelf: 'center' },
   content: { flex: 1 },
-  title: { fontSize: 16, fontWeight: '600' },
-  body: { fontSize: 14, marginVertical: 4 },
-  date: { fontSize: 12 },
-  actions: { flexDirection: 'row', alignItems: 'center' },
-  actionButton: { marginLeft: 12 },
+  title: { fontSize: 16, fontWeight: '600', marginBottom: 4 },
+  body: { fontSize: 14, marginBottom: 4 },
+  info: { fontSize: 14, marginBottom: 2 },
+  actionButton: { justifyContent: 'center', paddingHorizontal: 8 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyText: { textAlign: 'center', marginTop: 40 },
