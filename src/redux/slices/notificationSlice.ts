@@ -31,11 +31,8 @@ export const fetchNotifications = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetchNotificationsAPI();
-      console.log("API notifications payload:", res);
       // Si res ya es un array, úsalo directamente; si viene bajo res.notifications, úsalo
-      const notifications = Array.isArray(res)
-        ? res
-        : res.notifications;
+      const notifications = Array.isArray(res) ? res : res.notifications;
       return notifications;
     } catch (err: any) {
       return rejectWithValue(
@@ -44,7 +41,6 @@ export const fetchNotifications = createAsyncThunk(
     }
   }
 );
-
 
 export const markNotificationAsRead = createAsyncThunk(
   "notifications/markAsRead",

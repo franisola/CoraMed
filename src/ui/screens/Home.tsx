@@ -22,7 +22,9 @@ const IconButton = ({
   return (
     <TouchableOpacity style={styles.iconButton} onPress={onPress}>
       <View
-        style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.details }]}
+        // style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.details }]}
+        style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.white }]}
+
       >
         <FontAwesome name={icon} size={28} color={theme.colors.icons} />
       </View>

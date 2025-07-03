@@ -1,4 +1,3 @@
-// src/components/Appointments/NextAppointmentCard.tsx
 import React, { useCallback } from "react";
 import {
   View,
@@ -7,11 +6,16 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { useTheme } from "@themes/ThemeContext";
 import { getNextAppointment } from "@slices/appointmentSlice";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useNavigation,useFocusEffect } from "@react-navigation/native";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
+
+const ICON_SIZE = 20;
 
 const NextAppointmentCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,16 +35,9 @@ const NextAppointmentCard: React.FC = () => {
     }, [dispatch, user])
   );
 
-  const nombreCompleto = appointment?.profesional
-  ? `${appointment.profesional.nombre ?? ""} ${appointment.profesional.apellido ?? ""}`.trim()
-  : "-";
-
-
-  const especialidad = appointment?.profesional?.especialidad || "-";
-  const fecha = appointment?.fecha
-    ? dayjs(appointment.fecha).format("DD/MM/YYYY")
-    : "-";
-  const hora = appointment?.hora || "-";
+  const isCancelado =
+    appointment?.estado?.toLowerCase() === "cancelado" ||
+    appointment?.estado?.toLowerCase() === "turno_cancelado";
 
   const handlePress = () => {
     if (appointment?._id) {
@@ -63,105 +60,166 @@ const NextAppointmentCard: React.FC = () => {
     );
   }
 
+  // Si no hay turno próximo mostramos mensaje especial con otro estilo
+  if (!appointment) {
+    return (
+      <View
+        style={[
+          styles.noAppointmentContainer,
+          { backgroundColor: theme.colors.details },
+        ]}
+      >
+        <Text
+          style={[styles.noAppointmentText, { color: theme.colors.greyText }]}
+        >
+          No hay turnos próximos.
+        </Text>
+      </View>
+    );
+  }
+
+  // Si hay turno mostramos la card con estilo normal
+  const nombreCompleto = appointment.profesional
+    ? `${appointment.profesional.nombre ?? ""} ${appointment.profesional.apellido ?? ""}`.trim()
+    : "-";
+
+  const especialidad = appointment.profesional?.especialidad || "-";
+  const fecha = appointment.fecha
+    ? dayjs(appointment.fecha).utc(false).format("DD/MM/YYYY")
+    : "-";
+  const hora = appointment.hora || "-";
+
   return (
     <TouchableOpacity
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.details,
-          borderColor: theme.colors.inputBorder,
+          backgroundColor: theme.colors.white,
+          borderLeftColor: isCancelado
+            ? theme.colors.error
+            : theme.colors.primary,
+          borderLeftWidth: 4,
         },
       ]}
-      activeOpacity={appointment ? 0.8 : 1}
+      activeOpacity={0.8}
       onPress={handlePress}
-      disabled={!appointment}
     >
-      <Text style={[styles.title, { color: theme.colors.primary }]}>
-        Próximo Turno
-      </Text>
-
-      {appointment ? (
-        <View style={styles.rowGroup}>
-          <View style={styles.col}>
-            <Text style={[styles.label, { color: theme.colors.primary }]}>
-              Profesional:
-            </Text>
-            <Text style={[styles.value, { color: theme.colors.text }]}>
-              {nombreCompleto}
-            </Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={[styles.label, { color: theme.colors.primary }]}>
-              Especialidad:
-            </Text>
-            <Text style={[styles.value, { color: theme.colors.text }]}>
-              {especialidad}
-            </Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={[styles.label, { color: theme.colors.primary }]}>
-              Fecha:
-            </Text>
-            <Text style={[styles.value, { color: theme.colors.text }]}>
-              {fecha}
-            </Text>
-          </View>
-          <View style={styles.col}>
-            <Text style={[styles.label, { color: theme.colors.primary }]}>
-              Hora:
-            </Text>
-            <Text style={[styles.value, { color: theme.colors.text }]}>
-              {hora}
-            </Text>
-          </View>
+      <View style={styles.row}>
+        {/* Nombre y especialidad sin icono, alineados a la izquierda */}
+        <View style={styles.nameSpecialtyContainer}>
+          <Text
+            style={[
+              styles.title,
+              { color: isCancelado ? theme.colors.error : theme.colors.text },
+            ]}
+            numberOfLines={1}
+          >
+            {nombreCompleto}
+          </Text>
+          <Text
+            style={[
+              styles.subtitle,
+              {
+                color: isCancelado ? theme.colors.error : theme.colors.greyText,
+              },
+            ]}
+            numberOfLines={1}
+          >
+            {especialidad}
+          </Text>
         </View>
-      ) : (
-        <Text style={[styles.noDataText, { color: theme.colors.greyText }]}>
-          No hay turnos próximos.
+      </View>
+
+      {/* Fecha con icono */}
+      <View style={styles.row}>
+        <Ionicons
+          name="calendar-outline"
+          size={ICON_SIZE}
+          color={isCancelado ? theme.colors.error : theme.colors.icons}
+          style={styles.icon}
+        />
+        <Text
+          style={[
+            styles.info,
+            { color: isCancelado ? theme.colors.error : theme.colors.text },
+          ]}
+        >
+          {`Fecha: ${fecha}`}
         </Text>
-      )}
+      </View>
+
+      {/* Hora con icono */}
+      <View style={styles.row}>
+        <Ionicons
+          name="time-outline"
+          size={ICON_SIZE}
+          color={isCancelado ? theme.colors.error : theme.colors.icons}
+          style={styles.icon}
+        />
+        <Text
+          style={[
+            styles.info,
+            { color: isCancelado ? theme.colors.error : theme.colors.text },
+          ]}
+        >
+          {`Hora: ${hora}`}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
-    borderRadius: 8,
     padding: 16,
-    marginTop: 16,
+    borderRadius: 8,
+    marginVertical: 10,
+    marginHorizontal: 12,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  nameSpecialtyContainer: {
+    flex: 1,
+    flexDirection: "column",
   },
   title: {
-    fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 16,
+    fontSize: 18,
+    fontWeight: "600",
   },
-  rowGroup: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: 10,
+  subtitle: {
+    fontSize: 14,
+    marginTop: 2,
   },
-  col: {
-    width: "47%",
-    marginBottom: 10,
+  icon: {
+    marginRight: 10,
   },
-  label: {
+  info: {
     fontSize: 16,
-    fontWeight: "bold",
-  },
-  value: {
-    fontSize: 16,
-    marginTop: 4,
   },
   errorText: {
     marginTop: 20,
     fontSize: 16,
+    textAlign: "center",
   },
-  noDataText: {
-    fontStyle: "italic",
+  noAppointmentContainer: {
+    padding: 20,
+    marginHorizontal: 12,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noAppointmentText: {
     fontSize: 16,
-    marginTop: 8,
+    fontStyle: "italic",
   },
 });
 

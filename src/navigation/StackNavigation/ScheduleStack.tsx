@@ -1,11 +1,9 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@themes/ThemeContext";
 import { getDefaultHeaderOptions } from "@navigation/options/headerOptions";
-
 
 import MyAppointments from "@screens/Appointments/Schedule/MyAppointments";
 import AppointmentDetails from "@screens/Appointments/Schedule/AppointmentDetails";
@@ -13,12 +11,9 @@ import AppointmentResults from "@screens/Appointments/Schedule/AppointmentResult
 
 export type AppointmentStackParamList = {
   MyAppointments: undefined;
-  AppointmentDetails: undefined
+  AppointmentDetails: undefined;
   AppointmentResults: undefined;
 };
-
-
-
 
 const Stack = createNativeStackNavigator<AppointmentStackParamList>();
 
