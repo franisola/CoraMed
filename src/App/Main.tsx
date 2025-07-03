@@ -21,6 +21,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
 
   useEffect(() => {
     dispatch(getCurrentUser());
+    //dispatch(logoutUser());
   }, [dispatch]);
 
   useEffect(() => {

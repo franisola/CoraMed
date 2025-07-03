@@ -4,6 +4,7 @@ import appointmentReducer from './slices/appointmentSlice';
 import professionalReducer from './slices/professionalSlice';
 import healthInsuranceReducer from "@slices/healthInsuranceSlice";
 import userReducer from "@slices/userSlice";
+import notificationReducer from "@slices/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     professionals: professionalReducer,
     healthInsurance: healthInsuranceReducer,
     user: userReducer,
+    notification: notificationReducer,
   },
 });
 
