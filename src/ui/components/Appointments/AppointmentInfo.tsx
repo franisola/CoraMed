@@ -22,8 +22,9 @@ const AppointmentInfo: React.FC<Props> = ({ doctor, especialidad, fecha, hora })
         <View style={styles.column}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Profesional:</Text>
           <Text style={[styles.value, { color: valueColor }]}>
-            {doctor.nombre} {doctor.apellido}
+            {doctor?.nombre ?? "-"} {doctor?.apellido ?? "-"}
           </Text>
+
         </View>
         <View style={styles.column}>
           <Text style={[styles.label, { color: theme.colors.text }]}>Especialidad:</Text>

@@ -31,10 +31,10 @@ const NextAppointmentCard: React.FC = () => {
     }, [dispatch, user])
   );
 
-  const nombreCompleto =
-    appointment?.profesional?.nombre && appointment?.profesional?.apellido
-      ? `${appointment.profesional.nombre} ${appointment.profesional.apellido}`
-      : "-";
+  const nombreCompleto = appointment?.profesional
+  ? `${appointment.profesional.nombre ?? ""} ${appointment.profesional.apellido ?? ""}`.trim()
+  : "-";
+
 
   const especialidad = appointment?.profesional?.especialidad || "-";
   const fecha = appointment?.fecha

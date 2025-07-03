@@ -4,11 +4,12 @@ import * as appointmentApi from "@api/appointment";
 export interface Appointment {
   _id: string;
   paciente: string;
-  profesional: {
-    nombre: string;
-    apellido: string;
-    especialidad: string;
-  };
+  profesional?: {
+  nombre?: string;
+  apellido?: string;
+  especialidad?: string;
+};
+
   especialidad: string;
   fecha: string;
   hora: string;
