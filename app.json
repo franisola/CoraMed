@@ -9,9 +9,9 @@
     "newArchEnabled": true,
     "scheme": "coramed",
     "splash": {
-      "image": "",
-      "resizeMode": "",
-      "backgroundColor": ""
+      "image": "./src/assets/images/Logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,7 +19,9 @@
       "infoPlist": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["coramed"]
+            "CFBundleURLSchemes": [
+              "coramed"
+            ]
           }
         ]
       },
@@ -31,7 +33,7 @@
       "package": "com.coramed.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/Logo.png",
-        "backgroundColor": ""
+        "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "intentFilters": [
@@ -42,24 +44,36 @@
             "host": "coramed.com",
             "pathPrefix": "/reset-password"
           },
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         },
         {
           "action": "VIEW",
           "data": {
             "scheme": "coramed"
           },
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
     "web": {
-      "favicon": "",
+      "favicon": "./src/assets/images/favicon.png",
       "bundler": "metro"
     },
     "plugins": [
       "expo-localization",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "12fe81c5-5bf2-4739-896d-95174f570c3a"
+      }
+    },
+    "owner": "santi_ote"
   }
 }
