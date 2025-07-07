@@ -11,6 +11,8 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 
+import { useTranslation } from "react-i18next";
+
 import AppointmentInfo from "@components/Appointments/AppointmentInfo";
 import AppointmentMotiveInput from "@components/Appointments/AppointmentMotiveInput";
 import CustomButton from "@components/Buttons/NormalButton";
@@ -28,6 +30,8 @@ const AppointmentDetailsScreen = () => {
   const navigation = useNavigation();
   const { id } = route.params as { id: string };
 
+  const { t } = useTranslation();
+    
   const { appointment, loading, error } = useAppSelector(
     (state) => state.appointment
   );
@@ -38,12 +42,12 @@ const AppointmentDetailsScreen = () => {
 
   const handleCancelarTurno = () => {
     Alert.alert(
-      "¿Está seguro?",
-      "¿Desea cancelar su turno?",
+      t("appointmentCardTxt.areYouSure"),
+      t("appointmentCardTxt.cancelAppointmentQuestion"),
       [
-        { text: "Mantener Turno", style: "cancel" },
+        { text: "No", style: "cancel" },
         {
-          text: "Cancelar Turno",
+          text: t("appointmentCardTxt.cancelButton"),
           style: "destructive",
           onPress: async () => {
             if (!appointment?._id) return;
@@ -59,14 +63,15 @@ const AppointmentDetailsScreen = () => {
               dispatch(getNextAppointment());
 
               Alert.alert(
-                "Turno cancelado",
-                "El turno fue cancelado correctamente."
+                t("cancelledTitle"),
+                t("cancelledMessage"),
+              
               );
               navigation.navigate("Home");
             } catch (e) {
               Alert.alert(
                 "Error",
-                "No se pudo cancelar el turno. Intente nuevamente."
+                t("errorCancel"),
               );
               console.error("Error al cancelar turno:", e);
             }
@@ -128,7 +133,7 @@ const AppointmentDetailsScreen = () => {
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={[styles.label, { color: theme.colors.text }]}>
-              Estado:
+              {t("appointmentCardTxt.status")}
             </Text>
             <Text style={[styles.value, { color: valueColor }]}>{estado}</Text>
           </View>
@@ -138,7 +143,7 @@ const AppointmentDetailsScreen = () => {
       <View style={styles.buttonWrapper}>
         {estado === "Agendado" && (
           <CustomButton
-            title="Cancelar Turno"
+            title= {t("appointmentCardTxt.cancelButton")} 
             onPress={handleCancelarTurno}
             style={{ backgroundColor: theme.colors.error }}
           />

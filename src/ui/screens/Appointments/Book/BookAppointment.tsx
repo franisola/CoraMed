@@ -13,17 +13,22 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 
+import { useTranslation } from "react-i18next";
+
 import { useAppDispatch } from "@redux/hooks";
 import { createAppointment } from "@slices/appointmentSlice";
 
 import AppointmentMotiveInput from "@components/Appointments/AppointmentMotiveInput";
 import AppointmentInfo from "@components/Appointments/AppointmentInfo";
+import AppointmentCard from "@/ui/components/Appointments/AppointmentCard";
 
 const BookAppointment = () => {
   const { theme, isDark } = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
   const dispatch = useAppDispatch();
+
+  const { t } = useTranslation();
 
   const { especialidad, doctor, fecha, hora } = route.params;
   const [motivoConsulta, setMotivoConsulta] = useState("");
@@ -58,7 +63,7 @@ const BookAppointment = () => {
       await navigation.navigate("Home", { turno: response });
     } catch (error: any) {
       const mensaje =
-        error?.message || "Ocurrió un error al crear el turno.";
+        error?.message || t("appointmentCardTxt.errorAppointment");
       setErrorMsg(mensaje);
     } finally {
       setIsLoading(false);
@@ -103,7 +108,7 @@ const BookAppointment = () => {
 
         <View style={styles.buttonWrapper}>
           <CustomButton
-            title="Confirmar Turno"
+            title= {t("appointmentCardTxt.confirmButton")}
             onPress={handleSubmit}
             loading={isLoading}
             disabled={!isValid || isLoading}

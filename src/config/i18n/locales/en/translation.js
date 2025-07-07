@@ -79,7 +79,34 @@ const translations = {
     myHealthInsurance: "My health insurance",
     welcomeMale: "Welcome",
     welcomeFemale: "Welcome",
-    welcomeOther: "Bienvenide",
+    welcomeOther: "Welcome",
+  },
+
+  book: {
+    selectSpecialty: "Select a specialty",
+    selectDoctor: "Select a doctor",
+    byName: "Search by name",
+    selectDate: "Select date:",
+    selectDateTime: "Select date and time",
+    selectTime: "Select time:",
+    errorAppointment: "An error occurred while creating the appointment.",
+  },
+
+  appointmentCardTxt: {
+    professional: "Professional:",
+    specialty: "Specialty:",
+    date: "Date:",
+    time: "Time:",
+    reason: "Reason for visit:",
+    placeholderText: "Write the reason for your visit...",
+    confirmButton: "Confirm appointment",
+    cancelButton: "Cancel appointment",
+    cancel: "Canceled",
+    areYouSure: "Are you sure?",
+    keepAppointment: "Keep appointment",
+    cancelAppointmentQuestion: "Do you want to cancel your appointment?",
+    status: "Status:",
+    characters: "Characters"
   },
 
   authFooterText: {
@@ -89,6 +116,8 @@ const translations = {
     register: "Register",
     
   },
+
+  loading: "Loading..",
 
   errorInputEmail: "Invalid email",
   errorInputPassword: "Invalid password",
@@ -104,6 +133,10 @@ const translations = {
   errorInputRequired: "Required field",
   errorInputMinLength: "Minimum {{min}} characters",
   errorInputMaxLength: "Maximum {{max}} characters",
+
+  errorCancel: "Could not cancel the appointment. Please try again.",
+  cancelledTitle: "Appointment canceled",
+  cancelledMessage: "The appointment has been successfully canceled.",
 };
 
 export default translations;

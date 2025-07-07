@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import { useTheme } from "@themes/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   doctor: { nombre: string; apellido: string };
@@ -13,32 +14,32 @@ interface Props {
 const AppointmentInfo: React.FC<Props> = ({ doctor, especialidad, fecha, hora }) => {
   const { theme, isDark } = useTheme();
   const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
-
+  const { t } = useTranslation();
 
 
   return (
     <>
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Profesional:</Text>
+          <Text style={[styles.label, { color: theme.colors.text }]}>{t("appointmentCardTxt.professional")} </Text>
           <Text style={[styles.value, { color: valueColor }]}>
             {doctor?.nombre ?? "-"} {doctor?.apellido ?? "-"}
           </Text>
 
         </View>
         <View style={styles.column}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Especialidad:</Text>
+          <Text style={[styles.label, { color: theme.colors.text }]}>{t("appointmentCardTxt.specialty")}</Text>
           <Text style={[styles.value, { color: valueColor }]}>{especialidad}</Text>
         </View>
       </View>
 
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Fecha:</Text>
+          <Text style={[styles.label, { color: theme.colors.text }]}>{t("appointmentCardTxt.date")}</Text>
           <Text style={[styles.value, { color: valueColor }]}>{dayjs(fecha).format("DD/MM/YYYY")}</Text>
         </View>
         <View style={styles.column}>
-          <Text style={[styles.label, { color: theme.colors.text }]}>Hora:</Text>
+          <Text style={[styles.label, { color: theme.colors.text }]}>{t("appointmentCardTxt.time")}</Text>
           <Text style={[styles.value, { color: valueColor }]}>{hora}</Text>
         </View>
       </View>

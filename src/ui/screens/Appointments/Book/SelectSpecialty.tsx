@@ -4,12 +4,13 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import CustomPicker from "@components/Inputs/CustomPicker";
 import CustomButton from "@components/Buttons/NormalButton";
-
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   getSpecialties,
   setSelectedSpecialty,
 } from "@slices/professionalSlice";
+import { t } from "i18next";
 
 const SelectSpecialty = () => {
   const { theme } = useTheme();
@@ -62,7 +63,7 @@ const SelectSpecialty = () => {
     >
       <View style={styles.content}>
         <Text style={[styles.subtitle, { color: theme.colors.text }]}>
-          Elija una Especialidad:
+          {t("book.selectSpecialty")}
         </Text>
 
         <CustomPicker
@@ -74,7 +75,7 @@ const SelectSpecialty = () => {
       </View>
 
       <CustomButton
-        title="Seleccionar Especialidad"
+        title= {t("book.selectSpecialty")}
         onPress={handlePress}
         disabled={selected === "default" || !selected || loading}
         loading={loading}

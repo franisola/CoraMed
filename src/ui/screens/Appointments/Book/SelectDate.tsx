@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
   View,
   Text,
@@ -16,6 +18,7 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { getAvailableSchedules } from "@slices/professionalSlice";
 
+
 const weekdayMap: Record<string, string> = {
   Sunday: "Domingo",
   Monday: "Lunes",
@@ -31,7 +34,7 @@ const SelectDate = () => {
   const route = useRoute();
   const { doctor, especialidad } = route.params;
   const { theme } = useTheme();
-
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const availableTimes = useAppSelector(
     (state) => state.professionals.schedules
@@ -153,7 +156,7 @@ const SelectDate = () => {
     >
       <View style={styles.content}>
         <Text style={[styles.subtitle, { color: theme.colors.text }]}>
-          Seleccionar fecha:
+          {t("book.selectDate")}
         </Text>
 
         <View style={styles.calendarWrapper}>
@@ -179,7 +182,7 @@ const SelectDate = () => {
         {selectedDate && (
           <>
             <Text style={[styles.subtitle, { color: theme.colors.text }]}>
-              Seleccionar horario:
+              {t("book.selectTime")}
             </Text>
 
             <View style={styles.timeListContainer}>
@@ -231,7 +234,7 @@ const SelectDate = () => {
       </View>
 
       <CustomButton
-        title={loading ? "Cargando..." : "Seleccionar Fecha y Hora"}
+        title={loading ?  t("book.selectTime") : t("book.selectDateTime")}
         onPress={handleContinue}
         disabled={!selectedDate || !selectedTime || loading}
         style={styles.button}

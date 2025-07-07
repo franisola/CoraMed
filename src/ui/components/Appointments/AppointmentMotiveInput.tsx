@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, TextInput, View, StyleSheet } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   value: string;
@@ -11,10 +12,11 @@ interface Props {
 const AppointmentMotiveInput: React.FC<Props> = ({ value, onChangeText, editable = false }) => {
   const { theme, isDark } = useTheme();
   const valueColor = isDark ? theme.colors.textSecondary : theme.colors.greyText;
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.subtitle, { color: theme.colors.text }]}>Motivo de la consulta:</Text>
+      <Text style={[styles.subtitle, { color: theme.colors.text }]}>{t("appointmentCardTxt.reason")} </Text>
       {editable ? (
         <>
           <TextInput
@@ -22,7 +24,7 @@ const AppointmentMotiveInput: React.FC<Props> = ({ value, onChangeText, editable
               borderColor: theme.colors.inputBorder,
               color: theme.colors.text,
             }]}
-            placeholder="Escriba aquí el motivo de su consulta..."
+            placeholder={t("appointmentCardTxt.placeholderText")}
             placeholderTextColor={valueColor}
             value={value}
             onChangeText={onChangeText}
@@ -31,7 +33,7 @@ const AppointmentMotiveInput: React.FC<Props> = ({ value, onChangeText, editable
             maxLength={500}
           />
           <Text style={[styles.charCounter, { color: valueColor }]}>
-            Caracteres: {value.length}/500
+            {t("appointmentCardTxt.characters")} {value.length}/500
           </Text>
         </>
       ) : (

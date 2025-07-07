@@ -87,12 +87,43 @@ const translations = {
     welcomeOther: "Bienvenide",
   },
 
+  book: {
+    selectSpecialty: "Elija una especialidad",
+    selectDoctor: "Elija un doctor",
+    byName: "Buscar por nombre",
+    selectDate: "Seleccionar fecha:",  
+    selectDateTime: "Seleccionar fecha y hora",
+    selectTime: "Seleccionar horario:",
+  },
+
+  appointmentCardTxt: {
+    professional: "Profesional:",
+    specialty: "Especialidad:",
+    date: "Fecha:",
+    time: "Hora:",
+    reason: "Motivo de la consulta:",
+    placeholderText: "Escriba aquí el motivo de su consulta...",
+    confirmButton: "Confirmar turno",
+    cancelButton: "Cancelar turno",
+    cancel: "Cancelado",
+    areYouSure: "¿Está seguro?",
+    status: "Estado:",
+    keepAppointment: "Mantener turno",
+    cancelAppointmentQuestion: "¿Desea cancelar su turno?",
+    characters: "Caracteres",
+    errorAppointment: "Ocurrió un error al crear el turno.",
+
+  },
+
+
   authFooterText: {
     noAccount: "¿No tienes una cuenta?",
     alreadyHaveAccount: "¿Ya tienes una cuenta?",
     login: "Inicia sesión",
     register: "Registrate",
   },
+
+  loading: "Loading..",
 
   errorInputEmail: "Email inválido",
   errorInputPassword: "Contraseña inválida",
@@ -116,6 +147,11 @@ const translations = {
   errorInputRequired: "Campo requerido",
   errorInputMinLength: "Mínimo {{min}} caracteres",
   errorInputMaxLength: "Máximo {{max}} caracteres",
+
+  errorCancel: "No se pudo cancelar el turno. Intente nuevamente.",
+  cancelledTitle: "Turno cancelado",
+  cancelledMessage: "El turno fue cancelado correctamente.",
+
 };
 
 export default translations;

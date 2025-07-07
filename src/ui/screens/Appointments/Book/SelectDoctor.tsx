@@ -12,7 +12,7 @@ import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/nativ
 import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 import { Ionicons } from "@expo/vector-icons";
-
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { getProfessionalsBySpecialty, Professional } from "@slices/professionalSlice";
 
@@ -25,6 +25,8 @@ const SelectDoctor = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { especialidad } = route.params as RouteParams;
+
+  const {t} = useTranslation();
 
   const dispatch = useAppDispatch();
   const allDoctors = useAppSelector((state) => state.professionals.professionals);
@@ -70,12 +72,12 @@ const SelectDoctor = () => {
     >
       <View style={styles.content}>
         <Text style={[styles.subtitle, { color: theme.colors.text }]}>
-          Elija su Doctor:
+          {t("book.selectDoctor")}
         </Text>
 
         <View style={styles.searchContainer}>
           <TextInput
-            placeholder="Buscar Doctor Por Nombre..."
+            placeholder= {t("book.byName")}
             placeholderTextColor={theme.colors.greyText}
             style={[
               styles.searchInput,
@@ -141,7 +143,7 @@ const SelectDoctor = () => {
       </View>
 
       <CustomButton
-        title="Seleccionar Doctor"
+        title= {t("book.selectDoctor")}
         onPress={handlePress}
         disabled={!selectedDoctor || loadingButton}
         loading={loadingButton}
