@@ -2,7 +2,7 @@ import { Dimensions } from "react-native";
 
 export const getDefaultHeaderOptions = (theme) => {
   const screenHeight = Dimensions.get("window").height;
-  const headerHeight = screenHeight * 0.12;
+  const headerHeight = screenHeight * 0.18;
 
   return {
     headerShown: true,

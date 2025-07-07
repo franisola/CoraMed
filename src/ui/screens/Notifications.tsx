@@ -16,6 +16,7 @@ import {
   fetchNotifications,
   deleteNotification,
 } from "@slices/notificationSlice";
+import { t } from "i18next";
 
 interface NotificationItem {
   _id: string;
@@ -232,7 +233,7 @@ const NotificationsScreen: React.FC = () => {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <Text style={[styles.emptyText, { color: theme.colors.greyText }]}>
-            No tienes notificaciones
+            {t("notificationsTxt.noNotifications")}
           </Text>
         }
       />

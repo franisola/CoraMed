@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@redux/store";
 import { User } from "@models/User";
 import NextAppointmentCard from "@components/Appointments/NextAppointmentCard";
+import { useTranslation } from "react-i18next"; // ✅ Importación agregada
 
 const IconButton = ({
   icon,
@@ -22,9 +23,10 @@ const IconButton = ({
   return (
     <TouchableOpacity style={styles.iconButton} onPress={onPress}>
       <View
-        // style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.details }]}
-        style={[styles.iconWrapper, { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.white }]}
-
+        style={[
+          styles.iconWrapper,
+          { borderColor: theme.colors.inputBorder, backgroundColor: theme.colors.white },
+        ]}
       >
         <FontAwesome name={icon} size={28} color={theme.colors.icons} />
       </View>
@@ -36,41 +38,42 @@ const IconButton = ({
 const Home = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
+  const { t } = useTranslation(); // ✅ Hook de traducción agregado
 
   const user = useSelector((state: RootState) => state.auth.user) as User;
 
   const getSaludo = (genero?: string) => {
-    if (!genero) return "Bienvenide";
+    if (!genero) return t("homeTxt.welcomeOther");
     const g = genero.toLowerCase();
-    if (g === "masculino" || g === "m" || g === "male") return "Bienvenido";
-    if (g === "femenino" || g === "f" || g === "female") return "Bienvenida";
-    return "Bienvenide";
+    if (g === "masculino" || g === "m" || g === "male") return t("homeTxt.welcomeMale"); 
+    if (g === "femenino" || g === "f" || g === "female") return  t("homeTxt.welcomeFemale");
+    return  t("homeTxt.welcomeOther");
   };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Text style={[styles.welcomeText, { color: theme.colors.text }]}>
-        {user ? `${getSaludo(user.genero)} ${user.nombreCompleto}!` : "Bienvenide!"}
+        {user ? `${getSaludo(user.genero)} ${user.nombreCompleto}!` : t("homeTxt.welcomeOther")}
       </Text>
 
       <View style={styles.buttonsRow}>
         <IconButton
           icon="calendar"
-          label="Solicitar Turno"
+          label={t("homeTxt.appointment")} 
           onPress={() =>
             navigation.navigate("BookStack", { screen: "SelectSpecialty" })
           }
         />
         <IconButton
           icon="book"
-          label="Mis Turnos"
+          label= {t("homeTxt.myAppointments")}
           onPress={() =>
             navigation.navigate("ScheduleStack", { screen: "MyAppointments" })
           }
         />
         <IconButton
           icon="id-card"
-          label="Mi Obra Social"
+          label= {t("homeTxt.myHealthInsurance")}
           onPress={() =>
             navigation.navigate("ProfileStack", { screen: "Insurance" })
           }
@@ -82,6 +85,7 @@ const Home = () => {
   );
 };
 
+// Styles for the Home screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -94,21 +94,21 @@ const ProfileScreen = () => {
     >
       <ProfileItem
         iconName="database"
-        text="Mis datos"
+        text={t("settings.data")}
         onPress={() =>
           navigation.navigate("ProfileStack", { screen: "AccountInfo" })
         }
       />
       <ProfileItem
         iconName="id-card"
-        text="Mi Obra Social"
+        text={t("settings.myHealthInsurance")}
         onPress={() =>
           navigation.navigate("ProfileStack", { screen: "Insurance" })
         }
       />
       <ProfileItem
         iconName="globe"
-        text="Idioma"
+        text={t("settings.language")}
         onPress={() =>
           navigation.navigate("ProfileStack", { screen: "Language" })
         }
@@ -121,7 +121,7 @@ const ProfileScreen = () => {
             <FontAwesome5 name="moon" size={25} color={theme.colors.icons} />
           </View>
           <Text style={[styles.itemText, { color: theme.colors.text }]}>
-            Modo Oscuro
+            {t("settings.darkMode")}
           </Text>
         </View>
         <Switch value={isDark} onValueChange={toggleTheme} />
@@ -133,12 +133,12 @@ const ProfileScreen = () => {
 
       <ProfileItem
         iconName="lock"
-        text="Cerrar Sesión"
+        text={t("settings.logOut")}
         onPress={confirmLogout}
       />
       <ProfileItem
         iconName="trash"
-        text="Borrar Cuenta"
+        text={t("settings.deleteAccount")}
         onPress={confirmDeleteAccount}
       />
     </View>

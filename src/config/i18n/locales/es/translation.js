@@ -1,3 +1,5 @@
+import NextAppointmentCard from "@/ui/components/Appointments/NextAppointmentCard";
+
 const translations = {
   greeting: "Hola muchacho",
   farewell: "Adiós",
@@ -18,7 +20,11 @@ const translations = {
     results: "Resultados",
     subtitlePersonal: "Personal",
     subtitleAccount: "Cuenta",
+  
   },
+
+
+
 
   inputPlaceholder: {
     email: "Email",
@@ -56,6 +62,29 @@ const translations = {
     forgotPassword: "¿Olvidaste tu contraseña?",
     linkForgotPassword: "Recuperala aquí",
     codeVerification: "Verificar código",
+  },
+
+  settings: {
+    data: "Mis Datos",
+    myHealthInsurance: "Mi Obra Social",
+    language: "Idioma",
+    darkMode: "Modo Oscuro",
+    logOut: "Cerrar Sesión",
+    deleteAccount: "Borrar Cuenta",
+  },
+
+  notificationsTxt: {
+    noNotifications: "No tienes notificaciones",
+    noNextAppointmentCard: "No hay turnos próximos.",
+  },
+
+  homeTxt: {
+    appointment: "Solicitar turno",
+    myAppointments: "Mis turnos",
+    myHealthInsurance: "Mi obra social",
+    welcomeMale: "Bienvenido",
+    welcomeFemale: "Bienvenida",
+    welcomeOther: "Bienvenide",
   },
 
   authFooterText: {

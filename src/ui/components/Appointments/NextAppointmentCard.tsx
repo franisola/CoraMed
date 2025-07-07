@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   View,
   Text,
@@ -19,6 +20,7 @@ const ICON_SIZE = 20;
 
 const NextAppointmentCard: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const navigation = useNavigation<any>();
 
@@ -72,7 +74,7 @@ const NextAppointmentCard: React.FC = () => {
         <Text
           style={[styles.noAppointmentText, { color: theme.colors.greyText }]}
         >
-          No hay turnos próximos.
+          {t("notificationsTxt.noNextAppointmentCard")}
         </Text>
       </View>
     );

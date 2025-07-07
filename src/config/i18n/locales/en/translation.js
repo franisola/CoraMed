@@ -58,11 +58,36 @@ const translations = {
     codeVerification: "Verify code",
   },
 
+  settings: {
+    data: "My Data",
+    myHealthInsurance: "My Health Insurance",
+    language: "Language",
+    darkMode: "Dark Mode",
+    register: "Register",
+    logOut: "Log Out",
+    deleteAccount: "Delete account",
+  },
+
+  notificationsTxt: {
+    noNotifications: "You have no notifications",
+    noNextAppointmentCard: "No upcoming appointments.",
+  },
+
+  homeTxt: {
+    appointment: "Schedule appointment", 
+    myAppointments: "My appointments",
+    myHealthInsurance: "My health insurance",
+    welcomeMale: "Welcome",
+    welcomeFemale: "Welcome",
+    welcomeOther: "Bienvenide",
+  },
+
   authFooterText: {
     noAccount: "Don't have an account?",
     alreadyHaveAccount: "Already have an account?",
     login: "Login",
     register: "Register",
+    
   },
 
   errorInputEmail: "Invalid email",
