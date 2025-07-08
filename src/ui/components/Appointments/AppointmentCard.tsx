@@ -15,12 +15,26 @@ interface Props {
 const AppointmentCard: React.FC<Props> = ({ appointment, onPress }) => {
   const { theme } = useTheme();
 
-  const isCanceled = appointment.estado.toLowerCase() === "cancelado";
+  const estado = appointment.estado.toLowerCase();
 
-  const borderColor = isCanceled ? theme.colors.error : theme.colors.primary;
+  const isCanceled = estado === "cancelado";
+  const isCompleted = estado === "completado";
+  const isAgendado = estado === "agendado";
+
+  const borderColor = isCanceled
+    ? theme.colors.error
+    : isCompleted
+      ? theme.colors.confirmationColor
+      : theme.colors.primary;
+
+  const iconColor = isCanceled
+    ? theme.colors.error
+    : isCompleted
+      ? theme.colors.confirmationColor
+      : theme.colors.icons;
+
   const textColor = theme.colors.text;
   const subTextColor = theme.colors.greyText;
-  const iconColor = isCanceled ? theme.colors.error : theme.colors.icons;
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>

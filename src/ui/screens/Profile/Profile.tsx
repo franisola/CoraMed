@@ -165,8 +165,9 @@ const styles = StyleSheet.create({
   },
   itemText: {
     marginLeft: 15,
-    lineHeight: 20,
+    lineHeight: 24,
     fontSize: 20,
+    flexShrink: 1,
   },
   separator: {
     width: "80%",
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   iconContainer: {
-    width: 30, // o 32 si algún ícono es muy ancho
+    width: 30,
     alignItems: "center",
   },
 });

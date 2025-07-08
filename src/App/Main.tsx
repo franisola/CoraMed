@@ -7,8 +7,6 @@ import { getCurrentUser, logoutUser } from "@slices/authSlice";
 
 import LoadingScreen from "@screens/LoadingScreen";
 
-import { registerPushToken } from "@api/notifications"
-
 type MainProps = {
   changeLanguage: (lang: string) => void;
   currentLanguage: string;
@@ -24,11 +22,7 @@ export default function Main({ changeLanguage, currentLanguage }: MainProps) {
     //dispatch(logoutUser());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      registerPushToken();
-    }
-  }, [user]);
+
 
   if (initialLoading) {
     return <LoadingScreen />;

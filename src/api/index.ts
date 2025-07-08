@@ -35,7 +35,7 @@ API.interceptors.response.use(
       // store.dispatch(logoutUser());
     }
 
-    console.error("API error:", error.response?.data || error.message);
+    //console.error("API error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
 );

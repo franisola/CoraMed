@@ -18,6 +18,8 @@ export const lightColors = {
 
   inputBorder: "#769FCD",
 
+  confirmationColor: "#43D29E",
+
 };
 
 export const darkColors = {

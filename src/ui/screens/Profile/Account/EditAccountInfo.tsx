@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { View, ScrollView, StyleSheet, Text } from "react-native";
+import { View, ScrollView, StyleSheet, Text, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTheme } from "@themes/ThemeContext";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,8 @@ import TabsPerfil from "@components/Header/TabsPerfil";
 
 import { updateUser } from "@redux/slices/userSlice";
 
+import { useToast } from "react-native-toast-notifications";
+
 const EditarPerfil = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -30,6 +32,8 @@ const EditarPerfil = () => {
   const [activeTab, setActiveTab] = useState(route.params?.tab || "personal");
 
   const user = useAppSelector((state) => state.auth.user);
+
+  const toast = useToast();
 
   const [initialValues, setInitialValues] = useState<any>(null);
 
@@ -194,26 +198,65 @@ const EditarPerfil = () => {
         (fechaNacimiento && !initialValues.fechaNacimiento) ||
         (fechaNacimiento &&
           initialValues.fechaNacimiento &&
-          fechaNacimiento.getTime() !==
-            initialValues.fechaNacimiento.getTime())
+          fechaNacimiento.getTime() !== initialValues.fechaNacimiento.getTime())
       ) {
-        if (fechaNacimiento) {
-          payload.fechaNacimiento = fechaNacimiento.toISOString();
-        }
+        payload.fechaNacimiento = fechaNacimiento?.toISOString();
       }
+
+      Alert.alert(
+        "Confirmar actualización",
+        "¿Querés guardar los cambios en tus datos personales?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Confirmar",
+            onPress: () => {
+              dispatch(updateUser(payload))
+                .unwrap()
+                .then(() => {
+                  navigation.goBack();
+                })
+                .catch(() => {
+                  // manejar error si querés
+                });
+            },
+          },
+        ],
+        { cancelable: true }
+      );
     } else if (activeTab === "account") {
       if (password !== "") payload.password = password;
       if (confirmPassword !== "") payload.confirmPassword = confirmPassword;
-    }
 
-    dispatch(updateUser(payload))
-      .unwrap()
-      .then(() => {
-        navigation.goBack();
-      })
-      .catch(() => {
-        // El error queda en updateError y se muestra automáticamente
-      });
+      Alert.alert(
+        "Confirmar actualización",
+        "¿Querés actualizar tu contraseña?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Confirmar",
+            onPress: () => {
+              dispatch(updateUser(payload))
+                .unwrap()
+                .then(() => {
+                  toast.show("Contraseña actualizada con éxito", {
+                    type: "success",
+                  });
+                  setPassword("");
+                  setConfirmPassword("");
+                  navigation.goBack();
+                })
+                .catch(() => {
+                  toast.show("Hubo un error al actualizar la contraseña", {
+                    type: "danger",
+                  });
+                });
+            },
+          },
+        ],
+        { cancelable: true }
+      );
+    }
   };
 
   return (

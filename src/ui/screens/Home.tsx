@@ -38,7 +38,7 @@ const IconButton = ({
 const Home = () => {
   const navigation = useNavigation();
   const { theme } = useTheme();
-  const { t } = useTranslation(); // ✅ Hook de traducción agregado
+  const { t } = useTranslation(); 
 
   const user = useSelector((state: RootState) => state.auth.user) as User;
 

@@ -82,12 +82,18 @@ const NotificationsScreen: React.FC = () => {
     return iconMap[key] || iconMap["otro"];
   };
 
+  const getColorByType = (tipo: string) => {
+    const type = tipo.toLowerCase();
+    if (type === "turno_cancelado") return theme.colors.error;
+    if (type === "resultados_subidos") return theme.colors.confirmationColor;
+    if (type === "turno_agendado" || type === "recordatorio")
+      return theme.colors.primary;
+    return theme.colors.greyText;
+  };
+
   const renderItem = ({ item }: { item: NotificationItem }) => {
-    // Quita hora del mensaje para no repetirla
-    // const cleanMensaje = item.mensaje.replace(/ a las \d{1,2}:\d{2}/, "");
     const cleanMensaje = item.mensaje;
 
-    // Nombre completo del doctor/profesional
     let doctorName = "";
     const prof = item.turno?.profesional;
     if (prof) {
@@ -99,6 +105,8 @@ const NotificationsScreen: React.FC = () => {
             prof.name ||
             "";
     }
+
+    const colorByType = getColorByType(item.tipo);
 
     return (
       <TouchableOpacity
@@ -121,10 +129,7 @@ const NotificationsScreen: React.FC = () => {
             styles.card,
             {
               backgroundColor: theme.colors.white,
-              borderLeftColor:
-                item.tipo.toLowerCase() === "turno_cancelado"
-                  ? theme.colors.error
-                  : theme.colors.primary,
+              borderLeftColor: colorByType,
               borderLeftWidth: 4,
             },
           ]}
@@ -132,41 +137,14 @@ const NotificationsScreen: React.FC = () => {
           <Ionicons
             name={renderIcon(item.tipo) as any}
             size={24}
-            color={
-              item.tipo.toLowerCase() === "turno_cancelado"
-                ? theme.colors.error
-                : theme.colors.icons
-            }
+            color={colorByType}
             style={styles.icon}
           />
           <View style={styles.content}>
-            <Text
-              style={[
-                styles.title,
-                {
-                  color:
-                    item.tipo.toLowerCase() === "turno_cancelado"
-                      ? theme.colors.error
-                      : theme.colors.text,
-                },
-              ]}
-            >
+            <Text style={[styles.title, { color: colorByType }]}>
               {item.titulo}
             </Text>
-            {/* <Text style={[styles.body, { color: theme.colors.greyText }]}>
-              {cleanMensaje}
-            </Text> */}
-            <Text
-              style={[
-                styles.body,
-                {
-                  color:
-                    item.tipo.toLowerCase() === "turno_cancelado"
-                      ? theme.colors.error
-                      : theme.colors.greyText,
-                },
-              ]}
-            >
+            <Text style={[styles.body, { color: colorByType }]}>
               {cleanMensaje}
             </Text>
             {item.turno && (
@@ -209,6 +187,7 @@ const NotificationsScreen: React.FC = () => {
       </View>
     );
   }
+
   if (error) {
     return (
       <View
