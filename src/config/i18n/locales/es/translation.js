@@ -1,5 +1,6 @@
 import NextAppointmentCard from "@/ui/components/Appointments/NextAppointmentCard";
 import { t } from "i18next";
+import { identity } from "lodash";
 
 const translations = {
   greeting: "Hola muchacho",
@@ -150,6 +151,30 @@ const translations = {
     logOut: "Cerrar sesión",
     myNotifications: "Mis notificaciones",
   },
+
+
+  myDataTxt: {
+    fullName: "Nombre completo",
+    birthDate: "Fecha de nacimiento",
+    gender: "Género",
+    phone: "Teléfono",
+    address: "Dirección",
+    noBirdthDate: "Sin fecha de nacimiento",
+    noGender: "Sin género",
+    noPhone: "Sin teléfono",
+    noAddress: "Sin dirección",
+    password: "Contraseña",
+    editProfile: "Editar perfil",
+  },
+
+   editAccTxt: {
+    editData: "Confirmar",
+    selectGender: "Selecciona tu género",
+    selectBirthDate: "Selecciona tu fecha de nacimiento",
+    saving: "Guardando...",
+    cancel: "Cancelar",
+  },
+
 
   loading: "Loading..",
 

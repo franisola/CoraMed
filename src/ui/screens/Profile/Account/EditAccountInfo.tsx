@@ -295,7 +295,7 @@ const EditarPerfil = () => {
           <>
             <CustomInput
               label
-              labelText="Nombre completo"
+              labelText= {t("myDataTxt.fullName")}
               placeholder="Nombre completo"
               value={nombreCompleto}
               onChangeText={(value) =>
@@ -341,8 +341,8 @@ const EditarPerfil = () => {
 
             <CustomInput
               label
-              labelText="Teléfono"
-              placeholder="Teléfono"
+              labelText= {t("myDataTxt.phone")}
+              placeholder={t("myDataTxt.phone")}
               value={telefono}
               onChangeText={(value) => handleInputChange("telefono", value)}
               error={errors.telefono}
@@ -350,8 +350,8 @@ const EditarPerfil = () => {
 
             <CustomInput
               label
-              labelText="Dirección"
-              placeholder="Dirección"
+              labelText= {t("myDataTxt.address")}
+              placeholder= {t("myDataTxt.address")}
               value={direccion}
               onChangeText={(value) => handleInputChange("direccion", value)}
               error={errors.direccion}
@@ -361,8 +361,8 @@ const EditarPerfil = () => {
           <>
             <CustomInput
               label
-              labelText="Nueva contraseña"
-              placeholder="Nueva contraseña"
+              labelText= {t("inputPlaceholder.newPassword")}
+              placeholder= {t("inputPlaceholder.newPassword")}
               value={password}
               onChangeText={(value) => handleInputChange("password", value)}
               secureTextEntry
@@ -371,8 +371,8 @@ const EditarPerfil = () => {
 
             <CustomInput
               label
-              labelText="Confirme la contraseña"
-              placeholder="Confirme la contraseña"
+              labelText={t("inputPlaceholder.confirmPassword")}
+              placeholder={t("inputPlaceholder.confirmPassword")}
               value={confirmPassword}
               onChangeText={(value) =>
                 handleInputChange("confirmPassword", value)
@@ -403,13 +403,13 @@ const EditarPerfil = () => {
           ]}
         >
           <CustomButton
-            title={updateLoading ? "Guardando..." : "Editar datos"}
+            title={updateLoading ? t("editAccTxt.saving"): t("editAccTxt.editData")}
             onPress={handleSubmit}
             style={{ width: "48%" }}
             disabled={!isModified || updateLoading}
           />
           <CustomButton
-            title="Cancelar"
+            title= {t("editAccTxt.cancel")}
             onPress={handleCancel}
             style={{ backgroundColor: theme.colors.errorButton, width: "48%" }}
           />

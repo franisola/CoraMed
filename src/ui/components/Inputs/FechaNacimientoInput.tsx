@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useTheme } from "@themes/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   value: Date | null; // <-- permito null
@@ -24,6 +25,8 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
   const showPicker = () => setPickerVisible(true);
   const hidePicker = () => setPickerVisible(false);
 
+  const { t } = useTranslation();
+
   const handleConfirm = (date: Date) => {
     hidePicker();
     onChange(date);
@@ -39,7 +42,7 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
           color: theme.colors.text,
         }}
       >
-        Fecha de nacimiento
+        {t("editAccTxt.selectBirthDate")}
       </Text>
 
       <TouchableOpacity
@@ -58,7 +61,7 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
             fontSize: 18,
           }}
         >
-          {value ? formatDate(value) : "Seleccioná tu fecha de nacimiento"}
+          {value ? formatDate(value) : t("editAccTxt.selectBirthDate")}
         </Text>
       </TouchableOpacity>
 

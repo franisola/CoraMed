@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 
 import { useTheme } from "@themes/ThemeContext";
 
+import { useTranslation } from "react-i18next";
 import { FontAwesome } from "@expo/vector-icons";
 
 import CustomButton from "@components/Buttons/NormalButton";
@@ -27,6 +28,8 @@ const Perfil = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
+  const { t } = useTranslation();
+  
   const { theme } = useTheme();
 
   // 1. Seleccionamos el usuario del store
@@ -36,7 +39,7 @@ const Perfil = () => {
   const renderPersonalData = () => (
     <>
       <Text style={[styles.label, { color: theme.colors.text }]}>
-        Nombre Completo
+        {t("myDataTxt.fullnName")}
       </Text>
       <Text
         style={[
@@ -66,7 +69,7 @@ const Perfil = () => {
       </Text>
 
       <Text style={[styles.label, { color: theme.colors.text }]}>
-        Fecha de nacimiento
+        {t("myDataTxt.birthDate")}
       </Text>
       <Text
         style={[
@@ -82,10 +85,10 @@ const Perfil = () => {
           ? dayjs(user.fechaNacimiento).isValid()
             ? dayjs(user.fechaNacimiento).format("DD/MM/YYYY")
             : "Sin fecha"
-          : "Sin fecha"}
+          : t("myDataTxt.noBirdthDate")}
       </Text>
 
-      <Text style={[styles.label, { color: theme.colors.text }]}>Género</Text>
+      <Text style={[styles.label, { color: theme.colors.text }]}>{t("myDataTxt.gender")}</Text>
       <Text
         style={[
           styles.value,
@@ -96,10 +99,10 @@ const Perfil = () => {
           },
         ]}
       >
-        {user?.genero || "Sin género"}
+        {user?.genero ||t("myDataTxt.noGender")}
       </Text>
 
-      <Text style={[styles.label, { color: theme.colors.text }]}>Teléfono</Text>
+      <Text style={[styles.label, { color: theme.colors.text }]}>{t("myDataTxt.phone")}</Text>
       <Text
         style={[
           styles.value,
@@ -110,11 +113,11 @@ const Perfil = () => {
           },
         ]}
       >
-        {user?.telefono || "Sin teléfono"}
+        {user?.telefono || t("myDataTxt.noPhone")}
       </Text>
 
       <Text style={[styles.label, { color: theme.colors.text }]}>
-        Dirección
+        {t("myDataTxt.address")}
       </Text>
       <Text
         style={[
@@ -126,7 +129,7 @@ const Perfil = () => {
           },
         ]}
       >
-        {user?.direccion || "Sin dirección"}
+        {user?.direccion || t("myDataTxt.noAddress")}
       </Text>
     </>
   );
@@ -148,7 +151,7 @@ const Perfil = () => {
       </Text>
 
       <Text style={[styles.label, { color: theme.colors.text }]}>
-        Contraseña
+        {t("myDataTxt.password")}
       </Text>
       <View style={styles.passwordContainer}>
         <Text
@@ -209,7 +212,7 @@ const Perfil = () => {
             position: "absolute",
             bottom: 30,
           }}
-          title="Editar Perfil"
+          title= {t("myDataTxt.editProfile")}
           onPress={handleNavigation}
         />
       

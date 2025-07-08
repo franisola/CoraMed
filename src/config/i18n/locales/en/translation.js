@@ -145,6 +145,28 @@ const translations = {
     myNotifications: "My notifications",
   },
 
+  myDataTxt: {
+    fullName: "Full name",
+    birthDate: "Birth date",
+    gender: "Gender",
+    phone: "Phone",
+    address: "Address",
+    noBirdthDate: "Birth date not provided",
+    noGender: "Gender not provided",
+    noPhone: "Phone number not provided",
+    noAddress: "Address not provided",
+    password: "Password",
+    editProfile: "Edit profile",
+  },
+
+  editAccTxt: {
+    editData: "Confirm",
+    selectGender: "Select your gender",
+    selectBirthDate: "Select your birth date",
+    saving: "Saving...",
+    cancel: "Cancel",
+  },
+
   loading: "Loading..",
 
   errorInputEmail: "Invalid email",
