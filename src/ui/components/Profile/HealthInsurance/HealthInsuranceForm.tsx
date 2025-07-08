@@ -4,6 +4,8 @@ import { useTheme } from "@themes/ThemeContext";
 import CustomButton from "@components/Buttons/NormalButton";
 import { useHealthInsuranceForm } from "./useHealthInsuranceForm";
 import HealthInsuranceFields from "./HealthInsuranceFields";
+import { useTranslation } from "react-i18next"; 
+
 
 interface Props {
   onSubmit: (data: {
@@ -29,7 +31,7 @@ const HealthInsuranceForm: React.FC<Props> = ({
     generalError,
     isValid,
   } = useHealthInsuranceForm(onSubmit);
-
+  const { t } = useTranslation(); 
   return (
     <SafeAreaView
       style={{
@@ -53,7 +55,7 @@ const HealthInsuranceForm: React.FC<Props> = ({
 
       <CustomButton
         style={{ position: "absolute", bottom: 30 }}
-        title="Agregar Obra Social"
+        title= {t("insuranceTxt.addInsurance")} 
         onPress={handleFormSubmit}
         loading={loading}
         disabled={!isValid || loading}

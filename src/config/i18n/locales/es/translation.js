@@ -1,4 +1,5 @@
 import NextAppointmentCard from "@/ui/components/Appointments/NextAppointmentCard";
+import { t } from "i18next";
 
 const translations = {
   greeting: "Hola muchacho",
@@ -121,6 +122,33 @@ const translations = {
     alreadyHaveAccount: "¿Ya tienes una cuenta?",
     login: "Inicia sesión",
     register: "Registrate",
+  },
+
+  insuranceTxt: {
+    noInsurance: "No tienes una obra social vinculada.",
+    addInsurance: "Agregar obra social",
+    deleteInsurance: "Eliminar obra social",
+    insuranceName: "Nombre de la Obra Social",
+    memberId: "Número de socio",
+    plan: "Plan",
+    memberIdLabel: "Nro. Socio"
+  },
+
+  menuTxt:{
+    acc: "Cuenta",
+    myProfile: "Mi perfil",
+    myData: "Mis datos",
+    myHealthInsurance: "Mi obra social",
+    appointments: "Turnos",
+    myAppointments: "Mis turnos",
+    newAppointment: "Nuevo turno",
+    preferences: "Preferencias",
+    language: "Idioma",
+    lightMode: "Modo claro",
+    darkMode: "Modo oscuro",
+    notifications: "Notificaciones",
+    logOut: "Cerrar sesión",
+    myNotifications: "Mis notificaciones",
   },
 
   loading: "Loading..",

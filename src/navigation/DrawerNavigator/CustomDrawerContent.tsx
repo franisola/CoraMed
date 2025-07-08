@@ -12,6 +12,7 @@ import { useTheme } from "@themes/ThemeContext";
 import { useAppDispatch } from "@redux/hooks";
 import { logoutUser } from "@slices/authSlice";
 import { navigateToNestedScreen } from "@/utils/navigationHelpers";
+import { useTranslation } from "react-i18next";
 
 type MenuItem = {
   label: string;
@@ -27,6 +28,7 @@ type MenuItem = {
 const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   const { theme, toggleTheme } = useTheme();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation(); 
 
   const confirmLogout = () => {
     Alert.alert(
@@ -49,7 +51,7 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 
   const menuSections: { title: string; items: MenuItem[] }[] = [
     {
-      title: "Cuenta",
+      title: t("menuTxt.acc"),
       items: [
         {
           label: "Home",
@@ -59,33 +61,33 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           screen: "Home",
         },
         {
-          label: "Mi perfil",
+          label: t("menuTxt.myProfile"),
           type: "nested",
           tab: "Tabs",
           stack: "ProfileStack",
           screen: "Profile",
         },
         {
-          label: "Mis datos",
+          label: t("menuTxt.myData"),
           type: "nested",
           tab: "Tabs",
           stack: "ProfileStack",
           screen: "PersonalInfo",
         },
         {
-          label: "Mi obra social",
+          label: t("menuTxt.myHealthInsurance"),
           type: "nested",
           tab: "Tabs",
-          stack: "ProfileStack",
+          stack: "AccountInfo",
           screen: "Insurance",
         },
       ],
     },
     {
-      title: "Turnos",
+      title: t("menuTxt.appointments"),
       items: [
         {
-          label: "Mis turnos",
+          label: t("menuTxt.myAppointments"),
           type: "nested",
           tab: "Tabs",
           stack: "HomeStack",
@@ -93,7 +95,7 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           screen: "MyAppointments",
         },
         {
-          label: "Nuevo turno",
+          label: t("menuTxt.newAppointment"),
           type: "nested",
           tab: "Tabs",
           stack: "HomeStack",
@@ -103,27 +105,27 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
       ],
     },
     {
-      title: "Preferencias",
+      title: t("menuTxt.preferences"),
       items: [
         {
-          label: "Idioma",
+          label: t("menuTxt.language"),
           type: "nested",
           tab: "Tabs",
           stack: "ProfileStack",
           screen: "Language",
         },
         {
-          label: theme.dark ? "Modo claro" : "Modo oscuro",
+          label: theme.dark ? t("menuTxt.lightMode") : t("menuTxt.darkMode"),
           type: "action",
           action: toggleTheme,
         },
       ],
     },
     {
-      title: "Notificaciones",
+      title: t("menuTxt.notifications"),
       items: [
         {
-          label: "Notificaciones",
+          label: t("menuTxt.myNotifications"),
           type: "nested",
           tab: "Tabs",
           stack: "NotificationsStack",
@@ -134,7 +136,7 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   ];
 
   const logoutItem: MenuItem = {
-    label: "Cerrar sesión",
+    label: t("menuTxt.logOut"),
     type: "action",
     action: confirmLogout,
   };

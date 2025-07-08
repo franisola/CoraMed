@@ -117,6 +117,34 @@ const translations = {
     
   },
 
+  insuranceTxt: {
+    noInsurance: "You don’t have a health insurance associated.",
+    addInsurance: "Add health insurance",
+    deleteInsurance: "Delete health insurance",
+    insuranceName: "Health Insurance Name",
+    memberId: "Member ID",
+    plan: "Plan",
+    memberIdLabel: "Member ID"
+
+  },
+
+  menuTxt:{
+    acc: "Account",
+    myProfile: "My profile",
+    myData: "My data",
+    myHealthInsurance: "My health insurance",
+    appointments: "Appointments",
+    myAppointments: "My appointments",
+    newAppointment: "New appointment",
+    preferences: "Preferences",
+    language: "Language",
+    lightMode: "Light Mode",
+    darkMode: "Dark Mode",
+    notifications: "Notifications",
+    logOut: "Log out",
+    myNotifications: "My notifications",
+  },
+
   loading: "Loading..",
 
   errorInputEmail: "Invalid email",

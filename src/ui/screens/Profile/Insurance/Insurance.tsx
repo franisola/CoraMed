@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next"; 
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 import { useNavigation } from "@react-navigation/native";
@@ -10,13 +11,14 @@ import {
   fetchHealthInsurance,
   removeHealthInsurance,
 } from "@slices/healthInsuranceSlice";
+import { t } from "i18next";
 
 const Insurance = () => {
   const { theme } = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const dispatch = useAppDispatch();
-
+  const { t } = useTranslation(); 
   const {
     data: obraSocial,
     loading,
@@ -37,7 +39,7 @@ const Insurance = () => {
   const renderSinObra = () => (
     <View style={styles.centeredContent}>
       <Text style={[styles.subtitle, { color: theme.colors.text }]}>
-        No tienes una obra social vinculada.
+        {t("insuranceTxt.noInsurance")}
       </Text>
     </View>
   );
@@ -75,7 +77,7 @@ const Insurance = () => {
 
       {!loading && (
         <CustomButton
-          title={obraSocial ? "Eliminar obra" : "Agregar Obra Social"}
+          title={obraSocial ? t("insuranceTxt.deleteInsurance") :  t("insuranceTxt.addInsurance")}
           onPress={
             obraSocial
               ? handleEliminar
@@ -141,7 +143,7 @@ const InsuranceCard = ({
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={{ color: theme.colors.white, fontSize: 14 }}>
-          NRO. Socio
+         {t("insuranceTxt.memberIdLabel")}
         </Text>
         <Text style={{ color: theme.colors.white, fontSize: 14 }}>
           {obraSocial} - {plan}
