@@ -1,6 +1,13 @@
 {
   "name": "coramed",
   "version": "1.0.0",
+  "description": "Aplicación móvil para gestión de turnos médicos",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/franisola/CoraMed.git"
+},
+"keywords": ["react-native", "expo", "healthcare", "medical", "appointments"],
+"author": "CoraMed Team",
   "main": "./src/App/index.tsx",
   "scripts": {
     "start": "expo start",
