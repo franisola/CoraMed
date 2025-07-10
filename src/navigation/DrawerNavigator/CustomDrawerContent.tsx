@@ -78,7 +78,7 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
           label: t("menuTxt.myHealthInsurance"),
           type: "nested",
           tab: "Tabs",
-          stack: "AccountInfo",
+          stack: "ProfileStack",
           screen: "Insurance",
         },
       ],

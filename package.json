@@ -7,7 +7,10 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.4.0",
@@ -62,16 +65,23 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.2.0",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.19",
     "@types/react": "~19.0.10",
+    "@types/react-test-renderer": "^19.0.0",
     "@types/redux-persist": "^4.0.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~9.2.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
     "prettier": "^3.5.3",
     "react-native-svg-transformer": "^1.5.1",
+    "react-test-renderer": "19.0.0",
     "typescript": "^5.8.3"
   },
   "private": true

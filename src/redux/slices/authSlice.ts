@@ -35,6 +35,7 @@ export const loginUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      await clearToken();
       const res = await loginUserAPI(credentials);
       const token = res.token;
       if (token) {

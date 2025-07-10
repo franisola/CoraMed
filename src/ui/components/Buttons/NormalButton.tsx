@@ -33,6 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 
   return (
     <TouchableOpacity
+      testID="custom-button"
       style={[
         styles.button,
         {
