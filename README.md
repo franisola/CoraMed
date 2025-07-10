@@ -236,8 +236,8 @@ npm run test:coverage
 
 ## **Desarrolladores** 🤝
 
-| Developer | GitHub | Role |
-|-----------|---------|------|
+| Developer | GitHub |
+|-----------|---------|
 | Francisco Isola | [@franisola](https://github.com/franisola) 
 | Santiago Oteiza | [@santiote](https://github.com/santiote) 
 | Julian Aguero | [@JulianAgu](https://github.com/JulianAgu) 
