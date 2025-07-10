@@ -20,8 +20,6 @@
 9. [Testing](#testing-🧪)
 10. [Dependencias](#dependencias-📦)  
 11. [Desarrolladores](#desarrolladores-🤝)  
-12. [Contribuir](#contribuir-🤝)
-13. [Licencia](#licencia-📄)
 
 ---
 
