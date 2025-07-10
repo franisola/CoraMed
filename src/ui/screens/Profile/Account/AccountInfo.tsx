@@ -39,7 +39,7 @@ const Perfil = () => {
   const renderPersonalData = () => (
     <>
       <Text style={[styles.label, { color: theme.colors.text }]}>
-        {t("myDataTxt.fullnName")}
+        {t("myDataTxt.fullName")}
       </Text>
       <Text
         style={[

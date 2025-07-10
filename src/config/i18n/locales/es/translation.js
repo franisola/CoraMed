@@ -22,7 +22,8 @@ const translations = {
     results: "Resultados",
     subtitlePersonal: "Personal",
     subtitleAccount: "Cuenta",
-  
+    noAppointmentsScheduled: "No tienes turnos programados.",
+
   },
 
 
@@ -93,7 +94,7 @@ const translations = {
     selectSpecialty: "Elija una especialidad",
     selectDoctor: "Elija un doctor",
     byName: "Buscar por nombre",
-    selectDate: "Seleccionar fecha:",  
+    selectDate: "Seleccionar fecha:",
     selectDateTime: "Seleccionar fecha y hora",
     selectTime: "Seleccionar horario:",
   },
@@ -104,7 +105,7 @@ const translations = {
     date: "Fecha:",
     time: "Hora:",
     reason: "Motivo de la consulta:",
-    placeholderText: "Escriba aquí el motivo de su consulta...",
+    placeholderText: "Escriba aquí el motivo de su consulta...        (min. 10 caracteres)",
     confirmButton: "Confirmar turno",
     cancelButton: "Cancelar turno",
     cancel: "Cancelado",
@@ -135,7 +136,7 @@ const translations = {
     memberIdLabel: "Nro. Socio"
   },
 
-  menuTxt:{
+  menuTxt: {
     acc: "Cuenta",
     myProfile: "Mi perfil",
     myData: "Mis datos",
@@ -167,12 +168,22 @@ const translations = {
     editProfile: "Editar perfil",
   },
 
-   editAccTxt: {
+  editAccTxt: {
     editData: "Confirmar",
     selectGender: "Selecciona tu género",
     selectBirthDate: "Selecciona tu fecha de nacimiento",
     saving: "Guardando...",
     cancel: "Cancelar",
+  },
+
+  notificationsEdit: {
+    deleteNotification: "Eliminar notificación",
+    deleteSure: "¿Está seguro de que desea eliminar esta notificación?",
+    confirmUpdate: "Confirmar actualización",
+    updatePasswordQuestion:  "¿Querés actualizar tu contraseña?",
+    passwordUpdatedSuccess: "Contraseña actualizada con éxito",
+    passwordUpdateError: "Ocurrió un error al actualizar la contraseña",
+    saveChangesQuestion: "Do you want to save changes to your personal data?",
   },
 
 

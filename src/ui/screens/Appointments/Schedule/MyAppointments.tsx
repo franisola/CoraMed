@@ -77,7 +77,7 @@ const MyAppointmentsScreen = () => {
           contentContainerStyle={styles.list}
           ListEmptyComponent={
             <Text style={[styles.empty, { color: theme.colors.greyText }]}>
-              No hay turnos disponibles.
+              {t("screenTitles.noAppointmentsScheduled")}
             </Text>
           }
         />

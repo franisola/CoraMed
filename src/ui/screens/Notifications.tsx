@@ -57,8 +57,8 @@ const NotificationsScreen: React.FC = () => {
 
   const handleDelete = (id: string) => {
     Alert.alert(
-      "Eliminar notificación",
-      "¿Estás seguro de que quieres eliminar esta notificación?",
+      t("notificationsTxt.deleteNotification"),
+      t("notificationsTxt.deleteSure"),
       [
         { text: "Cancelar", style: "cancel" },
         {

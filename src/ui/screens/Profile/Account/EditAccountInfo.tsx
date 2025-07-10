@@ -204,8 +204,8 @@ const EditarPerfil = () => {
       }
 
       Alert.alert(
-        "Confirmar actualización",
-        "¿Querés guardar los cambios en tus datos personales?",
+       t("notificationsEdit.confirmUpdate"),
+        t("notificationsEdit.saveChangesQuestion"),
         [
           { text: "Cancelar", style: "cancel" },
           {
@@ -229,17 +229,17 @@ const EditarPerfil = () => {
       if (confirmPassword !== "") payload.confirmPassword = confirmPassword;
 
       Alert.alert(
-        "Confirmar actualización",
-        "¿Querés actualizar tu contraseña?",
+        t("notificationsEdit.confirmUpdate"),
+        t("notificationsEdit.updatePasswordQuestion"),
         [
-          { text: "Cancelar", style: "cancel" },
+          { text: t("editAccTxt.cancel"), style: "cancel" },
           {
-            text: "Confirmar",
+            text: t("editAccTxt.editData"),
             onPress: () => {
               dispatch(updateUser(payload))
                 .unwrap()
                 .then(() => {
-                  toast.show("Contraseña actualizada con éxito", {
+                  toast.show(t("notificationsEdit.passwordUpdatedSuccess"), {
                     type: "success",
                   });
                   setPassword("");
@@ -247,7 +247,7 @@ const EditarPerfil = () => {
                   navigation.goBack();
                 })
                 .catch(() => {
-                  toast.show("Hubo un error al actualizar la contraseña", {
+                  toast.show(t("notificationsEdit.passwordUpdateError"), {
                     type: "danger",
                   });
                 });
@@ -295,7 +295,7 @@ const EditarPerfil = () => {
           <>
             <CustomInput
               label
-              labelText= {t("myDataTxt.fullName")}
+              labelText={t("myDataTxt.fullName")}
               placeholder="Nombre completo"
               value={nombreCompleto}
               onChangeText={(value) =>
@@ -341,7 +341,7 @@ const EditarPerfil = () => {
 
             <CustomInput
               label
-              labelText= {t("myDataTxt.phone")}
+              labelText={t("myDataTxt.phone")}
               placeholder={t("myDataTxt.phone")}
               value={telefono}
               onChangeText={(value) => handleInputChange("telefono", value)}
@@ -350,8 +350,8 @@ const EditarPerfil = () => {
 
             <CustomInput
               label
-              labelText= {t("myDataTxt.address")}
-              placeholder= {t("myDataTxt.address")}
+              labelText={t("myDataTxt.address")}
+              placeholder={t("myDataTxt.address")}
               value={direccion}
               onChangeText={(value) => handleInputChange("direccion", value)}
               error={errors.direccion}
@@ -361,8 +361,8 @@ const EditarPerfil = () => {
           <>
             <CustomInput
               label
-              labelText= {t("inputPlaceholder.newPassword")}
-              placeholder= {t("inputPlaceholder.newPassword")}
+              labelText={t("inputPlaceholder.newPassword")}
+              placeholder={t("inputPlaceholder.newPassword")}
               value={password}
               onChangeText={(value) => handleInputChange("password", value)}
               secureTextEntry
@@ -394,22 +394,22 @@ const EditarPerfil = () => {
             styles.buttonRow,
             activeTab !== "personal"
               ? {
-                  marginHorizontal: "auto",
-                  alignSelf: "center",
-                  position: "absolute",
-                  bottom: 30,
-                }
+                marginHorizontal: "auto",
+                alignSelf: "center",
+                position: "absolute",
+                bottom: 30,
+              }
               : {},
           ]}
         >
           <CustomButton
-            title={updateLoading ? t("editAccTxt.saving"): t("editAccTxt.editData")}
+            title={updateLoading ? t("editAccTxt.saving") : t("editAccTxt.editData")}
             onPress={handleSubmit}
             style={{ width: "48%" }}
             disabled={!isModified || updateLoading}
           />
           <CustomButton
-            title= {t("editAccTxt.cancel")}
+            title={t("editAccTxt.cancel")}
             onPress={handleCancel}
             style={{ backgroundColor: theme.colors.errorButton, width: "48%" }}
           />

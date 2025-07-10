@@ -18,6 +18,7 @@ const translations = {
     results: "Results",
     subtitlePersonal: "Personal",
     subtitleAccount: "Account",
+    noAppointmentsScheduled: "You have no appointments scheduled.",
   },
 
   inputPlaceholder: {
@@ -74,7 +75,7 @@ const translations = {
   },
 
   homeTxt: {
-    appointment: "Schedule appointment", 
+    appointment: "Schedule appointment",
     myAppointments: "My appointments",
     myHealthInsurance: "My health insurance",
     welcomeMale: "Welcome",
@@ -98,7 +99,7 @@ const translations = {
     date: "Date:",
     time: "Time:",
     reason: "Reason for visit:",
-    placeholderText: "Write the reason for your visit...",
+    placeholderText: "Write the reason for your visit...                              (min. 10 characters)",
     confirmButton: "Confirm appointment",
     cancelButton: "Cancel appointment",
     cancel: "Canceled",
@@ -114,7 +115,7 @@ const translations = {
     alreadyHaveAccount: "Already have an account?",
     login: "Login",
     register: "Register",
-    
+
   },
 
   insuranceTxt: {
@@ -128,7 +129,7 @@ const translations = {
 
   },
 
-  menuTxt:{
+  menuTxt: {
     acc: "Account",
     myProfile: "My profile",
     myData: "My data",
@@ -165,6 +166,16 @@ const translations = {
     selectBirthDate: "Select your birth date",
     saving: "Saving...",
     cancel: "Cancel",
+  },
+
+  notificationsEdit: {
+    deleteNotification: "Delete notification",
+    deleteSure: "Are you sure you want to delete this notification?",
+    confirmUpdate: "Confirm update",
+    updatePasswordQuestion: "Do you want to update your password?",
+    passwordUpdatedSuccess: "Password updated successfully",
+    passwordUpdateError: "There was an error updating the password",
+    saveChangesQuestion: "Do you want to save changes to your personal data?",
   },
 
   loading: "Loading..",
