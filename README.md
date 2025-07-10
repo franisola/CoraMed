@@ -1,6 +1,6 @@
   # **CoraMed** 🩺
 
-> Aplicación móvil desarrollada en **React Native** con **Expo** para la gestión integral de turnos médicos, historiales clínicos y seguimiento de pacientes.
+> Aplicación móvil desarrollada con **React Native** y **Expo** para la gestión integral de turnos médicos. Permite a los usuarios reservar y gestionar citas, consultar su historial clínico, administrar sus datos personales y cobertura médica, así como personalizar su experiencia dentro de la app. Pensada para brindar una experiencia simple, rápida e intuitiva para pacientes.
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.79.5-blue.svg)](https://reactnative.dev/)
 [![Expo](https://img.shields.io/badge/Expo-53.0.16-black.svg)](https://expo.dev/)
