@@ -79,6 +79,8 @@ const translations = {
   notificationsTxt: {
     noNotifications: "No tienes notificaciones",
     noNextAppointmentCard: "No hay turnos próximos.",
+    deleteNotification: "Eliminar notificacion",
+    deleteSure: "Esta seguro que desea eliminar la notificacion?"
   },
 
   homeTxt: {

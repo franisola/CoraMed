@@ -73,6 +73,8 @@ const translations = {
   notificationsTxt: {
     noNotifications: "You have no notifications",
     noNextAppointmentCard: "No upcoming appointments.",
+    deleteNotification: "Delete notification",
+    deleteSure: "Are you sure about deleting this notification?"
   },
 
   homeTxt: {

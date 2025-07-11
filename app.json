@@ -10,8 +10,7 @@
     "scheme": "coramed",
     "splash": {
       "image": "./src/assets/images/Logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover"
     },
     "ios": {
       "supportsTablet": true,
@@ -32,8 +31,7 @@
     "android": {
       "package": "com.coramed.app",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/Logo.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/assets/images/Logo.png"
       },
       "edgeToEdgeEnabled": true,
       "intentFilters": [
