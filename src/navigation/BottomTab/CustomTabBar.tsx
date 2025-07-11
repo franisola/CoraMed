@@ -16,23 +16,34 @@ export default function CustomTabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
 
-  const activeBg = theme.colors.details;
-  const inactiveBg = theme.colors.primary;
-  const activeIcon = theme.colors.primary;
-  const inactiveIcon = theme.colors.details;
+  // Modo claro: igual que antes
+  const activeBgLight = theme.colors.details;
+  const inactiveBgLight = theme.colors.primary;
+  // El icono activo en light mode como antes
+  const activeIconLight = theme.colors.primary;
+  const inactiveIconLight = theme.colors.details;
+
+  // Modo oscuro: icono claro sobre fondo oscuro, tab seleccionado con fondo destacado
+  const activeBgDark = theme.colors.details;
+  const inactiveBgDark = theme.colors.background;
+  // El icono activo en dark mode debe ser claro para contrastar con details
+  const activeIconDark = theme.colors.text; // Usar color de texto principal en dark mode
+  const inactiveIconDark = theme.colors.greyText;
 
   // No hace falta CommonActions, usamos reset directo
+  // Color de fondo del tab bar según modo
+  const tabBarBgColor = isDark ? inactiveBgDark : inactiveBgLight;
+
   return (
     <SafeAreaView
       style={{
         flexDirection: "row",
-        backgroundColor: inactiveBg,
+        backgroundColor: tabBarBgColor,
       }}
     >
-      {state.routes.map((route, index) => {
-        // Tipado explícito para evitar warnings
+      {state.routes.map((route: any, index: number) => {
         const isFocused: boolean = state.index === index;
         const iconName: string = ICONS[route.name] ?? "question-circle";
 
@@ -44,7 +55,6 @@ export default function CustomTabBar({
           });
 
           if (route.name === "ProfileStack") {
-            // Si ya estoy en ProfileStack y el screen activo es Profile, no hago nada
             const profileRoute = state.routes.find(
               (r: typeof route) => r.name === "ProfileStack"
             );
@@ -75,6 +85,17 @@ export default function CustomTabBar({
           }
         };
 
+        // Colores según modo y selección (sin ternarios anidados)
+        let bgColor: string;
+        let iconColor: string;
+        if (isDark) {
+          bgColor = isFocused ? activeBgDark : inactiveBgDark;
+          iconColor = isFocused ? activeIconDark : inactiveIconDark;
+        } else {
+          bgColor = isFocused ? activeBgLight : inactiveBgLight;
+          iconColor = isFocused ? activeIconLight : inactiveIconLight;
+        }
+
         return (
           <TouchableOpacity
             key={route.key}
@@ -92,14 +113,14 @@ export default function CustomTabBar({
               alignItems: "center",
               justifyContent: "center",
               paddingVertical: 10,
-              backgroundColor: isFocused ? activeBg : inactiveBg,
+              backgroundColor: bgColor,
               height: 60,
             }}
           >
             <FontAwesome5
               name={iconName}
               size={25}
-              color={isFocused ? activeIcon : inactiveIcon}
+              color={iconColor}
               style={{
                 marginBottom: 4,
                 borderRadius: 8,
