@@ -8,11 +8,13 @@ import { getDefaultHeaderOptions } from "@navigation/options/headerOptions";
 import MyAppointments from "@screens/Appointments/Schedule/MyAppointments";
 import AppointmentDetails from "@screens/Appointments/Schedule/AppointmentDetails";
 import AppointmentResults from "@screens/Appointments/Schedule/AppointmentResults";
+import PdfViewerScreen from "@screens/Appointments/Schedule/PdfViewerScreen";
 
 export type AppointmentStackParamList = {
   MyAppointments: undefined;
   AppointmentDetails: undefined;
   AppointmentResults: undefined;
+  PdfViewerScreen: { pdfUrl: string; pdfName: string };
 };
 
 const Stack = createNativeStackNavigator<AppointmentStackParamList>();
@@ -44,6 +46,11 @@ const AppointmentStack = () => {
         options={{ title: t("screenTitles.myAppointments") }}
       />
 
+      <Stack.Screen
+        name="PdfViewerScreen"
+        component={PdfViewerScreen}
+        options={{ title: "PDF" }}
+      />
     </Stack.Navigator>
   );
 };

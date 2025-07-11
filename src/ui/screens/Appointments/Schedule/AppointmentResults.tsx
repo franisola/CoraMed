@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import AppointmentInfo from "@components/Appointments/AppointmentInfo";
@@ -16,6 +16,7 @@ import AppointmentInfo from "@components/Appointments/AppointmentInfo";
 const AppointmentResultsScreen = () => {
   const { theme, isDark } = useTheme();
   const route = useRoute();
+  const navigation = useNavigation();
   const { appointment } = route.params;
 
   const valueColor = isDark
@@ -37,8 +38,12 @@ const AppointmentResultsScreen = () => {
         {appointment.notas_medicas && (
           <View style={styles.row}>
             <View style={styles.column}>
-              <Text style={[styles.label, { color: theme.colors.text }]}>Notas médicas:</Text>
-              <Text style={[styles.value, { color: valueColor }]}>{appointment.notas_medicas}</Text>
+              <Text style={[styles.label, { color: theme.colors.text }]}>
+                Notas médicas:
+              </Text>
+              <Text style={[styles.value, { color: valueColor }]}>
+                {appointment.notas_medicas}
+              </Text>
             </View>
           </View>
         )}
@@ -46,7 +51,9 @@ const AppointmentResultsScreen = () => {
         {appointment.resultados_estudios.length > 0 && (
           <View style={styles.row}>
             <View style={styles.column}>
-              <Text style={[styles.label, { color: theme.colors.text }]}>Resultados:</Text>
+              <Text style={[styles.label, { color: theme.colors.text }]}>
+                Resultados:
+              </Text>
               {appointment.resultados_estudios.map((res, index) => (
                 <View key={index} style={styles.resultItem}>
                   <FontAwesome
@@ -57,7 +64,12 @@ const AppointmentResultsScreen = () => {
                   />
                   <Text
                     style={[styles.linkText, { color: valueColor }]}
-                    onPress={() => Linking.openURL(res.pdf)}
+                    onPress={() =>
+                      navigation.navigate("PdfViewerScreen", {
+                        pdfUrl: res.pdf,
+                        pdfName: res.nombre,
+                      })
+                    }
                   >
                     {res.nombre}.pdf
                   </Text>
@@ -86,7 +98,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: 308,
     marginVertical: 16,
-
   },
   column: {
     width: "100%",
