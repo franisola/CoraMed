@@ -5,7 +5,7 @@ import { useTheme } from "@themes/ThemeContext";
 
 export default function LanguageSelector() {
   const { i18n } = useTranslation();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const selectedLanguage = i18n.language.startsWith("es") ? "es" : "en";
 
   const handleSelectLanguage = (lang: "es" | "en") => {
@@ -13,12 +13,21 @@ export default function LanguageSelector() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <Text style={[styles.title, { color: theme.colors.text }]}>
         {selectedLanguage === "es" ? "Idioma" : "Language"}
       </Text>
 
-      <View style={[styles.separator, { backgroundColor: theme.colors.primary }]} />
+      <View
+        style={[
+          styles.separator,
+          {
+            backgroundColor: isDark ? theme.colors.white : theme.colors.primary,
+          },
+        ]}
+      />
 
       <View style={styles.optionsContainer}>
         <TouchableOpacity
@@ -29,7 +38,12 @@ export default function LanguageSelector() {
             style={[
               styles.radio,
               {
-                borderColor: selectedLanguage === "es" ? theme.colors.primary : theme.colors.greyText,
+                borderColor:
+                  selectedLanguage === "es"
+                    ? isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary
+                    : theme.colors.greyText,
               },
             ]}
           >
@@ -37,12 +51,28 @@ export default function LanguageSelector() {
               <View
                 style={[
                   styles.radioInner,
-                  { backgroundColor: theme.colors.primary },
+                  {
+                    backgroundColor: isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary,
+                  },
                 ]}
               />
             )}
           </View>
-          <Text style={[styles.label, { color: selectedLanguage === "es" ? theme.colors.primary : theme.colors.greyText }]}> 
+          <Text
+            style={[
+              styles.label,
+              {
+                color:
+                  selectedLanguage === "es"
+                    ? isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary
+                    : theme.colors.greyText,
+              },
+            ]}
+          >
             {selectedLanguage === "es" ? "Español" : "Spanish"}
           </Text>
         </TouchableOpacity>
@@ -55,7 +85,12 @@ export default function LanguageSelector() {
             style={[
               styles.radio,
               {
-                borderColor: selectedLanguage === "en" ? theme.colors.primary : theme.colors.greyText,
+                borderColor:
+                  selectedLanguage === "en"
+                    ? isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary
+                    : theme.colors.greyText,
               },
             ]}
           >
@@ -63,12 +98,28 @@ export default function LanguageSelector() {
               <View
                 style={[
                   styles.radioInner,
-                  { backgroundColor: theme.colors.primary },
+                  {
+                    backgroundColor: isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary,
+                  },
                 ]}
               />
             )}
           </View>
-          <Text style={[styles.label, { color: selectedLanguage === "en" ? theme.colors.primary : theme.colors.greyText }]}> 
+          <Text
+            style={[
+              styles.label,
+              {
+                color:
+                  selectedLanguage === "en"
+                    ? isDark
+                      ? theme.colors.icons
+                      : theme.colors.primary
+                    : theme.colors.greyText,
+              },
+            ]}
+          >
             {selectedLanguage === "es" ? "Inglés" : "English"}
           </Text>
         </TouchableOpacity>

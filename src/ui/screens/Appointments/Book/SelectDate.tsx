@@ -18,7 +18,6 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { getAvailableSchedules } from "@slices/professionalSlice";
 
-
 const weekdayMap: Record<string, string> = {
   Sunday: "Domingo",
   Monday: "Lunes",
@@ -33,7 +32,7 @@ const SelectDate = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { doctor, especialidad } = route.params;
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const availableTimes = useAppSelector(
@@ -129,7 +128,9 @@ const SelectDate = () => {
         <Text
           style={{
             color: !isAvailable
-              ? theme.colors.greyText
+              ? isDark
+                ? theme.colors.primary
+                : theme.colors.greyText
               : selectedDate === dateStr
                 ? theme.colors.white
                 : theme.colors.text,
@@ -234,7 +235,7 @@ const SelectDate = () => {
       </View>
 
       <CustomButton
-        title={loading ?  t("book.selectTime") : t("book.selectDateTime")}
+        title={loading ? t("book.selectTime") : t("book.selectDateTime")}
         onPress={handleContinue}
         disabled={!selectedDate || !selectedTime || loading}
         style={styles.button}
