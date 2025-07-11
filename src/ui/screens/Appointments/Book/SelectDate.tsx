@@ -18,6 +18,7 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { getAvailableSchedules } from "@slices/professionalSlice";
 
+
 const weekdayMap: Record<string, string> = {
   Sunday: "Domingo",
   Monday: "Lunes",
@@ -233,7 +234,7 @@ const SelectDate = () => {
       </View>
 
       <CustomButton
-        title={loading ? t("book.selectTime") : t("book.selectDateTime")}
+        title={loading ?  t("book.selectTime") : t("book.selectDateTime")}
         onPress={handleContinue}
         disabled={!selectedDate || !selectedTime || loading}
         style={styles.button}

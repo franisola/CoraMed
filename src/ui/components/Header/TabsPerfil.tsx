@@ -18,19 +18,27 @@ const Tabs: React.FC<TabsProps> = ({
   disableSwitching = false,
   labelMap = {},
 }) => {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const { t } = useTranslation();
 
+  // Colores según modo
+  const tabContainerBg = isDark ? theme.colors.background : theme.colors.primary;
+  // En dark mode, invertimos los colores de los tabs
+  const tabActiveBg = isDark ? theme.colors.background : theme.colors.primary;
+  const tabInactiveBg = isDark ? theme.colors.details : theme.colors.details;
+  const tabActiveText = isDark ? theme.colors.text : theme.colors.textSecondary;
+  const tabInactiveText = isDark ? theme.colors.textSecondary : theme.colors.text;
+
   return (
-    <View style={[styles.tabContainer, { backgroundColor: theme.colors.primary }]}>
+    <View style={[styles.tabContainer, { backgroundColor: tabContainerBg }]}> 
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab}
-          style={[
+          style={[ 
             styles.tab,
             {
               backgroundColor:
-                activeTab === tab ? theme.colors.primary : theme.colors.details,
+                activeTab === tab ? tabActiveBg : tabInactiveBg,
             },
           ]}
           onPress={() => !disableSwitching && setActiveTab(tab)}
@@ -38,7 +46,7 @@ const Tabs: React.FC<TabsProps> = ({
         >
           <Text
             style={{
-              color: activeTab === tab ? theme.colors.textSecondary : theme.colors.text,
+              color: activeTab === tab ? tabActiveText : tabInactiveText,
               fontWeight: "bold",
               fontSize: 16,
             }}

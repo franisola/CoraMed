@@ -1,10 +1,12 @@
 import React from "react";
 import { Dimensions, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@themes/ThemeContext";
 
 export const getDefaultHeaderOptions = (theme: any) => {
   const screenHeight = Dimensions.get("window").height;
   const headerHeight = screenHeight * 0.18;
+  const { isDark } = useTheme();
 
   return ({ navigation }: { navigation: any }) => ({
     headerShown: true,
@@ -37,7 +39,11 @@ export const getDefaultHeaderOptions = (theme: any) => {
         }}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Ionicons name="menu-outline" size={28} color={theme.colors.primary} />
+        <Ionicons
+          name="menu-outline"
+          size={28}
+          color={theme.colors.icons}
+        />
       </TouchableOpacity>
     ),
   });
