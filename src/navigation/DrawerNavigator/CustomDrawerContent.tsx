@@ -32,8 +32,8 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 
   const confirmLogout = () => {
     Alert.alert(
-      "Cerrar sesión",
-      "¿Está seguro que desea cerrar sesión?",
+      t("menuTxt.logOut"),
+      t("menuTxt.sureLogOut"),
       [
         {
           text: "Cancelar",

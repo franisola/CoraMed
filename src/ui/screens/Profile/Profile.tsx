@@ -28,15 +28,15 @@ const ProfileScreen = () => {
 
   const confirmLogout = () => {
     Alert.alert(
-      "Cerrar sesión",
-      "¿Está seguro que desea cerrar sesión?",
+      t("menuTxt.logOut"),
+      t("menuTxt.sureLogOut"),
       [
         {
-          text: "Cancelar",
+          text: t("editAccTxt.cancel"),
           style: "cancel",
         },
         {
-          text: "Cerrar Sesión",
+          text: t("settings.logOut"),
           onPress: () => dispatch(logoutUser()),
           style: "destructive",
         },
@@ -47,15 +47,15 @@ const ProfileScreen = () => {
 
   const confirmDeleteAccount = () => {
     Alert.alert(
-      "Borrar Cuenta",
-      "Esta acción eliminará su cuenta y todos sus datos.\n¿Está seguro que desea continuar?",
+      t("menuTxt.deleteAccountTitle"),
+      t("menuTxt.deleteAccountMessage"),
       [
         {
-          text: "Cancelar",
+          text: t("editAccTxt.cancel"),
           style: "cancel",
         },
         {
-          text: "Borrar Cuenta",
+          text: t("menuTxt.deleteAccountTitle"),
           style: "destructive",
           onPress: async () => {
             try {

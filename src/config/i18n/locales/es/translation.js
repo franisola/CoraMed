@@ -150,7 +150,10 @@ const translations = {
     darkMode: "Modo oscuro",
     notifications: "Notificaciones",
     logOut: "Cerrar sesión",
+    sureLogOut: "¿Está seguro que desea cerrar sesión?",
     myNotifications: "Mis notificaciones",
+    deleteAccountTitle: "Borrar Cuenta",
+    deleteAccountMessage: "Esta acción eliminará su cuenta y todos sus datos personales.\n¿Está seguro de que desea continuar?",
   },
 
 

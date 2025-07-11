@@ -19,6 +19,7 @@ const translations = {
     subtitlePersonal: "Personal",
     subtitleAccount: "Account",
     noAppointmentsScheduled: "You have no appointments scheduled.",
+   
   },
 
   inputPlaceholder: {
@@ -143,7 +144,10 @@ const translations = {
     darkMode: "Dark Mode",
     notifications: "Notifications",
     logOut: "Log out",
+    sureLogOut: "Are you sure you want to log out?",
     myNotifications: "My notifications",
+    deleteAccountTitle: "Delete Account",
+    deleteAccountMessage: "This action will delete your account and all your personal data.\nAre you sure you want to proceed?",
   },
 
   myDataTxt: {
