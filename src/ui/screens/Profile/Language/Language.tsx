@@ -29,7 +29,7 @@ export default function LanguageSelector() {
             style={[
               styles.radio,
               {
-                borderColor: theme.colors.primary,
+                borderColor: selectedLanguage === "es" ? theme.colors.primary : theme.colors.greyText,
               },
             ]}
           >
@@ -42,7 +42,7 @@ export default function LanguageSelector() {
               />
             )}
           </View>
-          <Text style={[styles.label, { color: theme.colors.primary }]}>
+          <Text style={[styles.label, { color: selectedLanguage === "es" ? theme.colors.primary : theme.colors.greyText }]}> 
             {selectedLanguage === "es" ? "Español" : "Spanish"}
           </Text>
         </TouchableOpacity>
@@ -55,7 +55,7 @@ export default function LanguageSelector() {
             style={[
               styles.radio,
               {
-                borderColor: theme.colors.primary,
+                borderColor: selectedLanguage === "en" ? theme.colors.primary : theme.colors.greyText,
               },
             ]}
           >
@@ -68,7 +68,7 @@ export default function LanguageSelector() {
               />
             )}
           </View>
-          <Text style={[styles.label, { color: theme.colors.primary }]}>
+          <Text style={[styles.label, { color: selectedLanguage === "en" ? theme.colors.primary : theme.colors.greyText }]}> 
             {selectedLanguage === "es" ? "Inglés" : "English"}
           </Text>
         </TouchableOpacity>

@@ -80,7 +80,6 @@ const NextAppointmentCard: React.FC = () => {
     );
   }
 
-  // Si hay turno mostramos la card con estilo normal
   const nombreCompleto = appointment.profesional
     ? `${appointment.profesional.nombre ?? ""} ${appointment.profesional.apellido ?? ""}`.trim()
     : "-";
@@ -91,16 +90,23 @@ const NextAppointmentCard: React.FC = () => {
     : "-";
   const hora = appointment.hora || "-";
 
+  const cardBg = theme.dark ? theme.colors.details : theme.colors.white;
+  // Borde lateral: usar un color más visible en dark
+  const borderColor = isCancelado
+    ? theme.colors.error
+    : (theme.dark ? theme.colors.textSecondary : theme.colors.primary);
+
+  const shadowColor = theme.dark ? theme.colors.background : '#000';
   return (
     <TouchableOpacity
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.white,
-          borderLeftColor: isCancelado
-            ? theme.colors.error
-            : theme.colors.primary,
+          backgroundColor: cardBg,
+          borderLeftColor: borderColor,
           borderLeftWidth: 4,
+          shadowColor,
+          shadowOpacity: theme.dark ? 0.25 : 0.1,
         },
       ]}
       activeOpacity={0.8}
@@ -177,10 +183,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 10,
     marginHorizontal: 12,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
+    // backgroundColor y shadowColor se setean dinámicamente
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
   },

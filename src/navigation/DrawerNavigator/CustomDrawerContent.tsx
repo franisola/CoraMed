@@ -28,7 +28,7 @@ type MenuItem = {
 const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   const { theme, toggleTheme } = useTheme();
   const dispatch = useAppDispatch();
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const confirmLogout = () => {
     Alert.alert(
@@ -49,91 +49,95 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
     );
   };
 
-  const menuSections: { title: string; items: MenuItem[] }[] = [
+  // Simplified menu definition with correct typing
+  type BaseMenuItem = {
+    section: string;
+    label: string;
+    stack?: string;
+    screen?: string;
+    nestedStack?: string;
+  };
+
+  const baseMenu: BaseMenuItem[] = [
+    { section: "acc", label: "Home", stack: "HomeStack", screen: "Home" },
     {
-      title: t("menuTxt.acc"),
-      items: [
-        {
-          label: "Home",
-          type: "nested",
-          tab: "Tabs",
-          stack: "HomeStack",
-          screen: "Home",
-        },
-        {
-          label: t("menuTxt.myProfile"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "ProfileStack",
-          screen: "Profile",
-        },
-        {
-          label: t("menuTxt.myData"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "ProfileStack",
-          screen: "PersonalInfo",
-        },
-        {
-          label: t("menuTxt.myHealthInsurance"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "ProfileStack",
-          screen: "Insurance",
-        },
-      ],
+      section: "acc",
+      label: "myProfile",
+      stack: "ProfileStack",
+      screen: "Profile",
     },
     {
-      title: t("menuTxt.appointments"),
-      items: [
-        {
-          label: t("menuTxt.myAppointments"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "HomeStack",
-          nestedStack: "ScheduleStack",
-          screen: "MyAppointments",
-        },
-        {
-          label: t("menuTxt.newAppointment"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "HomeStack",
-          nestedStack: "BookStack",
-          screen: "SelectSpecialty",
-        },
-      ],
+      section: "acc",
+      label: "myData",
+      stack: "ProfileStack",
+      screen: "AccountInfo",
     },
     {
-      title: t("menuTxt.preferences"),
-      items: [
-        {
-          label: t("menuTxt.language"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "ProfileStack",
-          screen: "Language",
-        },
-        {
-          label: theme.dark ? t("menuTxt.lightMode") : t("menuTxt.darkMode"),
-          type: "action",
-          action: toggleTheme,
-        },
-      ],
+      section: "acc",
+      label: "myHealthInsurance",
+      stack: "ProfileStack",
+      screen: "Insurance",
     },
     {
-      title: t("menuTxt.notifications"),
-      items: [
-        {
-          label: t("menuTxt.myNotifications"),
-          type: "nested",
-          tab: "Tabs",
-          stack: "NotificationsStack",
-          screen: "Notifications",
-        },
-      ],
+      section: "appointments",
+      label: "myAppointments",
+      stack: "HomeStack",
+      nestedStack: "ScheduleStack",
+      screen: "MyAppointments",
+    },
+    {
+      section: "appointments",
+      label: "newAppointment",
+      stack: "HomeStack",
+      nestedStack: "BookStack",
+      screen: "SelectSpecialty",
+    },
+    {
+      section: "preferences",
+      label: "language",
+      stack: "ProfileStack",
+      screen: "Language",
+    },
+    {
+      section: "notifications",
+      label: "myNotifications",
+      stack: "NotificationsStack",
+      screen: "Notifications",
     },
   ];
+
+  const menuSections: { title: string; items: MenuItem[] }[] = [
+    "acc",
+    "appointments",
+    "preferences",
+    "notifications",
+  ].map((section) => {
+    let items: MenuItem[] = baseMenu
+      .filter((item) => item.section === section)
+      .map((item) => ({
+        label:
+          item.label === "Home"
+            ? "Home"
+            : t(`menuTxt.${item.label}`) || item.label,
+        type: "nested" as const,
+        tab: "Tabs",
+        stack: item.stack,
+        screen: item.screen,
+        ...(item.nestedStack ? { nestedStack: item.nestedStack } : {}),
+      }));
+    // Add theme toggle to preferences
+    if (section === "preferences") {
+      items.push({
+        label: theme.dark ? t("menuTxt.lightMode") : t("menuTxt.darkMode"),
+        type: "action",
+        action: toggleTheme,
+      });
+    }
+    return {
+      title: t(`menuTxt.${section}`),
+      items,
+    };
+  });
 
   const logoutItem: MenuItem = {
     label: t("menuTxt.logOut"),
@@ -151,8 +155,22 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 
     if (item.type === "simple" && item.screen) {
       navigation.navigate(item.screen);
-    } else if (item.type === "nested" && item.tab && item.stack && item.screen) {
-      if (item.nestedStack) {
+    } else if (
+      item.type === "nested" &&
+      item.tab &&
+      item.stack &&
+      item.screen
+    ) {
+      if (item.stack === "ProfileStack" && item.screen !== "Profile") {
+        // Si navega a un screen secundario de perfil, forzar reset del stack
+        navigation.navigate(item.tab, {
+          screen: item.stack,
+          params: {
+            screen: item.screen,
+            params: item.params,
+          },
+        });
+      } else if (item.nestedStack) {
         navigateToNestedScreen(
           navigation,
           item.tab,
@@ -176,7 +194,9 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.colors.primary }]}
+    >
       {menuSections.map((section, sectionIndex) => (
         <View key={sectionIndex}>
           {section.title ? (
@@ -196,7 +216,12 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
                   {item.label}
                 </Text>
               </TouchableOpacity>
-              <View style={[styles.separator, { backgroundColor: theme.colors.white }]} />
+              <View
+                style={[
+                  styles.separator,
+                  { backgroundColor: theme.colors.white },
+                ]}
+              />
             </View>
           ))}
         </View>
@@ -213,7 +238,9 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
             {logoutItem.label}
           </Text>
         </TouchableOpacity>
-        <View style={[styles.separator, { backgroundColor: theme.colors.white }]} />
+        <View
+          style={[styles.separator, { backgroundColor: theme.colors.white }]}
+        />
       </View>
     </SafeAreaView>
   );

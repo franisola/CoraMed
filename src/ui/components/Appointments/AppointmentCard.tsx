@@ -19,20 +19,33 @@ const AppointmentCard: React.FC<Props> = ({ appointment, onPress }) => {
 
   const isCanceled = estado === "cancelado";
   const isCompleted = estado === "completado";
-  const isAgendado = estado === "agendado";
+  // const isAgendado = estado === "agendado"; // No se usa
 
-  const borderColor = isCanceled
-    ? theme.colors.error
-    : isCompleted
-      ? theme.colors.confirmationColor
-      : theme.colors.primary;
 
-  const iconColor = isCanceled
-    ? theme.colors.error
-    : isCompleted
-      ? theme.colors.confirmationColor
-      : theme.colors.icons;
+  // Borde lateral: rojo si cancelado, verde si completado, color visible según theme si agendado
+  let borderColor;
+  if (isCanceled) {
+    borderColor = theme.colors.error;
+  } else if (isCompleted) {
+    borderColor = theme.colors.confirmationColor;
+  } else {
+    borderColor = theme.dark ? theme.colors.textSecondary : theme.colors.primary;
+  }
 
+  // Iconos: rojo si cancelado, verde si completado, color de iconos del theme si agendado
+  let iconColor;
+  if (isCanceled) {
+    iconColor = theme.colors.error;
+  } else if (isCompleted) {
+    iconColor = theme.colors.confirmationColor;
+  } else {
+    iconColor = theme.colors.icons;
+  }
+
+  // Fondo de la card: adaptado a dark/light
+  const cardBg = theme.dark ? theme.colors.details : theme.colors.white;
+
+  // Texto principal y secundario: normal, pero si está cancelado, solo los iconos y barra en rojo
   const textColor = theme.colors.text;
   const subTextColor = theme.colors.greyText;
 
@@ -42,7 +55,7 @@ const AppointmentCard: React.FC<Props> = ({ appointment, onPress }) => {
         style={[
           styles.card,
           {
-            backgroundColor: theme.colors.white,
+            backgroundColor: cardBg,
             borderLeftColor: borderColor,
             borderLeftWidth: 4,
           },
@@ -50,12 +63,13 @@ const AppointmentCard: React.FC<Props> = ({ appointment, onPress }) => {
       >
         <View style={styles.content}>
           {/* Nombre y Especialidad sin icono, alineados al borde */}
-          <Text style={[styles.title, { color: textColor }]}>
-            Dr. {appointment.profesional.nombre}{" "}
-            {appointment.profesional.apellido}
+          <Text style={[styles.title, { color: textColor }]}> 
+            {appointment.profesional
+              ? `Dr. ${appointment.profesional.nombre ?? ''} ${appointment.profesional.apellido ?? ''}`.trim()
+              : '-'}
           </Text>
-          <Text style={[styles.subtitle, { color: subTextColor }]}>
-            Especialidad: {appointment.profesional.especialidad}
+          <Text style={[styles.subtitle, { color: subTextColor }]}> 
+            Especialidad: {appointment.profesional?.especialidad || '-'}
           </Text>
 
           {/* Los demás campos con icono y texto alineado */}

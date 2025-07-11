@@ -23,7 +23,7 @@ const CustomPicker: React.FC<CustomPickerProps> = ({
   const { theme } = useTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}> 
       {label && labelText && (
         <Text
           style={[
@@ -43,7 +43,7 @@ const CustomPicker: React.FC<CustomPickerProps> = ({
           styles.pickerWrapper,
           {
             borderColor: error ? theme.colors.error : theme.colors.inputBorder,
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.surface,
           },
         ]}
       >

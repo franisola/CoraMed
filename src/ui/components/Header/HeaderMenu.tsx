@@ -19,7 +19,7 @@ interface HeaderMenuProps {
 
 const HeaderMenu: React.FC<HeaderMenuProps> = ({ headerHeight }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const navigation = useNavigation();
 
   const toggleMenu = () => setIsMenuVisible((prev) => !prev);

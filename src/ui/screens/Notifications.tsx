@@ -106,7 +106,26 @@ const NotificationsScreen: React.FC = () => {
             "";
     }
 
-    const colorByType = getColorByType(item.tipo);
+    // Colores temáticos para el borde y los íconos según tipo
+    let borderColor;
+    let iconColor;
+    const type = item.tipo.toLowerCase();
+    if (type === "turno_cancelado") {
+      borderColor = theme.colors.error;
+      iconColor = theme.colors.error;
+    } else if (type === "resultados_subidos") {
+      borderColor = theme.colors.confirmationColor;
+      iconColor = theme.colors.confirmationColor;
+    } else if (type === "turno_agendado" || type === "recordatorio") {
+      borderColor = theme.dark ? theme.colors.textSecondary : theme.colors.primary;
+      iconColor = theme.dark ? theme.colors.textSecondary : theme.colors.primary;
+    } else {
+      borderColor = theme.colors.greyText;
+      iconColor = theme.colors.greyText;
+    }
+
+    // Fondo de la card adaptado a dark/light
+    const cardBg = theme.dark ? theme.colors.details : theme.colors.white;
 
     return (
       <TouchableOpacity
@@ -128,8 +147,8 @@ const NotificationsScreen: React.FC = () => {
           style={[
             styles.card,
             {
-              backgroundColor: theme.colors.white,
-              borderLeftColor: colorByType,
+              backgroundColor: cardBg,
+              borderLeftColor: borderColor,
               borderLeftWidth: 4,
             },
           ]}
@@ -137,14 +156,14 @@ const NotificationsScreen: React.FC = () => {
           <Ionicons
             name={renderIcon(item.tipo) as any}
             size={24}
-            color={colorByType}
+            color={iconColor}
             style={styles.icon}
           />
           <View style={styles.content}>
-            <Text style={[styles.title, { color: colorByType }]}>
+            <Text style={[styles.title, { color: iconColor }]}>
               {item.titulo}
             </Text>
-            <Text style={[styles.body, { color: colorByType }]}>
+            <Text style={[styles.body, { color: iconColor }]}>
               {cleanMensaje}
             </Text>
             {item.turno && (

@@ -14,8 +14,8 @@ export default function AppDrawer() {
         drawerType: "front",
         overlayColor: "transparent",
         drawerStyle: {
-          backgroundColor: "#D1DEF2", // color azul claro del menú
-          width: 220, // ancho similar al diseño
+          backgroundColor: "#D1DEF2", 
+          width: 220, 
         },
       }}
     >

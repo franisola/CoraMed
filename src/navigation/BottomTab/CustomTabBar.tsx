@@ -3,6 +3,7 @@ import { SafeAreaView, TouchableOpacity } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useTheme } from "@themes/ThemeContext";
+import { CommonActions } from "@react-navigation/native";
 
 const ICONS: Record<string, string> = {
   HomeStack: "home",
@@ -22,6 +23,7 @@ export default function CustomTabBar({
   const activeIcon = theme.colors.primary;
   const inactiveIcon = theme.colors.details;
 
+  // No hace falta CommonActions, usamos reset directo
   return (
     <SafeAreaView
       style={{
@@ -30,8 +32,9 @@ export default function CustomTabBar({
       }}
     >
       {state.routes.map((route, index) => {
-        const isFocused = state.index === index;
-        const iconName = ICONS[route.name] ?? "question-circle";
+        // Tipado explícito para evitar warnings
+        const isFocused: boolean = state.index === index;
+        const iconName: string = ICONS[route.name] ?? "question-circle";
 
         const onPress = () => {
           const event = navigation.emit({
@@ -40,12 +43,35 @@ export default function CustomTabBar({
             canPreventDefault: true,
           });
 
+          if (route.name === "ProfileStack") {
+            // Si ya estoy en ProfileStack y el screen activo es Profile, no hago nada
+            const profileRoute = state.routes.find(
+              (r: typeof route) => r.name === "ProfileStack"
+            );
+            const lastRouteName = Array.isArray(profileRoute?.state?.routes)
+              ? profileRoute.state.routes[profileRoute.state.routes.length - 1]
+                  ?.name
+              : undefined;
+            const isOnProfile = isFocused && lastRouteName === "Profile";
+            if (isOnProfile) return;
+
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: "ProfileStack",
+                    state: {
+                      routes: [{ name: "Profile" }],
+                    },
+                  },
+                ],
+              })
+            );
+            return;
+          }
           if (!isFocused && !event.defaultPrevented) {
-            if (route.name === "ProfileStack") {
-              navigation.navigate("ProfileStack", { screen: "Profile" });
-            } else {
-              navigation.navigate(route.name);
-            }
+            navigation.navigate(route.name);
           }
         };
 

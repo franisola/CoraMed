@@ -84,7 +84,7 @@ const AppointmentDetailsScreen = () => {
 
   if (loading || !appointment) {
     return (
-      <View style={styles.centered}>
+      <View style={[styles.centered, { backgroundColor: theme.colors.background }] }>
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );

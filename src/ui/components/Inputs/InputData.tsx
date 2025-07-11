@@ -53,7 +53,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
           styles.inputWrapper,
           {
             borderColor: error ? theme.colors.error : theme.colors.inputBorder,
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.surface,
           },
         ]}
       >
@@ -64,7 +64,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
               color: theme.colors.text,
             },
           ]}
-          placeholderTextColor={theme.colors.inputBorder}
+          placeholderTextColor={theme.colors.placeholder}
           secureTextEntry={isPassword && !showPassword}
           {...props}
         />
@@ -82,7 +82,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       </View>
 
       {error ? (
-        <Text style={[styles.errorText, { color: theme.colors.error }]}>
+        <Text style={[styles.errorText, { color: theme.colors.error }]}> 
           {error}
         </Text>
       ) : null}

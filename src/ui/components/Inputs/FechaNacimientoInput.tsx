@@ -51,7 +51,7 @@ const FechaNacimientoInput: React.FC<Props> = ({ value, onChange, error }) => {
           styles.input,
           {
             borderColor: error ? theme.colors.error : theme.colors.inputBorder,
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.surface,
           },
         ]}
       >
