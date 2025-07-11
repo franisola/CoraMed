@@ -56,11 +56,11 @@ const SelectDate = () => {
   const isDayAvailable = useCallback(
     (date: string) => {
       const today = dayjs().startOf("day");
-      const tomorrow = today.add(1, "day");
+      const dayAfterTomorrow = today.add(2, "day");
       const dateObj = dayjs(date);
 
-      // La fecha debe ser igual o posterior a mañana y estar dentro de los días laborales
-      if (dateObj.isBefore(tomorrow)) return false;
+      // La fecha debe ser igual o posterior a pasado mañana y estar dentro de los días laborales
+      if (dateObj.isBefore(dayAfterTomorrow)) return false;
 
       const day = dateObj.format("dddd");
       const diaTraducido = weekdayMap[day] ?? day;

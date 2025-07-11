@@ -5,10 +5,10 @@ export interface Appointment {
   _id: string;
   paciente: string;
   profesional?: {
-  nombre?: string;
-  apellido?: string;
-  especialidad?: string;
-};
+    nombre?: string;
+    apellido?: string;
+    especialidad?: string;
+  };
 
   especialidad: string;
   fecha: string;
@@ -41,13 +41,12 @@ const initialState: AppointmentState = {
   error: null,
 };
 
-
 export const getNextAppointment = createAsyncThunk(
   "appointment/next",
   async (_, { rejectWithValue }) => {
     try {
       const { appointment } = await appointmentApi.getNextAppointment();
-      return appointment; 
+      return appointment;
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Error al obtener el próximo turno"
@@ -73,6 +72,8 @@ export const createAppointment = createAsyncThunk(
     try {
       return await appointmentApi.createAppointment(payload);
     } catch (err: any) {
+      console.log(err);
+
       return rejectWithValue(
         err.response?.data?.message || "Error al crear turno"
       );

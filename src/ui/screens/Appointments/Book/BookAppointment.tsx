@@ -59,7 +59,6 @@ const BookAppointment = () => {
 
       const response = await dispatch(createAppointment(payload)).unwrap();
 
-
       await navigation.navigate("Home", { turno: response });
     } catch (error: any) {
       const mensaje =
@@ -73,10 +72,7 @@ const BookAppointment = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.background },
-        ]}
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={styles.content}>
@@ -108,7 +104,7 @@ const BookAppointment = () => {
 
         <View style={styles.buttonWrapper}>
           <CustomButton
-            title= {t("appointmentCardTxt.confirmButton")}
+            title={t("appointmentCardTxt.confirmButton")}
             onPress={handleSubmit}
             loading={isLoading}
             disabled={!isValid || isLoading}
